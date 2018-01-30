@@ -7,6 +7,7 @@ Web app that lets users enter a Montana address, returns which county/municipali
 - Geographic data store --> Geojson files in github repo directory
     - Shapefile data is easily available for most districts. Will need to collect/clean/standardize as GeoJSON
 - Backend system for taking a point (lat/long coords) and returning the boundaries it's part of --> techology???
+    - Use: https://github.com/manuelbieh/Geolib
 - Front end application --> React/Mapbox
     - Form for entering address, geocoding it and sending it to boundary API
         - Use [Mapbox Geocoding API](https://www.mapbox.com/geocoding/), free up to 50K requests/mo
