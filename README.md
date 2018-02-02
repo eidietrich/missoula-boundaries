@@ -30,3 +30,10 @@ Web app that lets users enter a Montana address, returns which county/municipali
 Looks like Seattle Boundaries is split into web app, API and geography repos. Web app is built with Choo (some lightweight JS framework) and Mapbox maps. API uses Node's http server, it looks like.
 
 The geography (boundaries) repo stores things as geojsons, with some packaging so they're hosted on [NPM](https://www.npmjs.com/package/seattle-boundaries). The overall project uses node/NPM to collect its parts together.
+
+References for setting up react development environment with webpack/Babel:
+- https://scotch.io/tutorials/setup-a-react-environment-using-webpack-and-babel
+- https://stanko.github.io/webpack-babel-react-revisited/
+- https://blog.jonathanargentiero.com/how-to-load-a-json-content-inside-a-js-module-with-webpack/
+- https://github.com/ReactJSResources/react-webpack-babel
+- https://webpack.js.org/guides/production/

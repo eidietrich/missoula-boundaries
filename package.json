@@ -1,0 +1,44 @@
+{
+  "name": "missoula-boundaries",
+  "version": "1.0.0",
+  "description": "Web app that lets users enter a Montana address, returns which county/municipalities/school districts/legislative districts it's part of. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries).",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coffeeAndCodeMSO/missoula-boundaries.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coffeeAndCodeMSO/missoula-boundaries/issues"
+  },
+  "homepage": "https://github.com/coffeeAndCodeMSO/missoula-boundaries#readme",
+  "dependencies": {
+    "normalize.css": "^7.0.0",
+    "path": "^0.12.7",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.18",
+    "css-loader": "^0.28.9",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.6",
+    "html-webpack-plugin": "^2.30.1",
+    "json-loader": "^0.5.7",
+    "style-loader": "^0.20.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.1",
+    "webpack-merge": "^4.1.1"
+  }
+}
