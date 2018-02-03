@@ -15,6 +15,23 @@ Web app that lets users enter a Montana address, returns which county/municipali
         - List of which districts the address is part of
         - Map of boundary for district
 
+## Project structure
+
+- app/ - source directory
+    - /components/ - React components
+        - App.jsx - Wrapper
+        - DataManager.js - non-display class for managing app data
+            - handles geocoding
+            - handles lat/long within calculation
+        - LocationForm.jsx - React component for entering location of interest
+            - collects address, passes to DataManager
+        - DistrictMap.jsx - React component for displayig interest point inside appropriate boundaries
+    - /css/
+    - /geodata/ - Geojson boundary data
+- build/ - build directory
+- scripts - Scripts for data collection/processing (e.g. converting source shapefiles to geojson)
+
+
 ## Workplan:
 
 1. Build a proof of concept using [MT House Districts](http://leg.mt.gov/css/Committees/interim/2011-2012/districting/adopted-plan.asp).

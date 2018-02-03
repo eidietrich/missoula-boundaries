@@ -43,7 +43,7 @@ module.exports = {
         // loaders: ['style-loader', 'css-loader']
       },
       {
-        test: /\.json$/,
+        test: /\.(json|geojson)$/,
         exclude: /node_modules/,
         loader: 'json-loader'
       },

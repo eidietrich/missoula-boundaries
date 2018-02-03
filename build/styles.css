@@ -446,5 +446,26 @@ template {
   display: none;
 }
 body {
-    background-color: blue;
+    font-family: 'Helvetica Neue', Arial, san-serif;
 }
+
+.app-container {
+    margin: 5px;
+    border: 1px solid #ddd;
+}
+
+.location-form-container {
+    margin: 5px;
+    border: 1px solid #ddd;
+}
+
+.maps-container {
+    margin: 5px;
+    border: 1px solid #ddd;
+}
+
+.map-container {
+    margin: 5px;
+    border: 1px solid #ddd;
+}
+
