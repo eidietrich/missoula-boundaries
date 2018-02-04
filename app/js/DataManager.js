@@ -2,12 +2,20 @@
 
 Object for managing/parsing data
 
-#TODO: Finish thinking through architecture here
-
 Expects:
   layers - array of geojson feature collections to be included
 
+TODO:
+- Select geoprocessing library
+- Set up tests
+
+NOTES:
+- Spatial analysis w/ Turf.js: http://turfjs.org/docs
+
 */
+
+import { point, polygon } from '@turf/helpers';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 export default class DataManager {
   constructor(layers){
@@ -17,22 +25,30 @@ export default class DataManager {
   /* Internal functions */
 
   getContainingFeature(features, latlng){
-    // parse a geojson feature collection (features) and return the feature (if any) that contains [lat, lng] coordinate
-    // TODO: Figure out spatial library to use
-    return null;
+    // parses a geojson feature array (features) and return the feature (if any) that contains [lat, lng] coordinate
+
+    const lnglat = latlng.reverse();
+    const pt = point(lnglat);
+    const withinFeatures = features.filter((f) => {
+      return booleanPointInPolygon(pt, f)
+    })
+
+    if (withinFeatures.length > 1) {
+      console.log('overlap!')
+      return withinFeatures[0];
+    } else if (withinFeatures.length === 1) {
+      return withinFeatures[0];
+    } else if (withinFeatures.length === 0) {
+      return null;
+    }
   }
 
   /* External functions */
-  geocodeAddress(address){
-    // interface with external API (Mapbox? Google?) to translate a string address into a [lat, lng] coordinate
 
-    // Might make more sense to put this in LocationForm
-  }
-
-  locateAddressOnLayers(latlng){
+  locatePointOnLayers(latlng){
     const maps = this.layers.map(layer => {
       const features = layer.data.features;
-      const containingFeature = getContainingFeature(features, latlng)
+      const containingFeature = this.getContainingFeature(features, latlng)
       return {
         key: layer.key,
         label: layer.label,
@@ -45,7 +61,5 @@ export default class DataManager {
   getLayers(){
     return this.layers;
   }
-
-
 
 }

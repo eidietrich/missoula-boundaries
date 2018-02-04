@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/coffeeAndCodeMSO/missoula-boundaries#readme",
   "dependencies": {
+    "@turf/boolean-point-in-polygon": "^5.1.5",
+    "@turf/helpers": "^6.0.0",
     "normalize.css": "^7.0.0",
     "path": "^0.12.7",
     "react": "^16.2.0",

@@ -1,6 +1,6 @@
 # missoula-boundaries
 
-Web app that lets users enter a Montana address, returns which county/municipalities/school districts/legislative districts it's part of. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries).
+WIP Web app that lets users enter a Montana address, returns which county/municipalities/school districts/legislative districts it's part of. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries).
 
 ## Project components:
 
@@ -8,6 +8,7 @@ Web app that lets users enter a Montana address, returns which county/municipali
     - Shapefile data is easily available for most districts. Will need to collect/clean/standardize as GeoJSON
 - Backend system for taking a point (lat/long coords) and returning the boundaries it's part of --> techology???
     - Use: https://github.com/manuelbieh/Geolib
+    - OR: https://github.com/Turfjs/turf
 - Front end application --> React/Mapbox
     - Form for entering address, geocoding it and sending it to boundary API
         - Use [Mapbox Geocoding API](https://www.mapbox.com/geocoding/), free up to 50K requests/mo
@@ -21,11 +22,10 @@ Web app that lets users enter a Montana address, returns which county/municipali
     - /components/ - React components
         - App.jsx - Wrapper
         - DataManager.js - non-display class for managing app data
-            - handles geocoding
             - handles lat/long within calculation
         - LocationForm.jsx - React component for entering location of interest
-            - collects address, passes to DataManager
-        - DistrictMap.jsx - React component for displayig interest point inside appropriate boundaries
+            - collects address, geocodes, passes to DataManager
+        - DistrictMap.jsx - React component for displaying interest point inside appropriate boundaries
     - /css/
     - /geodata/ - Geojson boundary data
 - build/ - build directory
