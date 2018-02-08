@@ -36,7 +36,7 @@ export default class App extends React.Component {
     super(props);
     this.dataManager = new DataManager(layers);
     this.state = {
-      focusLatlng: null,
+      focusLngLat: null,
       mapsToRender: [],
     }
 
@@ -46,13 +46,13 @@ export default class App extends React.Component {
   componentDidMount(){
     // SET DUMMY DATA FOR TESTING
     this.setState({
-      focusLatlng: dummyMapData.latlng,
+      focusLngLat: dummyMapData.latlng,
       mapsToRender: this.dataManager.locatePointOnLayers(dummyMapData.latlng)
     })
   }
 
   render(){
-    // console.log('rendering w/ state...', this.state)
+    console.log('rendering w/ state...', this.state)
 
     const isPointSelected = (this.state.focusLatLng != null)
 
@@ -62,7 +62,7 @@ export default class App extends React.Component {
         return (
           <DistrictMap
             key={map.feature.properties.id}
-            latlng={this.state.focusLatlng}
+            lngLat={this.state.focusLngLat}
             districtShape={map.feature.geometry}
             districtType={map.label}
             districtName={map.feature.properties.id}
@@ -86,8 +86,9 @@ export default class App extends React.Component {
 
   handleNewLatLng(latlng){
     const maps = this.dataManager.locatePointOnLayers(latlng);
+    // may need to throw in a reverse() here
     this.setState({
-      focusLatlng: latlng,
+      focusLngLat: latlng,
       mapsToRender: maps
     });
   }
