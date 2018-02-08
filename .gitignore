@@ -2,3 +2,5 @@
 node_modules
 
 raw-data
+
+.env

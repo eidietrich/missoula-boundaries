@@ -5,7 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // for deleting build folder
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
+// for environmental variables
+const Dotenv = require('dotenv-webpack')
 
 const paths = {
   app: path.resolve(__dirname, 'app'),
@@ -58,6 +59,9 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(['build']),
     HtmlWebpackPluginConfig,
-    new ExtractTextPlugin("styles.css")
+    new ExtractTextPlugin("styles.css"),
+    new Dotenv({
+      path: './.env'
+    })
   ]
 }

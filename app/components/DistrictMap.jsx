@@ -32,7 +32,7 @@ export default class DistrictMap extends React.Component {
         <div>{'Type: ' + this.props.districtType}</div>
         <div>{'Name: ' + this.props.districtName}</div>
         <div>{'Focus Point: ' + this.props.latlng}</div>
-        <div>{'District Shape: ' + this.props.districtShape.geometry.coordinates}</div>
+        <div>{'District Shape: ' + this.props.districtShape.coordinates}</div>
       </div>
     )
 

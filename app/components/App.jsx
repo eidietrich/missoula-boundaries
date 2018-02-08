@@ -40,56 +40,55 @@ export default class App extends React.Component {
       mapsToRender: [],
     }
 
-    // for testing
-    const testOverlap = this.dataManager.locatePointOnLayers(dummyMapData.latlng)
-    console.log('testOverlap', testOverlap)
+    this.handleNewLatLng = this.handleNewLatLng.bind(this);
+  }
+
+  componentDidMount(){
+    // SET DUMMY DATA FOR TESTING
+    this.setState({
+      focusLatlng: dummyMapData.latlng,
+      mapsToRender: this.dataManager.locatePointOnLayers(dummyMapData.latlng)
+    })
   }
 
   render(){
+    // console.log('rendering w/ state...', this.state)
 
     const isPointSelected = (this.state.focusLatLng != null)
-    const locationForm = (
-      <LocationForm
-        isPointSelected={isPointSelected}
-        handleNewLatLng={this.handleNewLatLng}
-      />
-    );
 
     // build DistrictMap objects for as many boundaries as there are in state.mapsToRender
     const districtMaps = this.state.mapsToRender.map(map => {
-      <DistrictMap
-        latlng={this.state.focusLatlng}
-        districtShape={map.feature}
-        districtType={map.key}
-        districtName={map.feature.properties.id}
-      />
-    })
-    // DEVELOPMENT DUMMY
-    const dummyDistrictMap = (
-      <DistrictMap
-        latlng={dummyMapData.latlng}
-        districtShape={dummyMapData.districtShape}
-        districtType={dummyMapData.districtType}
-        districtName={dummyMapData.districtName}
-      />
-    )
+      if (map.feature){
+        return (
+          <DistrictMap
+            key={map.feature.properties.id}
+            latlng={this.state.focusLatlng}
+            districtShape={map.feature.geometry}
+            districtType={map.label}
+            districtName={map.feature.properties.id}
+          />
+        );
+      }
+    });
 
     return (
        <div className="app-container">
-        {locationForm}
+        <LocationForm
+          isPointSelected={isPointSelected}
+          handleNewLatLng={this.handleNewLatLng}
+        />
         <div className="maps-container">
           {districtMaps}
-          {dummyDistrictMap}
         </div>
       </div>
     );
   }
 
-  handleNewLatLng(address){
-    const maps = this.dataManager.locatePointOnLayers(latlng)
+  handleNewLatLng(latlng){
+    const maps = this.dataManager.locatePointOnLayers(latlng);
     this.setState({
       focusLatlng: latlng,
       mapsToRender: maps
-    })
+    });
   }
 }

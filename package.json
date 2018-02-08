@@ -22,6 +22,8 @@
   "dependencies": {
     "@turf/boolean-point-in-polygon": "^5.1.5",
     "@turf/helpers": "^6.0.0",
+    "dotenv-webpack": "^1.5.4",
+    "mapbox": "^1.0.0-beta9",
     "normalize.css": "^7.0.0",
     "path": "^0.12.7",
     "react": "^16.2.0",
