@@ -24,10 +24,12 @@
     "@turf/helpers": "^6.0.0",
     "dotenv-webpack": "^1.5.4",
     "mapbox": "^1.0.0-beta9",
+    "mapbox-gl": "^0.44.0",
     "normalize.css": "^7.0.0",
     "path": "^0.12.7",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "react-map-gl": "^3.2.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

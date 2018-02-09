@@ -63,7 +63,7 @@ export default class App extends React.Component {
           <DistrictMap
             key={map.feature.properties.id}
             lngLat={this.state.focusLngLat}
-            districtShape={map.feature.geometry}
+            districtFeature={map.feature}
             districtType={map.label}
             districtName={map.feature.properties.id}
           />
