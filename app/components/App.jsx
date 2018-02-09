@@ -37,10 +37,11 @@ export default class App extends React.Component {
     this.dataManager = new DataManager(layers);
     this.state = {
       focusLngLat: null,
+      focusAddress: null,
       mapsToRender: [],
     }
 
-    this.handleNewLatLng = this.handleNewLatLng.bind(this);
+    this.handleNewLocation = this.handleNewLocation.bind(this);
   }
 
   componentDidMount(){
@@ -75,8 +76,9 @@ export default class App extends React.Component {
        <div className="app-container">
         <LocationForm
           isPointSelected={isPointSelected}
-          handleNewLatLng={this.handleNewLatLng}
+          handleNewLocation={this.handleNewLocation}
         />
+        <div>{this.state.focusAddress}</div>
         <div className="maps-container">
           {districtMaps}
         </div>
@@ -84,12 +86,17 @@ export default class App extends React.Component {
     );
   }
 
-  handleNewLatLng(latlng){
+  handleNewLocation(location){
+    // pass location as {latlng, address} object
+    const latlng = location.latlng;
+    const address = location.address;
     const maps = this.dataManager.locatePointOnLayers(latlng);
-    // may need to throw in a reverse() here
+
     this.setState({
       focusLngLat: latlng,
+      focusAddress: address,
       mapsToRender: maps
     });
+
   }
 }

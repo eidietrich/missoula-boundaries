@@ -11,11 +11,6 @@ Inputs:
 Outputs:
  - Render container with district information and map with boundary and interest point plotted
 
-TODO:
-- Select a React-compatible mapping libary (Mapbox?), able to plot a geojson and point marker
-- Wire everything up in this component (a test component is currently being fed dummy data in App.jsx)
-- Polish formatting (in app.css or create districtMap.css file)
-
 NOTES/POSSIBLE GOTCHAS:
 - Depending on input library requirements, props.districtShape may or may not be appropriate format. Check whether library expects a geojson {type: "Feature"} or {type: "FeatureCollection"} (props.districtShape is supplied as {type: "Feature" currently})
 - Some geomapping systems assume [lat, lng] for coordinates, others [lng, lat]. Make sure props.latlng is in the order the mapping library expects.
@@ -86,9 +81,10 @@ export default class DistrictMap extends React.Component {
   render(){
 
     const labels = (
-      <div>
-        <div>{'Type: ' + this.props.districtType}</div>
-        <div>{'Name: ' + this.props.districtName}</div>
+      <div className='map-label-container'>
+        <div className='label-district-name'>{this.props.districtName}</div>
+        <div className='label-district-type'>{this.props.districtType}</div>
+
       </div>
     )
 

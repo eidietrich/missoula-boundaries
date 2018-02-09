@@ -33,7 +33,8 @@ export default class LocationForm extends React.Component {
     super(props);
     this.state = {
       value: '',
-      responses: []
+      responses: [],
+      showResponseBox: false,
     };
 
     this.client = new MapboxClient(process.env.MAPBOX_API_TOKEN)
@@ -50,9 +51,13 @@ export default class LocationForm extends React.Component {
     }
   }
 
-  handleLocationSelect(lnglat){
-    var latlng = lnglat.reverse(); // TODO: change app so everything in app expects lng, lat coordinates
-    this.props.handleNewLatLng(latlng);
+  handleLocationSelect(location){
+    location.latlng = location.lnglat.reverse(); // TODO: change app so everything in app expects lng, lat coordinates
+    this.props.handleNewLocation(location);
+    this.setState({
+      showResponseBox: false,
+      value: ''
+    })
 
   }
 
@@ -63,7 +68,8 @@ export default class LocationForm extends React.Component {
       // TODO: Figure out how to filter responses to MT
 
       this.setState({
-        responses: filtered
+        responses: filtered,
+        showResponseBox: (filtered.length > 0)
       })
     });
 
@@ -76,26 +82,30 @@ export default class LocationForm extends React.Component {
       const lnglat = location.center;
 
       return (
-        <li key={String(i)}
-          onClick={() => this.handleLocationSelect(lnglat)}
+        <div className='location-form-response-item'
+          key={String(i)}
+          onClick={() => this.handleLocationSelect({
+              lnglat: lnglat,
+              address: name
+            })}
         >
           {name}
-        </li>
+        </div>
       )
     })
 
+    const responseLocationClassName = (this.state.showResponseBox) ? 'location-form-response-list' : 'location-form-response-list hide'
+
     return (
       <div className='location-form-container'>
-        #TODO: Location Form
+        <div className='location-form-label'>Enter address</div>
         <form onSubmit={this.handleSubmit}>
-            <label>
-              Enter address
-              <input type="text" value={this.state.value} onChange={this.handleChange} />
-            </label>
+          <input className='location-form-input'
+            type="text" value={this.state.value} onChange={this.handleChange} />
         </form>
-        <ul>
+        <div className={responseLocationClassName}>
           {responseLocations}
-        </ul>
+        </div>
       </div>
     )
   }
