@@ -63,9 +63,11 @@ export default class LocationForm extends React.Component {
 
   geocodeAddress(address){
     this.client.geocodeForward(address, geocodeParameters, (err, res) => {
-      const filtered = res.features;
 
-      // TODO: Figure out how to filter responses to MT
+      // filter to MT addresses using state name and first 2 digits of zipcode
+      const filtered = res.features.filter(feature => {
+          return feature.place_name.includes('Montana 59')
+      });
 
       this.setState({
         responses: filtered,
@@ -94,7 +96,7 @@ export default class LocationForm extends React.Component {
       )
     })
 
-    const responseLocationClassName = (this.state.showResponseBox) ? 'location-form-response-list' : 'location-form-response-list hide'
+    const responseContainerClass = (this.state.showResponseBox) ? 'location-form-response-container' : 'location-form-response-container hide'
 
     return (
       <div className='location-form-container'>
@@ -103,8 +105,10 @@ export default class LocationForm extends React.Component {
           <input className='location-form-input'
             type="text" value={this.state.value} onChange={this.handleChange} />
         </form>
-        <div className={responseLocationClassName}>
-          {responseLocations}
+        <div className={responseContainerClass}>
+          <div className='location-form-response-list'>
+            {responseLocations}
+          </div>
         </div>
       </div>
     )

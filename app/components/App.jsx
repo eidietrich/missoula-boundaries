@@ -72,13 +72,19 @@ export default class App extends React.Component {
       }
     });
 
+    const addressContainer = this.state.focusAddress ? (
+        <div className="address-container">
+          {this.state.focusAddress}
+        </div>
+      ) : null;
+
     return (
        <div className="app-container">
         <LocationForm
           isPointSelected={isPointSelected}
           handleNewLocation={this.handleNewLocation}
         />
-        <div>{this.state.focusAddress}</div>
+        {addressContainer}
         <div className="maps-container">
           {districtMaps}
         </div>

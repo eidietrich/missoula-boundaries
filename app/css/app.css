@@ -1,22 +1,25 @@
 body {
     font-family: 'Helvetica Neue', Arial, san-serif;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .app-container {
     margin: 5px;
+    /*border: 1px solid #ddd;*/
+}
+.address-container{
     border: 1px solid #ddd;
+    padding: 5px;
 }
 
 /* Location Form */
 
 .location-form-container {
-    position: relative;
     top: 0;
     left: 0;
     margin: 5px 0;
-    border: 1px solid #ddd;
-    padding: 5px;
+    /*border: 1px solid #ddd;*/
+    /*padding: 5px;*/
     text-align: center;
 }
 .location-form-label {
@@ -27,6 +30,10 @@ body {
     border: 1px solid rgba(0,0,0,.15);
     border-radius: 0.25rem;
     padding: .5rem 0.75rem;
+    margin-top: 5px;
+    margin-bottom: 10px;
+
+    width: 80vw;
 }
 
 .location-form-input:focus {
@@ -34,22 +41,28 @@ body {
     border-color: #5cb3fd;
 }
 
+.location-form-response-container{
+    position: relative;
+}
+.location-form-response-container.hide {
+    display: none;
+}
 .location-form-response-list {
     position: absolute;
     z-index: 20;
 
-    width: 80vw;
+    width: 100%;
+    left: 0px;
+    top: 2px;
 
     background: #fff;
-    border: 1px solid #ddd;
-}
-.location-form-response-list.hide {
-    display: none;
+    /*border: 1px solid #ddd;*/
 }
 
 .location-form-response-item {
     line-height: 2em;
-    border-bottom: 1px solid #ddd;
+
+    border-top: 1px solid #ddd;
     cursor: pointer;
 
     color: #444;

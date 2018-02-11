@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/coffeeAndCodeMSO/missoula-boundaries#readme",
   "dependencies": {
+    "@turf/bbox": "^5.1.5",
     "@turf/boolean-point-in-polygon": "^5.1.5",
     "@turf/helpers": "^6.0.0",
     "dotenv-webpack": "^1.5.4",
@@ -29,7 +30,8 @@
     "path": "^0.12.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-map-gl": "^3.2.2"
+    "react-map-gl": "^3.2.2",
+    "viewport-mercator-project": "^5.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

@@ -19,6 +19,9 @@ NOTES/POSSIBLE GOTCHAS:
 
 import React from 'react';
 import ReactMapGL, { SVGOverlay } from 'react-map-gl';
+import turfBbox from '@turf/bbox';
+import WebMercatorViewport from 'viewport-mercator-project';
+
 
 import './../css/mapbox-gl.css';
 import defaultMapStyle from './../map-style-basic-v8.json';
@@ -42,11 +45,41 @@ export default class DistrictMap extends React.Component {
 
   componentDidMount(){
     this._setSize();
+
+    // This appears to fire whenever new props are supplied to DistrictMap.jsx
+    // componentWillReceiveProps() seems cleaner, but doesn't work
+    this._setBounds();
   }
 
   _setSize(){
     let { clientHeight, clientWidth } = this.refs['map-container']
+
     const viewport = Object.assign(this.state.viewport, {width: clientWidth})
+    this.setState({
+      viewport: viewport
+    })
+  }
+
+  _setBounds(){
+    console.log('set bounds called')
+    let { clientHeight, clientWidth } = this.refs['map-container']
+    const vpHelper = new WebMercatorViewport({width: clientWidth, height: 400});
+
+    // TODO: Figure out how to avoid redundancy with _setSize
+
+    const bbox = turfBbox(this.props.districtFeature);
+    const bounds = vpHelper.fitBounds(
+      [[bbox[0], bbox[1]],[bbox[2],bbox[3]]],
+      {padding: 75}
+      );
+    // TODO: Figure out why this padding value has to be set so high to avoid clipping
+
+    const viewport = Object.assign(this.state.viewport, {
+        latitude: bounds.latitude,
+        longitude: bounds.longitude,
+        zoom: bounds.zoom,
+      })
+
     this.setState({
       viewport: viewport
     })
