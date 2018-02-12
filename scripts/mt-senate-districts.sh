@@ -2,14 +2,13 @@
 
 # Run from repo home directory
 # sh scripts/mt-house-districts.sh
-# Human-readable source page: http://leg.mt.gov/css/Committees/interim/2011-2012/districting/adopted-plan.asp
 
 # TODO: Make this more generalized
 
-DATASOURCE="http://leg.mt.gov/content/Committees/Interim/2011-2012/Districting/Maps/Adopted-Plan/House_shape_adopted021213.zip"
+DATASOURCE="http://leg.mt.gov/content/Committees/Interim/2011-2012/Districting/Maps/Adopted-Plan/Senate_shape_adopted021213.zip"
 
-mkdir -p raw-data/mt-house-districts
-cd raw-data/mt-house-districts
+mkdir -p raw-data/mt-senate-districts
+cd raw-data/mt-senate-districts
 
 # Download data
 curl -o shapefile.zip $DATASOURCE
@@ -23,14 +22,14 @@ for f in *; do mv "$f" "$f.tmp"; mv "$f.tmp" "`echo $f | tr "[:upper:]" "[:lower
 # Documentation: https://github.com/mbloch/mapshaper/wiki/Command-Reference
 # -each line strips unneeded properties and builds id label
 mapshaper \
-    -i house_shape_adopted021213.shp \
+    -i senate_shape_adopted021213.shp \
     -simplify dp 20% \
-    -each 'this.properties = {id: "House District " + this.properties["DISTRICT"]}' \
+    -each 'this.properties = {id: "Senate District " + this.properties["DISTRICT"]}' \
     -o format=geojson extension=".geojson"
 
 # move to app folder
 
-cp ./house_shape_adopted021213.geojson ./../../app/geodata/mt-house-districts.geojson
+cp ./senate_shape_adopted021213.geojson ./../../app/geodata/mt-senate-districts.geojson
 
 echo "DONE"
 

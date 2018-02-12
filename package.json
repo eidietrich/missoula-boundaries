@@ -30,6 +30,7 @@
     "path": "^0.12.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-dropdown": "^1.3.6",
     "react-map-gl": "^3.2.2",
     "viewport-mercator-project": "^5.0.0"
   },

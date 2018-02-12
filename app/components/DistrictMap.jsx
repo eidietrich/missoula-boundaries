@@ -3,7 +3,7 @@
 Component to render a specified location inside a geographic district.
 
 Inputs:
- - props.lngLat --> [lng, lat] coordinate pair of interest point
+ - props.lnglat --> [lng, lat] coordinate pair of interest point
  - props.districtFeature --> single geojson-format district feature to plot on map
  - props.districtType --> string label for district type being mapped (e.g. 'House district')
  - props.districtName --> string id for district (e.g. 'House District 4')
@@ -28,12 +28,12 @@ import defaultMapStyle from './../map-style-basic-v8.json';
 
 export default class DistrictMap extends React.Component {
   constructor(props){
-    // state.viewport controls map display
+    // NOTE: Component is being rebuilt every time App.jsx gets a new data layer selected
     super(props)
     this.state = {
       viewport: {
-        latitude: props.lngLat[1],
-        longitude: props.lngLat[0],
+        latitude: props.lnglat[1],
+        longitude: props.lnglat[0],
         zoom: 14,
         width: 400,
         height: 300,
@@ -61,7 +61,6 @@ export default class DistrictMap extends React.Component {
   }
 
   _setBounds(){
-    console.log('set bounds called')
     let { clientHeight, clientWidth } = this.refs['map-container']
     const vpHelper = new WebMercatorViewport({width: clientWidth, height: 400});
 
@@ -99,7 +98,7 @@ export default class DistrictMap extends React.Component {
   }
 
   buildMarker(opt, lngLat){
-    const coord = this.props.lngLat;
+    const coord = this.props.lnglat;
     const p = opt.project([coord[0], coord[1]]);
     return (
       <g transform={'translate(' + p[0] + ',' + p[1] + ')'}>
@@ -115,9 +114,9 @@ export default class DistrictMap extends React.Component {
 
     const labels = (
       <div className='map-label-container'>
-        <div className='label-district-name'>{this.props.districtName}</div>
-        <div className='label-district-type'>{this.props.districtType}</div>
-
+        <div className='label-district-name'>
+          {this.props.districtName}
+        </div>
       </div>
     )
 
@@ -129,7 +128,7 @@ export default class DistrictMap extends React.Component {
 
     const markerOverlay = (
       <SVGOverlay redraw={(opt) => {
-        return this.buildMarker(opt, this.props.lngLat)
+        return this.buildMarker(opt, this.props.lnglat)
       }} />
     );
 

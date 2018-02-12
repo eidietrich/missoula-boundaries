@@ -24,10 +24,9 @@ export default class DataManager {
 
   /* Internal functions */
 
-  getContainingFeature(features, latlng){
+  getContainingFeature(features, lnglat){
     // parses a geojson feature array (features) and return the feature (if any) that contains [lat, lng] coordinate
 
-    const lnglat = latlng.reverse();
     const pt = point(lnglat);
     const withinFeatures = features.filter((f) => {
       return booleanPointInPolygon(pt, f)
@@ -45,10 +44,10 @@ export default class DataManager {
 
   /* External functions */
 
-  locatePointOnLayers(latlng){
+  locatePointOnLayers(lnglat){
     const maps = this.layers.map(layer => {
       const features = layer.data.features;
-      const containingFeature = this.getContainingFeature(features, latlng)
+      const containingFeature = this.getContainingFeature(features, lnglat)
       return {
         key: layer.key,
         label: layer.label,

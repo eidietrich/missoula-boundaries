@@ -52,7 +52,6 @@ export default class LocationForm extends React.Component {
   }
 
   handleLocationSelect(location){
-    location.latlng = location.lnglat.reverse(); // TODO: change app so everything in app expects lng, lat coordinates
     this.props.handleNewLocation(location);
     this.setState({
       showResponseBox: false,
@@ -100,7 +99,7 @@ export default class LocationForm extends React.Component {
 
     return (
       <div className='location-form-container'>
-        <div className='location-form-label'>Enter address</div>
+        <div className='label'>Enter address</div>
         <form onSubmit={this.handleSubmit}>
           <input className='location-form-input'
             type="text" value={this.state.value} onChange={this.handleChange} />
