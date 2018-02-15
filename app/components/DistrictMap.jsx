@@ -26,6 +26,8 @@ import WebMercatorViewport from 'viewport-mercator-project';
 import './../css/mapbox-gl.css';
 import defaultMapStyle from './../map-style-basic-v8.json';
 
+const mapAspect = 0.65;
+
 export default class DistrictMap extends React.Component {
   constructor(props){
     // NOTE: Component is being rebuilt every time App.jsx gets a new data layer selected
@@ -48,25 +50,31 @@ export default class DistrictMap extends React.Component {
 
     // This appears to fire whenever new props are supplied to DistrictMap.jsx
     // componentWillReceiveProps() seems cleaner, but doesn't work
-    this._setBounds();
+    this._setBounds(this.props.districtFeature);
   }
 
   _setSize(){
     let { clientHeight, clientWidth } = this.refs['map-container']
-
-    const viewport = Object.assign(this.state.viewport, {width: clientWidth})
+    const viewport = Object.assign(this.state.viewport, {
+      width: clientWidth,
+      height: clientWidth * mapAspect,
+    })
     this.setState({
       viewport: viewport
     })
   }
 
-  _setBounds(){
+  _setBounds(shape){
+    // Sets map center point / zoom scale to fit shape
     let { clientHeight, clientWidth } = this.refs['map-container']
-    const vpHelper = new WebMercatorViewport({width: clientWidth, height: 400});
+    const vpHelper = new WebMercatorViewport({
+      width: clientWidth,
+      height: clientHeight,
+    });
 
     // TODO: Figure out how to avoid redundancy with _setSize
 
-    const bbox = turfBbox(this.props.districtFeature);
+    const bbox = turfBbox(shape);
     const bounds = vpHelper.fitBounds(
       [[bbox[0], bbox[1]],[bbox[2],bbox[3]]],
       {padding: 75}

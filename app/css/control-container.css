@@ -1,0 +1,53 @@
+.control-container {
+    border: 1px solid #ddd;
+    padding: 5px;
+    /*background-color: #666;*/
+    margin-top: 5px;
+}
+
+.address-container{
+    border: none;
+    padding: 5px;
+    text-align: center;
+    font-style: italic;
+    color: #444;
+}
+
+/* Location Form */
+
+.location-form-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 5px 0;
+    /*border: 1px solid #ddd;*/
+    /*padding: 5px;*/
+    text-align: center;
+}
+.location-form-container:hover {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+.label {
+    text-align: center;
+    color: #666;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.location-form-input {
+    box-sizing: border-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.25rem;
+    padding: .5rem 0.75rem;
+    margin-top: 5px;
+    /*margin-bottom: 10px;*/
+
+    color: #333;
+
+    width: 100%;
+}
+
+.location-form-input:focus {
+    outline: none;
+    border-color: #5cb3fd;
+}

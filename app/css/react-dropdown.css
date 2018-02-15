@@ -1,3 +1,7 @@
+/*
+Adapted from https://github.com/fraserxu/react-dropdown/blob/master/style.css
+*/
+
 .Dropdown-root {
   position: relative;
 }
@@ -6,8 +10,8 @@
   position: relative;
   overflow: hidden;
   background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 2px;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 0.25rem;
   box-sizing: border-box;
   color: #333;
   cursor: default;
@@ -40,6 +44,8 @@
 }
 
 .Dropdown-menu {
+  border-radius: 0.25rem;
+  text-align: left;
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
@@ -67,6 +73,7 @@
   cursor: pointer;
   display: block;
   padding: 8px 10px;
+  border-bottom: 1px solid #eee;
 }
 
 .Dropdown-option:last-child {

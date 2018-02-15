@@ -7,36 +7,15 @@ import DataManager from './../js/DataManager.js'
 import LocationForm from './LocationForm.jsx';
 import DistrictMap from './DistrictMap.jsx';
 
-import './../css/react-dropdown.css';
+import layers from './../js/layers.js'
+
 import './../css/app.css';
+import './../css/control-container.css';
+import './../css/react-dropdown.css';
 
-// Data import
-// TODO: Find a cleaner way to import multiple datafiles?
-// Eventually extract this to its own file
-import mtHouseDistricts from './../geodata/mt-house-districts.geojson';
-import mtSenateDistricts from './../geodata/mt-senate-districts.geojson';
-
-const layers = [
-  // only one data layer for now
-  {key: 'house-districts', label: 'Montana House Districts', data: mtHouseDistricts},
-  {key: 'senate-districts', label: 'Montana Senate Districts', data: mtSenateDistricts}
-];
-
-/* Development dummy variables */
-
-const dummyMapData = {
-  lnglat: [-113.99293899536133, 46.87292510231656,],
-  districtShape: {
-    "type":"Feature",
-    "properties":{id: 'Dummy District'},
-    "geometry":{"type":"Polygon","coordinates":[[[-114.16305541992188,46.765265193338],[-113.83621215820312,46.765265193338],[-113.83621215820312,46.95494930564661],[-114.16305541992188,46.95494930564661],[-114.16305541992188,46.765265193338]]]}
-  },
-  districtType: 'Dummy District',
-  districtName: 'Missoula Dummy'
-}
-
+// For initial app state config. May not be necessary depending on UI choices.
 const initLayerKey = 'house-districts'
-
+const initLnglat = [-113.99293899536133, 46.87292510231656,];
 
 export default class App extends React.Component {
   constructor(props){
@@ -58,8 +37,9 @@ export default class App extends React.Component {
     // SET DUMMY DATA
     // TODO: Think through what initial app state should be
     this.setState({
-      focusLnglat: dummyMapData.lnglat,
-      mapsToRender: this.dataManager.locatePointOnLayers(dummyMapData.lnglat),
+      focusLnglat: initLnglat,
+      focusAddress: 'Placeholder spot',
+      mapsToRender: this.dataManager.locatePointOnLayers(initLnglat),
       currentLayerKey: initLayerKey,
       currentLayerLabel: this._getLayerLabel(initLayerKey),
     })
@@ -97,23 +77,29 @@ export default class App extends React.Component {
 
     return (
        <div className="app-container">
-        <LocationForm
-          isPointSelected={isPointSelected}
-          handleNewLocation={this.handleNewLocation}
-        />
-        {addressContainer}
 
-        <div className="label">Select layer</div>
-        <Dropdown
-          options={layerOptions}
-          onChange={this.handleLayerSelect}
-          value={this.state.currentLayerLabel}
-          placeholder={'Select layer'}
-        />
+        <h1>Montana Boundaries</h1>
 
-        <div className="maps-container">
-          {districtMap}
+        <div className="control-container">
+          <div className="label">Location</div>
+          {addressContainer}
+          <LocationForm
+            isPointSelected={isPointSelected}
+            focusAddress={this.state.focusAddress}
+            handleNewLocation={this.handleNewLocation}
+          />
+
+          <div className="label">Layer</div>
+          <Dropdown
+            options={layerOptions}
+            onChange={this.handleLayerSelect}
+            value={this.state.currentLayerLabel}
+            placeholder={'Select layer'}
+          />
         </div>
+
+        {districtMap}
+
       </div>
     );
   }

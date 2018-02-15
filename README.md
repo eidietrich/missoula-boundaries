@@ -2,26 +2,26 @@
 
 WIP Web app that lets users enter a Montana address, returns which county/municipalities/school districts/legislative districts it's part of. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries).
 
+## Requirements
+
+Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work/) key. Using dotenv,  token is stored in MAPBOX_API_TOKEN. See `.env.example`.
+
 ## Project components:
 
 - Geographic data store --> Geojson files in github repo directory
     - Shapefile data is easily available for most districts. Will need to collect/clean/standardize as GeoJSON
-- Backend system for taking a point (lat/long coords) and returning the boundaries it's part of --> techology???
-    - Use: https://github.com/manuelbieh/Geolib
-    - OR: https://github.com/Turfjs/turf
-- Front end application --> React/Mapbox
-    - Form for entering address, geocoding it and sending it to boundary API
-        - Use [Mapbox Geocoding API](https://www.mapbox.com/geocoding/), free up to 50K requests/mo
-    - Response page for displaying API
-        - List of which districts the address is part of
-        - Map of boundary for district
+- Data processing system for taking a point (lat/long coords) and returning the boundaries it's part of. Uses [Turf.js](https://github.com/Turfjs/turf).
+- Front end application
+    - React
+    - [react-map-gl](https://github.com/uber/react-map-gl). Poorly documented but powerful React binding for [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/).
 
 ## Project structure
 
 - app/ - source directory
     - /components/ - React components
         - App.jsx - Wrapper
-        - DataManager.js - non-display class for managing app data
+        - layers.js - config file for map layers
+        - DataManager.js - non-display class for managing app data w/ Turf.js
             - handles lat/long within calculation
         - LocationForm.jsx - React component for entering location of interest
             - collects address, geocodes, passes to DataManager

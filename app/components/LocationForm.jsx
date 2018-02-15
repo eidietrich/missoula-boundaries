@@ -16,6 +16,7 @@ TODO:
 NOTES:
 - Keeps track of state internally
 - Form ref: https://reactjs.org/docs/forms.html
+- Dropdown styling cribbed from react-dropdown: https://github.com/fraserxu/react-dropdown
 
 */
 
@@ -28,9 +29,13 @@ const geocodeParameters = {
   bbox: [-116.10,44.30,-103.88,49.01] // roughly MT bounding box
 }
 
+// Regex for trimming address place name
+const placeNameStateCountry = /, Montana 59\d{3}, United States/;
+
 export default class LocationForm extends React.Component {
   constructor(props) {
     super(props);
+    console.log('a', props.focusAddress)
     this.state = {
       value: '',
       responses: [],
@@ -40,14 +45,24 @@ export default class LocationForm extends React.Component {
     this.client = new MapboxClient(process.env.MAPBOX_API_TOKEN)
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleInputFocus = this.handleInputFocus.bind(this);
+    this.handleInputBlur = this.handleInputBlur.bind(this);
+
   }
 
   handleChange(event){
+    // geocode if there are enough characters, otherwise reset input
+    const numCharThrehold = 5;
     const value = event.target.value;
     this.setState({ value: value })
 
-    if (value.length > 5) {
+    if (value.length > numCharThrehold) {
       this.geocodeAddress(value);
+    } else {
+      this.setState({
+        responses: [],
+        showResponseBox: false,
+      })
     }
   }
 
@@ -58,6 +73,22 @@ export default class LocationForm extends React.Component {
       value: ''
     })
 
+  }
+
+  handleInputFocus(){
+    console.log('focus')
+    this.setState({
+      value: '',
+    })
+  }
+
+  handleInputBlur(){
+    console.log('blur')
+    this.setState({
+      value: this.props.focusAddress,
+      responses: [],
+      showResponseBox: false,
+    })
   }
 
   geocodeAddress(address){
@@ -77,38 +108,44 @@ export default class LocationForm extends React.Component {
   }
 
   render(){
+    let locationDropdown;
+    if (this.state.showResponseBox){
+      const responseLocations = this.state.responses.map((location, i) => {
+        const name = location.place_name.replace(placeNameStateCountry, '');
+        const lnglat = location.center;
 
-    const responseLocations = this.state.responses.map((location, i) => {
-      const name = location.place_name;
-      const lnglat = location.center;
-
-      return (
-        <div className='location-form-response-item'
-          key={String(i)}
-          onClick={() => this.handleLocationSelect({
-              lnglat: lnglat,
-              address: name
-            })}
-        >
-          {name}
+        return (
+          <div className='Dropdown-option'
+            key={String(i)}
+            onClick={() => this.handleLocationSelect({
+                lnglat: lnglat,
+                address: name
+              })}
+          >
+            {name}
+          </div>
+        )
+      });
+      locationDropdown = (
+        <div className='Dropdown-menu'>
+          {responseLocations}
         </div>
-      )
-    })
-
-    const responseContainerClass = (this.state.showResponseBox) ? 'location-form-response-container' : 'location-form-response-container hide'
+      );
+    } else {
+      locationDropdown = null;
+    }
 
     return (
       <div className='location-form-container'>
-        <div className='label'>Enter address</div>
         <form onSubmit={this.handleSubmit}>
           <input className='location-form-input'
-            type="text" value={this.state.value} onChange={this.handleChange} />
+            type="text"
+            value={this.state.value}
+            onChange={this.handleChange}
+            placeholder='Enter address'
+          />
         </form>
-        <div className={responseContainerClass}>
-          <div className='location-form-response-list'>
-            {responseLocations}
-          </div>
-        </div>
+        {locationDropdown}
       </div>
     )
   }
