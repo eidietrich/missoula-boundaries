@@ -35,7 +35,6 @@ const placeNameStateCountry = /, Montana 59\d{3}, United States/;
 export default class LocationForm extends React.Component {
   constructor(props) {
     super(props);
-    console.log('a', props.focusAddress)
     this.state = {
       value: '',
       responses: [],

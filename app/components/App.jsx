@@ -14,10 +14,14 @@ import './../css/control-container.css';
 import './../css/react-dropdown.css';
 
 // For initial app state config. May not be necessary depending on UI choices.
-const initLayerKey = 'house-districts'
-const initLnglat = [-113.99293899536133, 46.87292510231656,];
+const initLayerIndex = 0; //'house-districts'
+const initAddress = '420 North Higgins Avenue, Missoula'
+const initLnglat = [-113.99293899536133, 46.87292510231656];
 
 export default class App extends React.Component {
+
+  /* Lifecycle methods */
+
   constructor(props){
     super(props);
     this.dataManager = new DataManager(layers);
@@ -25,9 +29,14 @@ export default class App extends React.Component {
       focusLnglat: null,
       focusAddress: null,
       mapsToRender: [],
-      currentLayerKey: null,
-      currentLayerLabel: null,
+      currentLayer: {
+        key: 'null',
+        label: null,
+        data: null,
+      },
     }
+
+    this.layerDropdownConfig = this.buildLayerDropdownConfig(layers);
 
     this.handleNewLocation = this.handleNewLocation.bind(this);
     this.handleLayerSelect = this.handleLayerSelect.bind(this);
@@ -38,36 +47,34 @@ export default class App extends React.Component {
     // TODO: Think through what initial app state should be
     this.setState({
       focusLnglat: initLnglat,
-      focusAddress: 'Placeholder spot',
+      focusAddress: initAddress,
       mapsToRender: this.dataManager.locatePointOnLayers(initLnglat),
-      currentLayerKey: initLayerKey,
-      currentLayerLabel: this._getLayerLabel(initLayerKey),
+      currentLayer: layers[initLayerIndex],
     })
   }
+
+  /* Render functions */
 
   render(){
     console.log('rendering w/ state...', this.state)
 
+    return (
+       <div className="app-container">
+
+        <h1>Montana Boundaries</h1>
+
+        {this.buildControlPanel()}
+
+        {this.buildMap()}
+
+      </div>
+    );
+  }
+
+  buildControlPanel(){
     const isPointSelected = (this.state.focusLnglat != null)
 
-    // build DistrictMap for boundaries in current layer
-    const layerOptions = layers.map(layer => {
-      return {
-        value: layer.key,
-        label: layer.label
-      }
-    });
 
-    const renderMap = this.state.mapsToRender.filter(map => map.key === this.state.currentLayerKey)[0];// filter returns an array
-    const districtMap = renderMap ? (
-        <DistrictMap
-          key={renderMap.feature.properties.id}
-          lnglat={this.state.focusLnglat}
-          districtFeature={renderMap.feature}
-          districtType={renderMap.label}
-          districtName={renderMap.feature.properties.id}
-        />
-      ) : null;
 
     const addressContainer = this.state.focusAddress ? (
         <div className="address-container">
@@ -75,41 +82,76 @@ export default class App extends React.Component {
         </div>
       ) : null;
 
-    return (
-       <div className="app-container">
+    const controlContainer = (
+      <div className="control-container">
 
-        <h1>Montana Boundaries</h1>
+        <div className="label">Location</div>
+        {addressContainer}
+        <LocationForm
+          isPointSelected={isPointSelected}
+          focusAddress={this.state.focusAddress}
 
-        <div className="control-container">
-          <div className="label">Location</div>
-          {addressContainer}
-          <LocationForm
-            isPointSelected={isPointSelected}
-            focusAddress={this.state.focusAddress}
-            handleNewLocation={this.handleNewLocation}
-          />
+          handleNewLocation={this.handleNewLocation}
+        />
 
-          <div className="label">Layer</div>
-          <Dropdown
-            options={layerOptions}
-            onChange={this.handleLayerSelect}
-            value={this.state.currentLayerLabel}
-            placeholder={'Select layer'}
-          />
-        </div>
+        <div className="label">Layer</div>
+        <Dropdown
+          options={this.layerDropdownConfig}
+          value={this.state.currentLayer.label}
+          placeholder={'Select layer'}
 
-        {districtMap}
-
+          onChange={this.handleLayerSelect}
+        />
       </div>
     );
+
+    return controlContainer;
+
   }
 
-  _getLayerLabel(key){
+  buildMap(){
+    const renderMap = this.state.mapsToRender.filter(map => map.key === this.state.currentLayer.key)[0];// filter returns an array
+    const districtMap = renderMap ? (
+        <DistrictMap
+          key={renderMap.feature.properties.id}
+          lnglat={this.state.focusLnglat}
+          districtFeature={renderMap.feature}
+          districtType={renderMap.label}
+          districtName={renderMap.feature.properties.id}
+          districts={this.state.currentLayer.data}
+        />
+      ) : null;
+
+    return districtMap;
+  }
+
+  buildLayerDropdownConfig(layers){
+    // Build config object for layer select dropdown
+    // See https://www.npmjs.com/package/react-dropdown
+    const layerCategories = [... new Set(layers.map(layer => layer.category))]
+
+    const layerOptions = layerCategories.map(cat => {
+      const items = layers
+        .filter(layer => layer.category === cat)
+        .map(layer => {
+          return {
+            value: layer.key,
+            label: layer.label
+          }
+        });
+      return { type: 'group', name: cat, items: items }
+    })
+
+    return layerOptions;
+  }
+
+  /* Utility functions */
+
+  _getLayer(key){
     const curLayer = layers.filter(layer => {
       return layer.key === key;
     })[0];
-    console.log(curLayer);
-    return curLayer.label;
+    return curLayer;
   }
 
   /* Interaction handlers */
@@ -129,8 +171,7 @@ export default class App extends React.Component {
 
   handleLayerSelect(e){
     this.setState({
-      currentLayerKey: e.value,
-      currentLayerLabel: this._getLayerLabel(e.value),
+      currentLayer: this._getLayer(e.value),
     })
   }
 }

@@ -35,18 +35,26 @@ Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work
 ## TODOS:
 
 - Add more layers (school districts, municipalities)
+- Figure out what initial app state should look like
 - Look at nested layer display in dropdown
-- Try showing non-selected boundaries on map
+- Try showing non-selected boundaries on map (Turns out this is memory intensive w/out optimization work - maybe try a canvas layer instead of an SVG one)
 - Set up address input box to display current address?
-- Look at adding in information for certain districs (e.g. reps, contact information?)
 - Add map controls: Zoom to street level, Zoom to district extent
 - Fix map extent fitting wackiness
 - Map: Limit zoom extents to Montana. Maybe highlight state boundary
 - Map: Fine-tune Mapbox styling (e.g. deemphasize trailer park names)
 - Fine-tune map interaction (e.g. animations between different views)
 - Add buttons for 'default locations'
+- Add way to select point apart from entering address (e.g. drop pin)
 - User testing
 - General refactoring
+
+## Potential stretch features
+
+- Add in information for certain districs (e.g. reps, contact information?)
+- Set up some sort of async data layer loading? (If initial bundle gets too big)
+
+
 
 
 ## References:

@@ -7,6 +7,7 @@ Inputs:
  - props.districtFeature --> single geojson-format district feature to plot on map
  - props.districtType --> string label for district type being mapped (e.g. 'House district')
  - props.districtName --> string id for district (e.g. 'House District 4')
+ - props.districts --> geojson FeatureCollection of all districts in current layer
 
 Outputs:
  - Render container with district information and map with boundary and interest point plotted
@@ -102,7 +103,12 @@ export default class DistrictMap extends React.Component {
     const coordinates = feature.geometry.coordinates;
     const pathCoords = coordinates[0].map(coord => opt.project(coord))
     const d = 'M' + pathCoords.join(" ")
-    return (<g><path className={className} d={d} /></g>);
+    return (<g key={feature.properties.id}><path className={className} d={d} /></g>);
+  }
+
+  buildShapes(opt, features, className){
+    const shapes = features.map(feature => this.buildShape(opt, feature, className));
+    return (<g>{shapes}</g>)
   }
 
   buildMarker(opt, lngLat){
@@ -128,11 +134,17 @@ export default class DistrictMap extends React.Component {
       </div>
     )
 
-    const shapeOverlay = (
+    const focusDistrict = (
       <SVGOverlay redraw={(opt) => {
         return this.buildShape(opt, this.props.districtFeature, 'district-feature')
       }} />
     );
+    // Too processing intensive
+    // const districts = (
+    //   <SVGOverlay redraw={(opt) => {
+    //     return this.buildShapes(opt, this.props.districts.features, 'districts')
+    //   }} />
+    // )
 
     const markerOverlay = (
       <SVGOverlay redraw={(opt) => {
@@ -149,7 +161,7 @@ export default class DistrictMap extends React.Component {
           mapStyle={this.mapStyle}
           onViewportChange={this._onViewportChange}
         >
-          {shapeOverlay}
+          {focusDistrict}
           {markerOverlay}
         </ReactMapGL>
 
