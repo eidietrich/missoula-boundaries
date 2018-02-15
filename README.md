@@ -32,11 +32,22 @@ Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work
 - scripts - Scripts for data collection/processing (e.g. converting source shapefiles to geojson)
 
 
-## Workplan:
+## TODOS:
 
-1. Build a proof of concept using [MT House Districts](http://leg.mt.gov/css/Committees/interim/2011-2012/districting/adopted-plan.asp).
+- Add more layers (school districts, municipalities)
+- Look at nested layer display in dropdown
+- Try showing non-selected boundaries on map
+- Set up address input box to display current address?
+- Look at adding in information for certain districs (e.g. reps, contact information?)
+- Add map controls: Zoom to street level, Zoom to district extent
+- Fix map extent fitting wackiness
+- Map: Limit zoom extents to Montana. Maybe highlight state boundary
+- Map: Fine-tune Mapbox styling (e.g. deemphasize trailer park names)
+- Fine-tune map interaction (e.g. animations between different views)
+- Add buttons for 'default locations'
+- User testing
+- General refactoring
 
-2. Add in other geographies
 
 ## References:
 - https://github.com/seattleio/boundaries-api
