@@ -145,6 +145,8 @@ export default class DistrictMap extends React.Component {
   /* Render methods */
 
   render(){
+    const isDistrictToRender = this.props.districtFeature != null;
+
     const labels = (
       <div className='map-label-container'>
         <div className='label-district-name'>
@@ -153,11 +155,11 @@ export default class DistrictMap extends React.Component {
       </div>
     )
 
-    const focusDistrict = (
+    const focusDistrict = isDistrictToRender ? (
       <SVGOverlay redraw={(opt) => {
         return this.buildShape(opt, this.props.districtFeature, 'district-feature')
       }} />
-    );
+    ) : null ;
     // Too processing intensive
     // const districts = (
     //   <SVGOverlay redraw={(opt) => {
