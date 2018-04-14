@@ -19,7 +19,7 @@ NOTES/POSSIBLE GOTCHAS:
 */
 
 import React from 'react';
-import ReactMapGL, { SVGOverlay } from 'react-map-gl';
+import ReactMapGL, { SVGOverlay, FlyToInterpolator } from 'react-map-gl';
 import turfBbox from '@turf/bbox';
 import WebMercatorViewport from 'viewport-mercator-project';
 
@@ -37,24 +37,59 @@ export default class DistrictMap extends React.Component {
       viewport: {
         latitude: props.lnglat[1],
         longitude: props.lnglat[0],
-        zoom: 14,
+        zoom: 8,
         width: 400,
         height: 300,
       },
+      style: defaultMapStyle,
     }
-    this.mapStyle = defaultMapStyle;
     this._onViewportChange = this._onViewportChange.bind(this);
   }
 
+  addOverlayStyle(){
+    // Add overlay by tweaking mapbox style
+    // See https://github.com/uber/react-map-gl/blob/master/docs/get-started/adding-custom-data.md
+
+    const style = JSON.parse(JSON.stringify(defaultMapStyle)); // deep clone
+
+    style.sources['districts'] = {
+      type: 'geojson',
+      data: this.props.districts,
+    }
+
+    style.layers.push({
+      id: 'district-lines',
+      source: 'districts',
+      type: 'line',
+      paint: {
+        'line-color': '#ff7f00',
+        'line-width': 1,
+        'line-opacity': 0.6,
+      }
+    });
+
+    this.setState({
+      style: style
+    });
+  }
+
+
+
   componentDidMount(){
+    window.addEventListener('resize', this._setSize.bind(this));
     this._setSize();
 
-    // This appears to fire whenever new props are supplied to DistrictMap.jsx
-    // componentWillReceiveProps() seems cleaner, but doesn't work
-    this._setBounds(this.props.districtFeature);
+    this.addOverlayStyle();
+
+  }
+
+  componentWillUnmount(){
+    console.log('unmounting map');
+    window.removeEventListener('resize', this._setSize.bind(this));
   }
 
   _setSize(){
+    // adjusts map display width to match container width
     let { clientHeight, clientWidth } = this.refs['map-container']
     const viewport = Object.assign(this.state.viewport, {
       width: clientWidth,
@@ -74,23 +109,31 @@ export default class DistrictMap extends React.Component {
     });
 
     // TODO: Figure out how to avoid redundancy with _setSize
+    // BUG: calling this in componentDidMount sets to pre _setSize() viewport shape
 
     const bbox = turfBbox(shape);
     const bounds = vpHelper.fitBounds(
       [[bbox[0], bbox[1]],[bbox[2],bbox[3]]],
-      {padding: 75}
+      {padding: 50}
       );
-    // TODO: Figure out why this padding value has to be set so high to avoid clipping
 
-    const viewport = Object.assign(this.state.viewport, {
-        latitude: bounds.latitude,
-        longitude: bounds.longitude,
-        zoom: bounds.zoom,
-      })
-
-    this.setState({
-      viewport: viewport
+    this._setViewport({
+      zoom: bounds.zoom,
+      latitude: bounds.latitude,
+      longitude: bounds.longitude,
     })
+  }
+
+  _setViewport({longitude, latitude, zoom}){
+    const viewport = Object.assign(this.state.viewport,
+      {
+        longitude: longitude,
+        latitude: latitude,
+        zoom: zoom,
+        transitionInterpolator: new FlyToInterpolator(),
+        transitionDuration: 400,
+      })
+    this.setState({ viewport })
   }
 
   _onViewportChange(newViewport){
@@ -98,6 +141,55 @@ export default class DistrictMap extends React.Component {
       viewport: newViewport
     });
   }
+
+  /* Render methods */
+
+  render(){
+    const labels = (
+      <div className='map-label-container'>
+        <div className='label-district-name'>
+          {this.props.districtName}
+        </div>
+      </div>
+    )
+
+    const focusDistrict = (
+      <SVGOverlay redraw={(opt) => {
+        return this.buildShape(opt, this.props.districtFeature, 'district-feature')
+      }} />
+    );
+    // Too processing intensive
+    // const districts = (
+    //   <SVGOverlay redraw={(opt) => {
+    //     return this.buildShapes(opt, this.props.districts.features, 'districts')
+    //   }} />
+    // )
+
+    const markerOverlay = (
+      <SVGOverlay redraw={(opt) => {
+        return this.buildMarker(opt, this.props.lnglat)
+      }} />
+    );
+
+    return (
+      <div className='map-container' ref='map-container'>
+        {labels}
+        <button onClick={() => this.zoomToStreetLevel()}>Street level</button>
+        <button onClick={() => this.zoomToFit()}>Fit district</button>
+        <ReactMapGL
+          {...this.state.viewport}
+          mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
+          mapStyle={this.state.style}
+          onViewportChange={this._onViewportChange}
+        >
+          {focusDistrict}
+          {markerOverlay}
+        </ReactMapGL>
+      </div>
+    );
+  }
+
+
 
   buildShape(opt, feature, className){
     const coordinates = feature.geometry.coordinates;
@@ -124,49 +216,17 @@ export default class DistrictMap extends React.Component {
     );
   }
 
-  render(){
-    const isLayerToDraw = this.props.districtFeature != null;
+  /* Interaction handlers */
 
-    const labels = (
-      <div className='map-label-container'>
-        <div className='label-district-name'>
-          {this.props.districtName}
-        </div>
-      </div>
-    )
+  zoomToStreetLevel(){
+    this._setViewport({
+      zoom: 14,
+      latitude: this.props.lnglat[1],
+      longitude: this.props.lnglat[0],
+    })
+  }
 
-    const focusDistrict = isLayerToDraw ? (
-      <SVGOverlay redraw={(opt) => {
-        return this.buildShape(opt, this.props.districtFeature, 'district-feature')
-      }} />
-    ) : null;
-    // // Too processing intensive
-    // const districts = (
-    //   <SVGOverlay redraw={(opt) => {
-    //     return this.buildShapes(opt, this.props.districts.features, 'districts')
-    //   }} />
-    // )
-
-    const markerOverlay = (
-      <SVGOverlay redraw={(opt) => {
-        return this.buildMarker(opt, this.props.lnglat)
-      }} />
-    );
-
-    return (
-      <div className='map-container' ref='map-container'>
-        {labels}
-        <ReactMapGL
-          {...this.state.viewport}
-          mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
-          mapStyle={this.mapStyle}
-          onViewportChange={this._onViewportChange}
-        >
-          {focusDistrict}
-          {markerOverlay}
-        </ReactMapGL>
-
-      </div>
-    );
+  zoomToFit(){
+    this._setBounds(this.props.districtFeature);
   }
 }
