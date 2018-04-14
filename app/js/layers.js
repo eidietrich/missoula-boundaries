@@ -7,6 +7,8 @@ import mtElemSchools from './../geodata/mt-elem-districts.geojson';
 import mtHighSchools from './../geodata/mt-hs-districts.geojson';
 import mtK12Schools from './../geodata/mt-k12-districts.geojson';
 
+import mtTowns from './../geodata/mt-places.geojson';
+
 
 
 const layers = [
@@ -15,6 +17,7 @@ const layers = [
   {key: 'schools-elementary', category: 'Montana Schools', label: 'Elementary School Districts', data: mtElemSchools},
   {key: 'schools-secondary', category: 'Montana Schools', label: 'High School Districts', data: mtHighSchools},
   {key: 'schools-k12', category: 'Montana Schools', label: 'K-12 School Districts', data: mtK12Schools},
+  // {key: 'places', category: 'Montana towns', label: 'Towns', data: mtTowns},
 ];
 
 export default layers;

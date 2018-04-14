@@ -53,6 +53,7 @@ export default class DataManager {
         label: layer.label,
         feature: containingFeature
       };
+
     });
     return maps;
   }
