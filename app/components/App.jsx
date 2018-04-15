@@ -6,6 +6,7 @@ import DataManager from './../js/DataManager.js'
 
 import LocationForm from './LocationForm.jsx';
 import DistrictMap from './DistrictMap.jsx';
+import DistrictsResults from './DistrictsResults.jsx';
 
 import layers from './../js/layers.js'
 
@@ -29,11 +30,17 @@ export default class App extends React.Component {
       focusLnglat: null,
       focusAddress: null,
       mapsToRender: [],
+      readyToRenderMap: false,
       currentLayer: {
         key: 'null',
         label: null,
         data: null,
       },
+      districts: {
+        town: null,
+        school: null,
+        county: null,
+      }
     }
 
     this.layerDropdownConfig = this.buildLayerDropdownConfig(layers);
@@ -50,6 +57,7 @@ export default class App extends React.Component {
       focusAddress: initAddress,
       mapsToRender: this.dataManager.locatePointOnLayers(initLnglat),
       currentLayer: layers[initLayerIndex],
+      readyToRenderMap: true,
     })
   }
 
@@ -61,11 +69,13 @@ export default class App extends React.Component {
     return (
        <div className="app-container">
 
-        <h1>Montana Boundaries</h1>
+        <h1>How is your town doing?</h1>
 
         {this.buildControlPanel()}
 
         {this.buildMap()}
+
+        {this.buildResults()}
 
       </div>
     );
@@ -74,13 +84,19 @@ export default class App extends React.Component {
   buildControlPanel(){
     const isPointSelected = (this.state.focusLnglat != null)
 
-
-
     const addressContainer = this.state.focusAddress ? (
         <div className="address-container">
           {this.state.focusAddress}
         </div>
       ) : null;
+
+    // const layerPicker = (<Dropdown
+    //   options={this.layerDropdownConfig}
+    //   value={this.state.currentLayer.label}
+    //   placeholder={'Select layer'}
+
+    //   onChange={this.handleLayerSelect}
+    // />);
 
     const controlContainer = (
       <div className="control-container">
@@ -93,15 +109,6 @@ export default class App extends React.Component {
 
           handleNewLocation={this.handleNewLocation}
         />
-
-        <div className="label">Layer</div>
-        <Dropdown
-          options={this.layerDropdownConfig}
-          value={this.state.currentLayer.label}
-          placeholder={'Select layer'}
-
-          onChange={this.handleLayerSelect}
-        />
       </div>
     );
 
@@ -110,17 +117,20 @@ export default class App extends React.Component {
   }
 
   buildMap(){
-    const renderLayer = this.state.mapsToRender.filter(map => map.key === this.state.currentLayer.key)[0];
-    const isLayer = renderLayer && (renderLayer.feature != null);
-
-    const districtMap = renderLayer ? (
+    // this.state.readyToRenderMap keeps map from rendering until after App is mounted
+    // TODO - figure out why this is necessary (something to do with data loading?)
+    const districtMap = this.state.readyToRenderMap ? (
         <DistrictMap
           // key={renderLayer.feature.properties.id}
           lnglat={this.state.focusLnglat}
-          districtFeature={isLayer ? renderLayer.feature : null}
-          districtType={isLayer ? renderLayer.label : null}
-          districtName={isLayer ? renderLayer.feature.properties.id : 'NO DISTRICT'}
-          districts={this.state.currentLayer.data}
+          townFeature={this.state.districts.town}
+          schoolFeature={this.state.districts.school}
+          countyFeature={this.state.districts.county}
+
+          //districtFeature={isLayer ? renderLayer.feature : null}
+          // districtType={isLayer ? renderLayer.label : null}
+          // districtName={isLayer ? renderLayer.feature.properties.id : 'NO DISTRICT'}
+          // districts={this.state.currentLayer.data}
 
           handleNewLocation={this.handleNewLocation}
         />
@@ -149,6 +159,15 @@ export default class App extends React.Component {
     return layerOptions;
   }
 
+  buildResults(){
+    return (
+      <DistrictsResults
+        districts={this.state.districts}
+      />
+    )
+
+  }
+
   /* Utility functions */
 
   _getLayer(key){
@@ -166,10 +185,17 @@ export default class App extends React.Component {
     const address = location.address;
     const maps = this.dataManager.locatePointOnLayers(lnglat);
 
+    const districts = {
+      town: maps.find(d => d.key === 'places').feature,
+      school: maps.find(d => d.key === 'schools-secondary').feature,
+      county: maps.find(d => d.key === 'counties').feature
+    }
+
     this.setState({
       focusLnglat: lnglat,
       focusAddress: address,
-      mapsToRender: maps
+      mapsToRender: maps,
+      districts: districts
     });
   }
 

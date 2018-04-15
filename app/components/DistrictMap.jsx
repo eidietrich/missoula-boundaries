@@ -28,7 +28,6 @@ import './../css/mapbox-gl.css';
 
 /* Hoist this reference? */
 import mapStyle from './../js/map-style.js';
-import defaultMapStyle from './../map-style-basic-v8.json';
 
 import mtTowns from './../geodata/mt-places.geojson';
 import mtHighSchools from './../geodata/mt-hs-districts.geojson';
@@ -40,6 +39,7 @@ export default class DistrictMap extends React.Component {
   constructor(props){
     // NOTE: Component is being rebuilt every time App.jsx gets a new data layer selected
     super(props)
+
     this.state = {
       viewport: {
         latitude: props.lnglat[1],
@@ -49,6 +49,7 @@ export default class DistrictMap extends React.Component {
         height: 300,
       },
       style: mapStyle,
+      // highlightTown: null
     }
     this._onViewportChange = this._onViewportChange.bind(this);
   }
@@ -116,9 +117,35 @@ export default class DistrictMap extends React.Component {
       viewport: newViewport
     });
   }
-  _onHover(event) {
-    // TODO: Figure out how to setup mouseover effects
-  }
+  // _onHover(event) {
+  //   // TODO: Figure out how to setup mouseover effects
+  //   // THIS DOESN'T WORK
+  //   if(event.features){
+  //     // event.features.forEach(d => console.log(d))
+  //     const town = event.features.find(d => d.layer.id === 'town-fill')
+  //     const newStyle = JSON.parse(JSON.stringify(mapStyle))
+
+  //     if (town){
+  //       console.log('add highlight')
+  //       newStyle.layers
+  //         .find(d => d.id === 'highlight-towns')
+  //         .filter[2] = town.properties.id
+  //       this.setState({
+  //         style: newStyle,
+  //         highlightTown: town.properties.id
+  //       })
+  //     } else {
+  //       console.log('clear highlight')
+  //       newStyle.layers
+  //         .find(d => d.id === 'highlight-towns')
+  //         .filter[2] = ''
+  //       this.setState({
+  //         style: mapStyle,
+  //         highlightTown: null
+  //       })
+  //     }
+  //   }
+  // }
   _onClick(event){
     const latlng = event.lngLat
     const address = `(${latlng[0]},${latlng[1]})`
@@ -132,19 +159,36 @@ export default class DistrictMap extends React.Component {
   /* Render methods */
 
   render(){
-    const isDistrictToRender = this.props.districtFeature != null;
 
-    const labels = (
-      <div className='map-label-container'>
-        <div className='label-district-name'>
-          {this.props.districtName}
-        </div>
-      </div>
-    )
+    // const isDistrictToRender = this.props.districtFeature != null;
 
-    const focusDistrict = isDistrictToRender ? (
+    // const labels = (
+    //   <div className='map-label-container'>
+    //     <div className='label-district-name'>
+    //       {this.props.districtName}
+    //     </div>
+    //   </div>
+    // )
+
+    // console.log('t', this.props.townFeature)
+    // console.log('s', this.props.schoolFeature)
+    // console.log('c', this.props.countyFeature)
+
+    const focusTown = this.props.townFeature ? (
       <SVGOverlay redraw={(opt) => {
-        return this.buildShape(opt, this.props.districtFeature, 'district-feature')
+        return this.buildShape(opt, this.props.townFeature, 'map-highlight town')
+      }} />
+    ) : null ;
+
+    const focusSchool = this.props.schoolFeature ? (
+      <SVGOverlay redraw={(opt) => {
+        return this.buildShape(opt, this.props.schoolFeature, 'map-highlight school')
+      }} />
+    ) : null ;
+
+    const focusCounty = this.props.countyFeature ? (
+      <SVGOverlay redraw={(opt) => {
+        return this.buildShape(opt, this.props.countyFeature, 'map-highlight county')
       }} />
     ) : null ;
 
@@ -156,7 +200,6 @@ export default class DistrictMap extends React.Component {
 
     return (
       <div className='map-container' ref='map-container'>
-        {labels}
         <button onClick={() => this.zoomToStreetLevel()}>Street level</button>
         <button onClick={() => this.zoomToFit()}>Fit district</button>
         <ReactMapGL
@@ -164,10 +207,12 @@ export default class DistrictMap extends React.Component {
           mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
           mapStyle={this.state.style}
           onViewportChange={this._onViewportChange}
-          // onHover={this._onHover}
+          // onHover={this._onHover.bind(this)}
           onClick={this._onClick.bind(this)}
         >
-          {focusDistrict}
+          {focusCounty}
+          {focusSchool}
+          {focusTown}
           {markerOverlay}
         </ReactMapGL>
       </div>
@@ -176,10 +221,31 @@ export default class DistrictMap extends React.Component {
 
 
   buildShape(opt, feature, className){
-    const coordinates = feature.geometry.coordinates;
-    const pathCoords = coordinates[0].map(coord => opt.project(coord))
-    const d = 'M' + pathCoords.join(" ")
-    return (<g key={feature.properties.id}><path className={className} d={d} /></g>);
+    const isMulti = feature.geometry.type === 'MultiPolygon'
+    // Possible TODO - set up data import scripts so all shapes are multipolygons
+    // OR refactor this
+
+    if (!isMulti) {
+      const coordinates = feature.geometry.coordinates;
+      const pathCoords = coordinates[0].map(coord => opt.project(coord))
+      const d = 'M' + pathCoords.join(" ")
+      return (<g key={feature.properties.id}><path className={className} d={d} /></g>);
+    } else {
+      const coordinates = feature.geometry.coordinates;
+      const paths = coordinates.map((shape, i) => {
+        const pathCoords = shape[0].map(coord => {
+          const projected = opt.project(coord)
+          return projected;
+        })
+        const d = 'M' + pathCoords.join(" ")
+        return (<path className={className} d={d} key={String(i)} />);
+      })
+      return (<g key={feature.properties.id}>
+        {paths}
+      </g>);
+    }
+
+
   }
 
   buildMarker(opt, lngLat){

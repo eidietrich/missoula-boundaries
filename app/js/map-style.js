@@ -36,9 +36,9 @@ style.layers.push({
   source: 'schools',
   type: 'line',
   paint: {
-    'line-color': '#00ff7f',
-    'line-width': 1,
-    'line-opacity': 0.6,
+    'line-color': '#ffff33',
+    'line-width': 1.5,
+    'line-opacity': 0.9,
   }
 });
 
@@ -47,31 +47,28 @@ style.layers.push({
   source: 'counties',
   type: 'line',
   paint: {
-    'line-color': '#ff007f',
+    'line-color': '#e41a1c',
     'line-width': 2,
-    'line-opacity': 0.6,
+    'line-opacity': 0.9,
   }
 });
 
-style.layers.push({
-  id: 'school-fill',
-  source: 'schools',
-  type: 'fill',
-  paint: {
-    'fill-color': '#00ff7f',
-    'fill-opacity': 0.1,
-  },
-  interactive: true
-});
+// style.layers.push({
+//   id: 'school-fill',
+//   source: 'schools',
+//   type: 'fill',
+//   paint: {
+//     'fill-color': '#ffff33',
+//     'fill-opacity': 0.5,
+//   },
+//   interactive: true
+// });
 
 style.layers.push({
   id: 'town-fill',
   source: 'towns',
   type: 'fill',
   paint: {
-    // 'line-color': '#ff7f00',
-    // 'line-width': 1,
-    // 'line-opacity': 0.6,
     'fill-color': '#ff7f00',
     'fill-opacity': 0.3,
   },
@@ -84,9 +81,22 @@ style.layers.push({
   type: 'line',
   paint: {
     'line-color': '#ff7f00',
-    'line-width': 1,
-    'line-opacity': 0.6,
-  }
+    'line-width': 1.5,
+    'line-opacity': 0.9,
+  },
+  filter: ['in', 'type', 'city', 'town'],
 });
+
+// FOR INTERACTION
+// style.layers.push({
+//   id: 'highlight-towns',
+//   source: 'towns',
+//   type: 'fill',
+//   paint: {
+//     'fill-color': '#111',
+//     'fill-opacity': 0.1,
+//   },
+//   filter: ['in', 'id', '']
+// })
 
 export default style;

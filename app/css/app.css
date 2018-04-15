@@ -46,19 +46,36 @@ h1 {
 
 /* Map features*/
 .point-marker {
-    fill: #fff;
+    fill: #eee;
     opacity: 1;
-    fill-opacity: 0.7;
-    stroke: red;
+    fill-opacity: 0.9;
+    stroke: #222;
     stroke-width: 3px;
 }
 
-.district-feature {
+.map-highlight {
+
+
+}
+
+.map-highlight.town {
     fill: #ff7f00;
-    fill-opacity: 0.6;
+    fill-opacity: 0.3;
     stroke: #ff7f00;
+    stroke-width: 1px;
     stroke-opacity: 0.9;
-    stroke-width: 3px;
+}
+.map-highlight.school {
+    fill: #ffff33;
+    fill-opacity: 0.3;
+    stroke: #ffff33;
+    stroke-width: 2px;
+    stroke-opacity: 0.9;
+}
+.map-highlight.county {
+    fill: none;
+    stroke: #e41a1c;
+    stroke-width: 4px;
 }
 
 .districts {
