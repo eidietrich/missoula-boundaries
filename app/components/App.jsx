@@ -111,7 +111,6 @@ export default class App extends React.Component {
 
   buildMap(){
     const renderLayer = this.state.mapsToRender.filter(map => map.key === this.state.currentLayer.key)[0];
-    console.log('rl', renderLayer)
     const isLayer = renderLayer && (renderLayer.feature != null);
 
     const districtMap = renderLayer ? (
@@ -122,6 +121,8 @@ export default class App extends React.Component {
           districtType={isLayer ? renderLayer.label : null}
           districtName={isLayer ? renderLayer.feature.properties.id : 'NO DISTRICT'}
           districts={this.state.currentLayer.data}
+
+          handleNewLocation={this.handleNewLocation}
         />
       ) : null;
 

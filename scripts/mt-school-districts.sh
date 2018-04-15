@@ -6,14 +6,14 @@
 
 # TODO: Make this more generalized
 
-# DATASOURCE="http://ftp.geoinfo.msl.mt.gov/Data/Spatial/MSDI/AdministrativeBoundaries/MontanaSchoolDistricts_shp.zip"
+DATASOURCE="http://ftp.geoinfo.msl.mt.gov/Data/Spatial/MSDI/AdministrativeBoundaries/MontanaSchoolDistricts_shp.zip"
 
 mkdir -p raw-data/mt-school-districts
 cd raw-data/mt-school-districts
 
-# # Download data
-# curl -o shapefile.zip $DATASOURCE
-# unzip shapefile.zip
+# Download data
+curl -o shapefile.zip $DATASOURCE
+unzip shapefile.zip
 
 
 # data processing
@@ -24,7 +24,7 @@ mapshaper \
     -i montanaschooldistricts_shp/Elementary.shp \
     -simplify dp 20% \
     -clean \
-    -each 'this.properties = {id: this.properties["NAME"]}' \
+    -each 'this.properties = {id: this.properties["NAME"], type: "elem"}' \
     -proj wgs84 \
     -o format=geojson extension=".geojson"
 
@@ -32,7 +32,7 @@ mapshaper \
     -i montanaschooldistricts_shp/Secondary.shp \
     -simplify dp 20% \
     -clean \
-    -each 'this.properties = {id: this.properties["NAME"]}' \
+    -each 'this.properties = {id: this.properties["NAME"], type: "hs"}' \
     -proj wgs84 \
     -o format=geojson extension=".geojson"
 
@@ -40,15 +40,25 @@ mapshaper \
     -i montanaschooldistricts_shp/Unified.shp \
     -simplify dp 20% \
     -clean \
-    -each 'this.properties = {id: this.properties["NAME"]}' \
+    -each 'this.properties = {id: this.properties["NAME"], type: "k12"}' \
     -proj wgs84 \
     -o format=geojson extension=".geojson"
 
+# Combined districts
+mapshaper \
+    -i Secondary.geojson Unified.geojson \
+    merge-files \
+    -o mt-hs-districts.geojson
+
+mapshaper \
+    -i Elementary.geojson Unified.geojson \
+    merge-files \
+    -o mt-elem-districts.geojson
+
 # move to app folder
 
-cp Elementary.geojson ./../../app/geodata/mt-elem-districts.geojson
-cp Secondary.geojson ./../../app/geodata/mt-hs-districts.geojson
-cp Unified.geojson ./../../app/geodata/mt-k12-districts.geojson
+cp mt-elem-districts.geojson ./../../app/geodata/mt-elem-districts.geojson
+cp mt-hs-districts.geojson ./../../app/geodata/mt-hs-districts.geojson
 
 echo "DONE"
 

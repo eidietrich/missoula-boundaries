@@ -25,7 +25,14 @@ import WebMercatorViewport from 'viewport-mercator-project';
 
 
 import './../css/mapbox-gl.css';
+
+/* Hoist this reference? */
+import mapStyle from './../js/map-style.js';
 import defaultMapStyle from './../map-style-basic-v8.json';
+
+import mtTowns from './../geodata/mt-places.geojson';
+import mtHighSchools from './../geodata/mt-hs-districts.geojson';
+import mtCounties from './../geodata/mt-counties.geojson';
 
 const mapAspect = 0.65;
 
@@ -41,46 +48,14 @@ export default class DistrictMap extends React.Component {
         width: 400,
         height: 300,
       },
-      style: defaultMapStyle,
+      style: mapStyle,
     }
     this._onViewportChange = this._onViewportChange.bind(this);
   }
 
-  addOverlayStyle(){
-    // Add overlay by tweaking mapbox style
-    // See https://github.com/uber/react-map-gl/blob/master/docs/get-started/adding-custom-data.md
-
-    const style = JSON.parse(JSON.stringify(defaultMapStyle)); // deep clone
-
-    style.sources['districts'] = {
-      type: 'geojson',
-      data: this.props.districts,
-    }
-
-    style.layers.push({
-      id: 'district-lines',
-      source: 'districts',
-      type: 'line',
-      paint: {
-        'line-color': '#ff7f00',
-        'line-width': 1,
-        'line-opacity': 0.6,
-      }
-    });
-
-    this.setState({
-      style: style
-    });
-  }
-
-
-
   componentDidMount(){
     window.addEventListener('resize', this._setSize.bind(this));
     this._setSize();
-
-    this.addOverlayStyle();
-
   }
 
   componentWillUnmount(){
@@ -141,6 +116,18 @@ export default class DistrictMap extends React.Component {
       viewport: newViewport
     });
   }
+  _onHover(event) {
+    // TODO: Figure out how to setup mouseover effects
+  }
+  _onClick(event){
+    const latlng = event.lngLat
+    const address = `(${latlng[0]},${latlng[1]})`
+    this.props.handleNewLocation({
+      lnglat: latlng,
+      address: address
+    })
+
+  }
 
   /* Render methods */
 
@@ -160,12 +147,6 @@ export default class DistrictMap extends React.Component {
         return this.buildShape(opt, this.props.districtFeature, 'district-feature')
       }} />
     ) : null ;
-    // Too processing intensive
-    // const districts = (
-    //   <SVGOverlay redraw={(opt) => {
-    //     return this.buildShapes(opt, this.props.districts.features, 'districts')
-    //   }} />
-    // )
 
     const markerOverlay = (
       <SVGOverlay redraw={(opt) => {
@@ -183,6 +164,8 @@ export default class DistrictMap extends React.Component {
           mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
           mapStyle={this.state.style}
           onViewportChange={this._onViewportChange}
+          // onHover={this._onHover}
+          onClick={this._onClick.bind(this)}
         >
           {focusDistrict}
           {markerOverlay}
@@ -192,17 +175,11 @@ export default class DistrictMap extends React.Component {
   }
 
 
-
   buildShape(opt, feature, className){
     const coordinates = feature.geometry.coordinates;
     const pathCoords = coordinates[0].map(coord => opt.project(coord))
     const d = 'M' + pathCoords.join(" ")
     return (<g key={feature.properties.id}><path className={className} d={d} /></g>);
-  }
-
-  buildShapes(opt, features, className){
-    const shapes = features.map(feature => this.buildShape(opt, feature, className));
-    return (<g>{shapes}</g>)
   }
 
   buildMarker(opt, lngLat){
