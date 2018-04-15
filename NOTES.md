@@ -32,7 +32,11 @@ Q's - What does back-end look like here? This is probably a bit too sophisticate
 
 
 TODO:
-- Refine mapbox default style to show/hide certain boundaries better (and avoid unwanted pointer-styles)
+
+
+Extra features
+- Show reservation boundaries
+- Add checkboxes for layers to show/hide (reservations, legislative districts)
 
 
 Longer-term:

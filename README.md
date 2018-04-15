@@ -1,6 +1,6 @@
-# missoula-boundaries
+# Montana vitality
 
-WIP Web app that lets users enter a Montana address, returns which county/municipalities/school districts/legislative districts it's part of. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries).
+WIP Web app that lets users enter a Montana address, returns which county/municipalities/school districts it's part of plus info on how those places are doing. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries) and [Census Reporter](https://censusreporter.org/).
 
 ## Requirements
 
@@ -14,6 +14,8 @@ Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work
 - Front end application
     - React
     - [react-map-gl](https://github.com/uber/react-map-gl). Poorly documented but powerful React binding for [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/).
+- Back end server
+    - Based on https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize
 
 ## Project structure
 
