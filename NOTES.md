@@ -37,6 +37,7 @@ TODO:
 Extra features
 - Show reservation boundaries
 - Add checkboxes for layers to show/hide (reservations, legislative districts)
+- Consider separating census places from incorporated municipalities - cleaner from a census data perspective
 
 
 Longer-term:

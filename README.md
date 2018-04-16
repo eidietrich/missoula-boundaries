@@ -16,6 +16,7 @@ Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work
     - [react-map-gl](https://github.com/uber/react-map-gl). Poorly documented but powerful React binding for [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/).
 - Back end server
     - Based on http://mherman.org/blog/2016/03/13/designing-a-restful-api-with-node-and-postgres/#.WtP0J9PwaAw
+    - CORS handling: https://medium.com/trisfera/using-cors-in-express-cac7e29b005b
 
 ## Project structure
 
