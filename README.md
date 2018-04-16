@@ -15,7 +15,7 @@ Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work
     - React
     - [react-map-gl](https://github.com/uber/react-map-gl). Poorly documented but powerful React binding for [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/).
 - Back end server
-    - Based on https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize
+    - Based on http://mherman.org/blog/2016/03/13/designing-a-restful-api-with-node-and-postgres/#.WtP0J9PwaAw
 
 ## Project structure
 

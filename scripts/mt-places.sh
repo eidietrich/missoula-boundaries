@@ -25,7 +25,7 @@ cd raw-data/mt-places
 mapshaper \
     -i cb_2017_30_place_500k.shp \
     -explode \
-    -each 'this.properties = {id: this.properties["NAME"], type: this.properties["LSAD"].replace("00","consolidated city/county").replace("25","city").replace("43","town").replace("57","census place")}' \
+    -each 'this.properties = {id: this.properties["NAME"], fips: this.properties["PLACEFP"], type: this.properties["LSAD"].replace("00","consolidated city/county").replace("25","city").replace("43","town").replace("57","census place")}' \
     -o format=geojson extension=".geojson"
 
 # move to app folder

@@ -6,6 +6,7 @@ export default class DistrictsResults extends React.Component {
     const town = districts.town ? (
       <div>
         <h2>{`${districts.town.properties.id} (${districts.town.properties.type})`}</h2>
+        <p>FIPS: {districts.town.properties.fips}</p>
       </div>
     ) : null;
 

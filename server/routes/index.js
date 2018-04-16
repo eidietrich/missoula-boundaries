@@ -1,10 +1,13 @@
-const todosController = require('../controllers').todos;
+var express = require('express');
+var router = express.Router();
 
-module.exports = (app) => {
-  app.get('/api', (req, res) => res.status(200).send({
-    message: 'Welcome to Todos API!',
-  }));
+var db = require('../queries');
 
-  app.post('/api/todos', todosController.create)
-  app.get('/api/todos', todosController.list);
-}
+/* GET home page. */
+router.get('/api/places/populations', db.getPlacePopulations)
+router.get('/api/places/populations/:fips', db.getSinglePlacePopulation)
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'MONTANA' });
+});
+
+module.exports = router;
