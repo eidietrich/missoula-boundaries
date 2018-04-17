@@ -16,7 +16,6 @@ export default class SchoolEnrollmentResults extends React.Component {
     if(this.props.data === null) return null;
 
     const data = this.props.data.enrollment;
-    console.log('in enrollment component', data);
 
     const curYear = data.slice(-1)[0].year
     const curEnrollment = data.slice(-1)[0].enrollment
@@ -42,9 +41,12 @@ export default class SchoolEnrollmentResults extends React.Component {
     const lineChart = (
       <div className='line-chart-wrapper' style={{ margin: 20 }}>
         <LineChart width={400} height={150} data={data}>
-          <YAxis type='number' yAxisId={0} domain={[60, 140]}
-            label={{ value: '% of 07-08', angle: -90, offset: 15, position: 'insideBottomLeft' }}/>
-          <XAxis dataKey='year'/>
+          <CartesianGrid stroke="#eee" vertical={false}/>
+          <YAxis type='number' yAxisId={0} domain={[60, 140]} axisLine={false} stroke="#666"
+            label={{ value: '% of 07-08', angle: -90, offset: 15, position: 'insideBottomLeft', fill: "#666" }}/>
+          }
+          <XAxis dataKey='year' axisLine={true} stroke="#666"/>
+
           <ReferenceLine y={100} stroke="#444" strokeDasharray="1 1" />
           <Line dataKey='index' stroke='#ff7300' strokeWidth={2} yAxisId={0}/>
         </LineChart>
