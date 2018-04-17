@@ -30,7 +30,7 @@ export default class SchoolEnrollmentResults extends React.Component {
     //     </li>);
     //   }
 
-    const description = `Enrollment: ${curEnrollment} high school students in ${curYear} (${changeDirection} ${Math.abs(change)} from ${baseYear})`
+    const description = `${curEnrollment} high school students in ${curYear} (${changeDirection} ${Math.abs(change)} from ${baseYear})`
 
     // calculate percent change
     data.forEach(d => {
@@ -50,13 +50,16 @@ export default class SchoolEnrollmentResults extends React.Component {
           <ReferenceLine y={100} stroke="#444" strokeDasharray="1 1" />
           <Line dataKey='index' stroke='#ff7300' strokeWidth={2} yAxisId={0}/>
         </LineChart>
+
       </div>
     );
 
     return (
       <div>
+        <h4>Enrollment</h4>
         <p>{description}</p>
         {lineChart}
+        <p>Data: Montana Office of Public Instruction</p>
       </div>
     );
   }

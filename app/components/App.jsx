@@ -70,6 +70,7 @@ export default class App extends React.Component {
        <div className="app-container">
 
         <h1>How is your town doing?</h1>
+        <div>[Placeholder: Dropdown for zooming to town]</div>
 
         {this.buildMap()}
 

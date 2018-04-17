@@ -23,6 +23,7 @@ h1 {
 
 .map-container {
     margin: 5px 0;
+    max-width: 400px;
     /*border: 1px solid blue;*/
 }
 
