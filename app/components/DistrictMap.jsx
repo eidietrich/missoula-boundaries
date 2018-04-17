@@ -200,8 +200,6 @@ export default class DistrictMap extends React.Component {
 
     return (
       <div className='map-container' ref='map-container'>
-        <button onClick={() => this.zoomToStreetLevel()}>Street level</button>
-        <button onClick={() => this.zoomToFit()}>Fit district</button>
         <ReactMapGL
           {...this.state.viewport}
           mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}

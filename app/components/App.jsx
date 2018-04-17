@@ -71,8 +71,6 @@ export default class App extends React.Component {
 
         <h1>How is your town doing?</h1>
 
-        {this.buildControlPanel()}
-
         {this.buildMap()}
 
         {this.buildResults()}
@@ -126,11 +124,6 @@ export default class App extends React.Component {
           townFeature={this.state.districts.town}
           schoolFeature={this.state.districts.school}
           countyFeature={this.state.districts.county}
-
-          //districtFeature={isLayer ? renderLayer.feature : null}
-          // districtType={isLayer ? renderLayer.label : null}
-          // districtName={isLayer ? renderLayer.feature.properties.id : 'NO DISTRICT'}
-          // districts={this.state.currentLayer.data}
 
           handleNewLocation={this.handleNewLocation}
         />

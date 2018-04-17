@@ -6,6 +6,7 @@ var db = require('../queries');
 /* GET home page. */
 router.get('/api/place/population', db.getPlacePopulations)
 router.get('/api/place/population/:fips', db.getSinglePlacePopulation)
+router.get('/api/school/enrollment/hs/:le_code', db.getSingleDistrictHSEnrollment)
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'MONTANA' });
 });

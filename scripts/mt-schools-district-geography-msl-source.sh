@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # Run from repo home directory
-# sh scripts/mt-house-districts.sh
-# Human-readable source page: http://leg.mt.gov/css/Committees/interim/2011-2012/districting/adopted-plan.asp
+# sh scripts/mt-schools-district-geography-msl-source.sh
 
 # TODO: Make this more generalized
 
 DATASOURCE="http://ftp.geoinfo.msl.mt.gov/Data/Spatial/MSDI/AdministrativeBoundaries/MontanaSchoolDistricts_shp.zip"
+FOLDER="mt-schools-district-geography-msl"
 
-mkdir -p raw-data/mt-school-districts
-cd raw-data/mt-school-districts
+mkdir -p raw-data/$FOLDER
+cd raw-data/$FOLDER
 
-# Download data
-curl -o shapefile.zip $DATASOURCE
-unzip shapefile.zip
+# # Download data
+# curl -o shapefile.zip $DATASOURCE
+# unzip shapefile.zip
 
 
 # data processing
@@ -24,7 +24,7 @@ mapshaper \
     -i montanaschooldistricts_shp/Elementary.shp \
     -simplify dp 20% \
     -clean \
-    -each 'this.properties = {id: this.properties["NAME"], type: "elem"}' \
+    -each 'this.properties = {id: this.properties["NAME"], type: "elem", le_code: this.properties["LE_NUMBER"]}' \
     -proj wgs84 \
     -o format=geojson extension=".geojson"
 
@@ -32,7 +32,7 @@ mapshaper \
     -i montanaschooldistricts_shp/Secondary.shp \
     -simplify dp 20% \
     -clean \
-    -each 'this.properties = {id: this.properties["NAME"], type: "hs"}' \
+    -each 'this.properties = {id: this.properties["NAME"], type: "hs", le_code: this.properties["LE_NUMBER"] }' \
     -proj wgs84 \
     -o format=geojson extension=".geojson"
 
@@ -40,7 +40,7 @@ mapshaper \
     -i montanaschooldistricts_shp/Unified.shp \
     -simplify dp 20% \
     -clean \
-    -each 'this.properties = {id: this.properties["NAME"], type: "k12"}' \
+    -each 'this.properties = {id: this.properties["NAME"], type: "k12", le_code: this.properties["LE_NUMBER"]}' \
     -proj wgs84 \
     -o format=geojson extension=".geojson"
 
