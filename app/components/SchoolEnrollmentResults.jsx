@@ -34,7 +34,7 @@ export default class SchoolEnrollmentResults extends React.Component {
 
     // calculate percent change
     data.forEach(d => {
-      d.index = d.enrollment / baseline * 100;
+      d.index = (d.enrollment / baseline - 1) * 100;
     })
     const yMax = max(data, d => d.enrollment)
 
@@ -42,12 +42,12 @@ export default class SchoolEnrollmentResults extends React.Component {
       <div className='line-chart-wrapper' style={{ margin: 20 }}>
         <LineChart width={400} height={150} data={data}>
           <CartesianGrid stroke="#eee" vertical={false}/>
-          <YAxis type='number' yAxisId={0} domain={[60, 140]} axisLine={false} stroke="#666"
-            label={{ value: '% of 07-08', angle: -90, offset: 15, position: 'insideBottomLeft', fill: "#666" }}/>
+          <YAxis type='number' yAxisId={0} domain={[-100, 100]} axisLine={false} stroke="#666"
+            label={{ value: '% change', angle: -90, offset: 15, position: 'insideBottomLeft', fill: "#666" }}/>
           }
           <XAxis dataKey='year' axisLine={true} stroke="#666"/>
 
-          <ReferenceLine y={100} stroke="#444" strokeDasharray="1 1" />
+          <ReferenceLine y={0} stroke="#444" strokeDasharray="1 1" />
           <Line dataKey='index' stroke='#ff7300' strokeWidth={2} yAxisId={0}/>
         </LineChart>
 

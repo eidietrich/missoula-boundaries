@@ -3,23 +3,23 @@
 # Run from repo home directory
 # sh scripts/mt-schools-enrollment.sh
 
-# Source: File from previous MT School enrollment work (data downloaded/collected from MT Office of Public Instruction website)
-# TODO: Double-check this workflow, try to figure out how to automate it
+# Source: File from previous MT School enrollment work (data downloaded from MT Office of Public Instruction website via April 17, 2018 data request)
 
-SOURCE_FILE="mt-school-enrollment-all-levels.csv"
+EXCEL_FILE="ALLYEARS91_18.xlsx"
 DBNAME="mt-vitality-metrics"
 FOLDER="mt-schools-enrollment"
 
-mkdir -p raw-data/$FOLDER
+python3 ./scripts/mt-school-enrollment-sub.py
+
 cd raw-data/$FOLDER
 
-
-csvcut -c system_code,county,district,school,level,year,grade,gender,enrollment $SOURCE_FILE > data-cleaned.csv
+# NOTE: in2csv is choking on the xlsx file for some reason. Converted to .csv using python script (data needs some cleaning anyway)
 
 psql -d mt-vitality-metrics -c "DROP TABLE mt_school_enrollment"
 
-psql -d mt-vitality-metrics -c "CREATE TABLE mt_school_enrollment (code varchar(4), county varchar(20), district varchar(50), school varchar(50), level varchar(4), year varchar(5), grade varchar(5), gender varchar(1), enrollment integer);"
+psql -d mt-vitality-metrics -c "CREATE TABLE mt_school_enrollment (code varchar(4),  district varchar(50), county varchar(20), level varchar(4), year varchar(4), elem_enrollment real, hs_enrollment real, tot_enrollment real, gen_budget real, tax_val real);"
 
-psql -d mt-vitality-metrics -c "COPY mt_school_enrollment FROM '$PWD/data-cleaned.csv' WITH CSV HEADER"
+psql -d mt-vitality-metrics -c "COPY mt_school_enrollment FROM '$PWD/mt-hs-enrollment-91-18-cleaned.csv' WITH CSV HEADER"
 
 echo "DONE"
+

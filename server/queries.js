@@ -46,7 +46,7 @@ function getSinglePlacePopulation(req, res, next){
 // NB: High school enrollment only!
 function getSingleDistrictHSEnrollment(req, res, next){
   var districtCode = req.params.le_code;
-  db.any(`select * from mt_school_enrollment where code = $1 and level = 'hs'`, districtCode)
+  db.any(`select * from mt_school_enrollment where code = $1`, districtCode)
   .then(function(data){
       // data processing
       // TODO: Break this out as separate file
@@ -61,7 +61,7 @@ function getSingleDistrictHSEnrollment(req, res, next){
       grouped.enrollment = grouped.years.map(year => {
         const curYear = data.filter(d => d.year === year)
         const enrollment = curYear.reduce((a,b) => {
-          return a + b.enrollment
+          return a + b.hs_enrollment
         }, 0)
         return {year: year, enrollment: enrollment}
       }).sort((a,b) => a.year.localeCompare(b.year)) // alphabetic sort for year order
