@@ -27,7 +27,7 @@ var db = pgp(connectionString);
 //     })
 // }
 
-function getSinglePlacePopulation(req, res, next){
+function getPlacePopulation(req, res, next){
   var placeFips = req.params.fips;
   db.any('select fips, place, year, population from mt_place_population where fips = $1', placeFips)
     .then(function(data){
@@ -45,7 +45,7 @@ function getSinglePlacePopulation(req, res, next){
         .json({
           status: 'success',
           data: grouped,
-          message: 'Retrieved one place',
+          message: 'Retrieved place population history',
           source: 'US Census Bureau'
         })
     })
@@ -55,7 +55,7 @@ function getSinglePlacePopulation(req, res, next){
 }
 
 // NB: High school enrollment only!
-function getSingleDistrictHSEnrollment(req, res, next){
+function getDistrictHSEnrollment(req, res, next){
   var districtCode = req.params.le_code;
   db.any(`select * from mt_school_enrollment where code = $1`, districtCode)
   .then(function(data){
@@ -90,8 +90,36 @@ function getSingleDistrictHSEnrollment(req, res, next){
   })
 }
 
+function getCountyPopulation(req, res, next){
+  var placeFips = req.params.fips;
+  db.any('select fips, place, year, population from mt_county_population where fips = $1', placeFips)
+    .then(function(data){
+      const grouped = {}
+      grouped.place = data[0].place
+      grouped.fips = data[0].fips
+      grouped.population = data.map(d => {
+        return {
+          year: d.year,
+          population: d.population,
+        }
+      }).sort((a,b) => a.year.localeCompare(b.year))
+
+      res.status(200)
+        .json({
+          status: 'success',
+          data: grouped,
+          message: 'Retrieved county population history',
+          source: 'US Census Bureau'
+        })
+    })
+    .catch(function(err) {
+      return next(err)
+    })
+}
+
 module.exports = {
-  getSinglePlacePopulation: getSinglePlacePopulation,
-  getSingleDistrictHSEnrollment: getSingleDistrictHSEnrollment,
+  getPlacePopulation: getPlacePopulation,
+  getDistrictHSEnrollment: getDistrictHSEnrollment,
+  getCountyPopulation: getCountyPopulation,
 }
 

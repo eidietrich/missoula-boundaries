@@ -1,7 +1,8 @@
 import React from 'react';
 
-import SchoolEnrollmentResults from './SchoolEnrollmentResults.jsx'
-import PlacePopulationResults from './PlacePopulationResults.jsx'
+import SchoolEnrollmentResults from './SchoolEnrollmentResults.jsx';
+import PlacePopulationResults from './PlacePopulationResults.jsx';
+import CountyPopulationResults from './CountyPopulationResults.jsx';
 
 const API_URL = process.env.API_URL || '';
 
@@ -11,6 +12,7 @@ export default class DistrictsResults extends React.Component {
     this.state = {
       townPopulation: null,
       schoolEnrollment: null,
+      countyPopulation: null,
     }
   }
 
@@ -73,24 +75,17 @@ export default class DistrictsResults extends React.Component {
   }
 
   makeTownResults(feature){
+    if(feature === null) return null;
+    console.log(feature.properties)
+
     const population = this.state.townPopulation;
 
-    // const populationItems = population ? Object.keys(population).map(key => {
-    //   return <li key={key}>{key + ': ' + population[key]}</li>
-    // }) : null;
-    // const populationList = population ? (
-    //   <div>
-    //      <p>Population</p>
-    //      <ul>{populationItems}</ul>
-    //   </div>
-    // ) : null;
-
-    const town = feature ? (
+    const town = (
       <div>
         <h3>{feature.properties.id}</h3>
         <PlacePopulationResults data={population} />
       </div>
-    ) : null;
+    );
 
     return town;
   }
@@ -111,11 +106,16 @@ export default class DistrictsResults extends React.Component {
   }
 
   makeCountyResults(feature){
-    const county = feature ? (
+    if(feature === null) return null;
+    const population = this.state.countyPopulation;
+
+    console.log(population)
+    const county = (
       <div>
         <h3>{feature.properties.id + ' County'}</h3>
+        <CountyPopulationResults data={population} />
       </div>
-    ): null;
+    );
 
     return county;
   }
@@ -135,7 +135,7 @@ export default class DistrictsResults extends React.Component {
   }
 
   loadCountyData(county){
-
+    this.apiCall('/county/population/', county.properties.fips, 'countyPopulation')
   }
 
   apiCall(route, code, stateVariable){

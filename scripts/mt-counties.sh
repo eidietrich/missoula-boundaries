@@ -10,9 +10,9 @@ DATASOURCE="http://ftp.geoinfo.msl.mt.gov/Data/Spatial/MSDI/AdministrativeBounda
 mkdir -p raw-data/mt-counties
 cd raw-data/mt-counties
 
-# Download data
-curl -o shapefile.zip $DATASOURCE
-unzip shapefile.zip
+# # Download data
+# curl -o shapefile.zip $DATASOURCE
+# unzip shapefile.zip
 
 # convert everything to lowercase
 # Ref: https://stackoverflow.com/questions/7787029/how-do-i-rename-all-files-to-lowercase
@@ -27,7 +27,7 @@ mapshaper \
     -proj wgs84 \
     -simplify dp 20% \
     -explode \
-    -each 'this.properties = {id: this.properties["NAME"]}' \
+    -each 'this.properties = {id: this.properties["NAMELABEL"], fips: this.properties["ALLFIPS"]}' \
     -o format=geojson extension=".geojson"
 
 # move to app folder
