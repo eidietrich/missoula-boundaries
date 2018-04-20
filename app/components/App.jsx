@@ -5,8 +5,11 @@ import Dropdown from 'react-dropdown';
 import DataManager from './../js/DataManager.js'
 
 import LocationForm from './LocationForm.jsx';
+import TownPicker from './TownPicker.jsx';
 import DistrictMap from './DistrictMap.jsx';
 import DistrictsResults from './DistrictsResults.jsx';
+
+import mtTowns from './../geodata/mt-places.geojson'; // Hacky/redundant import
 
 import layers from './../js/layers.js'
 
@@ -70,7 +73,8 @@ export default class App extends React.Component {
        <div className="app-container">
 
         <h1>How is your town doing?</h1>
-        <div>[Placeholder: Dropdown for zooming to town]</div>
+
+        {this.buildControlPanel()}
 
         {this.buildMap()}
 
@@ -81,13 +85,13 @@ export default class App extends React.Component {
   }
 
   buildControlPanel(){
-    const isPointSelected = (this.state.focusLnglat != null)
+    // const isPointSelected = (this.state.focusLnglat != null)
 
-    const addressContainer = this.state.focusAddress ? (
-        <div className="address-container">
-          {this.state.focusAddress}
-        </div>
-      ) : null;
+    // const addressContainer = this.state.focusAddress ? (
+    //     <div className="address-container">
+    //       {this.state.focusAddress}
+    //     </div>
+    //   ) : null;
 
     // const layerPicker = (<Dropdown
     //   options={this.layerDropdownConfig}
@@ -97,19 +101,28 @@ export default class App extends React.Component {
     //   onChange={this.handleLayerSelect}
     // />);
 
+    // const controlContainer = (
+    //   <div className="control-container">
+
+    //     <div className="label">Location</div>
+    //     {addressContainer}
+    //     <LocationForm
+    //       isPointSelected={isPointSelected}
+    //       focusAddress={this.state.focusAddress}
+
+    //       handleNewLocation={this.handleNewLocation}
+    //     />
+    //   </div>
+    // );
+
+    // Hacky way to get town districts
+    // TODO: Rework layer management architecture so it's more elegant
+
     const controlContainer = (
       <div className="control-container">
-
-        <div className="label">Location</div>
-        {addressContainer}
-        <LocationForm
-          isPointSelected={isPointSelected}
-          focusAddress={this.state.focusAddress}
-
-          handleNewLocation={this.handleNewLocation}
-        />
+        <TownPicker options={mtTowns}/>
       </div>
-    );
+    )
 
     return controlContainer;
 

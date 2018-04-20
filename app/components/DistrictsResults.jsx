@@ -76,7 +76,6 @@ export default class DistrictsResults extends React.Component {
 
   makeTownResults(feature){
     if(feature === null) return null;
-    console.log(feature.properties)
 
     const population = this.state.townPopulation;
 
@@ -109,7 +108,6 @@ export default class DistrictsResults extends React.Component {
     if(feature === null) return null;
     const population = this.state.countyPopulation;
 
-    console.log(population)
     const county = (
       <div>
         <h3>{feature.properties.id + ' County'}</h3>

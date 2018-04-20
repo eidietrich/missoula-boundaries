@@ -1,6 +1,11 @@
 import React from 'react';
 
+import { format } from 'd3-format';
+
 import TrendChart from './TrendChart.jsx';
+
+const f = format(',')
+const p = format('.1%')
 
 export default class PlacePopulationResults extends React.Component {
   constructor(props){
@@ -20,16 +25,16 @@ export default class PlacePopulationResults extends React.Component {
       // Describe if current population is peak
 
       const changeSinceBase = current.population - base.population;
-      const perChangeSinceBase = Math.round(changeSinceBase / base.population * 100);
+      const perChangeSinceBase = changeSinceBase / base.population;
 
-      description = `${current.population} residents in ${current.year} (up ${changeSinceBase}, or ${perChangeSinceBase} percent, since ${baseYear}).`
+      description = `${f(current.population)} residents in ${current.year} (up ${f(changeSinceBase)}, or ${p(perChangeSinceBase)}, since ${baseYear}).`
     } else {
       // Describe if current population is not peak
 
       const changeSincePeak = Math.abs(current.population - peak.population);
-      const perChangeSincePeak = Math.round(changeSincePeak / peak.population * 100)
+      const perChangeSincePeak = changeSincePeak / peak.population
 
-      description = `${current.population} residents in ${current.year} (down ${changeSincePeak}, or ${perChangeSincePeak} percent, from peak of ${peak.population} in ${peak.year}).`
+      description = `${f(current.population)} residents in ${current.year} (down ${f(changeSincePeak)}, or ${p(perChangeSincePeak)}, from peak of ${f(peak.population)} in ${peak.year}).`
     }
 
     return description;

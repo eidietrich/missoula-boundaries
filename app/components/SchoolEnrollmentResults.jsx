@@ -1,6 +1,11 @@
 import React from 'react';
 
+import { format } from 'd3-format';
+
 import TrendChart from './TrendChart.jsx';
+
+const f = format(',')
+const p = format('.1%')
 
 export default class SchoolEnrollmentResults extends React.Component {
   constructor(props){
@@ -26,7 +31,7 @@ export default class SchoolEnrollmentResults extends React.Component {
     //     </li>);
     //   }
 
-    const description = `${curEnrollment} high school students in ${curYear} (${changeDirection} ${Math.abs(change)} from ${baseYear})`
+    const description = `${f(curEnrollment)} high school students in ${curYear} (${changeDirection} ${f(Math.abs(change))} from ${baseYear})`
 
     // calculate percent change
     data.forEach(d => {
@@ -36,6 +41,7 @@ export default class SchoolEnrollmentResults extends React.Component {
 
     const lineChart = <TrendChart
       data={data}
+      range={[-100,100]}
       trendFunction={(d, i, data) => {
         const baseline = data[0].enrollment;
         return {
