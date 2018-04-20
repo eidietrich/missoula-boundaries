@@ -1,6 +1,7 @@
 import React from 'react';
 
 import SchoolEnrollmentResults from './SchoolEnrollmentResults.jsx'
+import PlacePopulationResults from './PlacePopulationResults.jsx'
 
 const API_URL = process.env.API_URL || '';
 
@@ -74,20 +75,20 @@ export default class DistrictsResults extends React.Component {
   makeTownResults(feature){
     const population = this.state.townPopulation;
 
-    const populationItems = population ? Object.keys(population).map(key => {
-      return <li key={key}>{key + ': ' + population[key]}</li>
-    }) : null;
-    const populationList = population ? (
-      <div>
-         <p>Population</p>
-         <ul>{populationItems}</ul>
-      </div>
-    ) : null;
+    // const populationItems = population ? Object.keys(population).map(key => {
+    //   return <li key={key}>{key + ': ' + population[key]}</li>
+    // }) : null;
+    // const populationList = population ? (
+    //   <div>
+    //      <p>Population</p>
+    //      <ul>{populationItems}</ul>
+    //   </div>
+    // ) : null;
 
     const town = feature ? (
       <div>
         <h3>{feature.properties.id}</h3>
-        {populationList}
+        <PlacePopulationResults data={population} />
       </div>
     ) : null;
 

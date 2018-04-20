@@ -3,7 +3,7 @@
 # Run from repo home directory
 # sh scripts/mt-schools-district-geography-msl-source.sh
 
-# TODO: Make this more generalized
+# USING THIS SCRIPT (tuns out census geography doesn't have the code you need to join with enrollment data)
 
 DATASOURCE="http://ftp.geoinfo.msl.mt.gov/Data/Spatial/MSDI/AdministrativeBoundaries/MontanaSchoolDistricts_shp.zip"
 FOLDER="mt-schools-district-geography-msl"

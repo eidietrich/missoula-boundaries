@@ -10,30 +10,41 @@ var db = pgp(connectionString);
 
 // add query functions
 
-function getPlacePopulations(req, res, next){
-  db.any('select * from mt_place_populations')
-    .then(function(data){
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved place populations',
-          source: 'US Census Bureau'
-        });
-    })
-    .catch(function(err) {
-      return next(err)
-    })
-}
+// function getPlacePopulations(req, res, next){
+//   db.any('select fips, place, year, population from mt_place_population')
+//     .then(function(data){
+//       console.log(data.slice(5))
+//       res.status(200)
+//         .json({
+//           status: 'success',
+//           data: data,
+//           message: 'Retrieved place populations',
+//           source: 'US Census Bureau'
+//         });
+//     })
+//     .catch(function(err) {
+//       return next(err)
+//     })
+// }
 
 function getSinglePlacePopulation(req, res, next){
   var placeFips = req.params.fips;
-  db.one('select * from mt_place_populations where place = $1 limit 1', placeFips)
+  db.any('select fips, place, year, population from mt_place_population where fips = $1', placeFips)
     .then(function(data){
+      const grouped = {}
+      grouped.place = data[0].place
+      grouped.fips = data[0].fips
+      grouped.population = data.map(d => {
+        return {
+          year: d.year,
+          population: d.population,
+        }
+      }).sort((a,b) => a.year.localeCompare(b.year))
+
       res.status(200)
         .json({
           status: 'success',
-          data: data,
+          data: grouped,
           message: 'Retrieved one place',
           source: 'US Census Bureau'
         })
@@ -80,7 +91,6 @@ function getSingleDistrictHSEnrollment(req, res, next){
 }
 
 module.exports = {
-  getPlacePopulations: getPlacePopulations,
   getSinglePlacePopulation: getSinglePlacePopulation,
   getSingleDistrictHSEnrollment: getSingleDistrictHSEnrollment,
 }

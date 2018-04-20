@@ -43,4 +43,3 @@ Extra features
 Longer-term:
 - Use react-router setup to get sharable URLs for app state
 - Figure out how to embed in a Wordpress site
-- Current setup converts multi-part geographies (e.g. cities) into piecemeal polygons so DistrictMap doesn't choke on them. This is going to be non-ideal long-run.

@@ -3,7 +3,7 @@
 # Run from repo home directory
 # sh scripts/mt-schools-district-geography.sh
 
-# Changing this to use census geography instead of MT State Library products to make joining with census data easier
+# Changing this to use census geography instead of MT State Library products to make joining with census data easier --> ACTUALLY NO (it's more important to be able to join with OPI data)
 
 FOLDER='mt-schools-district-geography-census'
 

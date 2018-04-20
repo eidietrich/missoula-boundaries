@@ -58,8 +58,6 @@ Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work
 - Set up some sort of async data layer loading? (If initial bundle gets too big)
 
 
-
-
 ## References:
 - https://github.com/seattleio/boundaries-api
 - https://github.com/seattleio/boundaries
