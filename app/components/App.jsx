@@ -120,7 +120,10 @@ export default class App extends React.Component {
 
     const controlContainer = (
       <div className="control-container">
-        <TownPicker options={mtTowns}/>
+        <TownPicker
+          options={mtTowns}
+          handleChoice={this.handleNewLocation}
+        />
       </div>
     )
 
@@ -187,9 +190,10 @@ export default class App extends React.Component {
   /* Interaction handlers */
 
   handleNewLocation(location){
-    // pass location as {lnglat, address} object
+    console.log('h new', location)
+    // pass location as {lnglat} object
     const lnglat = location.lnglat;
-    const address = location.address;
+    // const address = location.address;
     const maps = this.dataManager.locatePointOnLayers(lnglat);
 
     const districts = {
@@ -200,7 +204,7 @@ export default class App extends React.Component {
 
     this.setState({
       focusLnglat: lnglat,
-      focusAddress: address,
+      // focusAddress: address,
       mapsToRender: maps,
       districts: districts
     });

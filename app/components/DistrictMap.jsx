@@ -51,6 +51,7 @@ export default class DistrictMap extends React.Component {
       style: mapStyle,
       // highlightTown: null
     }
+
     this._onViewportChange = this._onViewportChange.bind(this);
   }
 

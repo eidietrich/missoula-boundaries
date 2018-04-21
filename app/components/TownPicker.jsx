@@ -1,5 +1,7 @@
 import React from 'react';
 
+import centroid from '@turf/centroid';
+
 // Expects props.options as a geojson of geographies to select
 
 // TODO: Figure out how to provide for keyboard navigation here
@@ -28,21 +30,14 @@ export default class TownPicker extends React.Component {
         name: d.properties.id,
         value: d.properties.id,
         type: d.properties.type,
-        label: `${d.properties.id} (${d.properties.type})`
+        label: `${d.properties.id} (${d.properties.type})`,
+        centroid: centroid(d.geometry).geometry.coordinates,
       }
     }) : [];
 
     return options.sort((a,b) => a.name.localeCompare(b.name))
   }
-  handleSelect(location){
-    console.log('selecting', location);
 
-    this.setState({
-      value: location.label,
-      responses: this.options,
-      showResponseBox: false,
-    })
-  }
 
   render(){
     let locationDropdown;
@@ -75,7 +70,7 @@ export default class TownPicker extends React.Component {
           <input className='location-form-input'
             type="text"
             value={this.state.value}
-            onChange={this.handleChange.bind(this)}
+            onChange={this.handleInputChange.bind(this)}
             onFocus={this.handleInputFocus.bind(this)}
             placeholder='Search/select town'
           />
@@ -85,7 +80,7 @@ export default class TownPicker extends React.Component {
     )
   }
 
-  handleChange(event){
+  handleInputChange(event){
     const value = event.target.value;
     console.log(value);
     this.setState({
@@ -118,6 +113,20 @@ export default class TownPicker extends React.Component {
     this.setState({
       value: this.props.focusAddress,
       responses: [],
+      showResponseBox: false,
+    })
+  }
+
+  handleSelect(option){
+    console.log('selecting', option);
+
+    console.log(this.props)
+
+    this.props.handleChoice({lnglat: option.centroid})
+
+    this.setState({
+      value: option.label,
+      responses: this.options,
       showResponseBox: false,
     })
   }

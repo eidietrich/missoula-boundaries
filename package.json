@@ -23,6 +23,7 @@
   "dependencies": {
     "@turf/bbox": "^5.1.5",
     "@turf/boolean-point-in-polygon": "^5.1.5",
+    "@turf/centroid": "^6.0.2",
     "@turf/helpers": "^6.0.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
