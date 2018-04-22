@@ -38,11 +38,11 @@ style.sources['counties'] = {
 // Custom styling
 style.layers.splice(insertIndex, 0, {
   id: 'county-fill',
-  source: 'schools',
+  source: 'counties',
   type: 'fill',
   paint: {
-    'fill-color': '#ffff33',
-    'fill-opacity': 0.05,
+    'fill-color': '#666',
+    'fill-opacity': 0.1,
   },
   interactive: true
 });
@@ -53,7 +53,7 @@ style.layers.splice(insertIndex, 0, {
   type: 'line',
   paint: {
     'line-color': '#ffff33',
-    'line-opacity': 0.9,
+    'line-opacity': 0.5,
     'line-width': {
       'base': 2,
       'stops': [
@@ -71,7 +71,7 @@ style.layers.splice(insertIndex, 0, {
   type: 'line',
   paint: {
     'line-color': '#e41a1c',
-    'line-opacity': 0.9,
+    'line-opacity': 0.5,
     'line-width': {
       'base': 2,
       'stops': [
@@ -112,6 +112,28 @@ style.layers.splice(insertIndex, 0, {
   },
   filter: ['in', 'type', 'city', 'town'],
 });
+
+
+
+// Highlight layers
+style.layers.splice(insertIndex, 0, {
+  id: 'highlight-town-lines',
+  source: 'towns',
+  type: 'line',
+  paint: {
+    'line-color': '#00ff00',
+    'line-opacity': 0.9,
+    'line-width': {
+      'base': 2,
+      'stops': [
+        [4, 5],
+        [13, 20]
+      ]
+    }
+  },
+  filter: ['in', 'fips', ''],
+});
+
 
 // FOR INTERACTION
 // style.layers.push({

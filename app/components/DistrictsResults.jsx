@@ -53,7 +53,7 @@ export default class DistrictsResults extends React.Component {
   }
 
   interpretLocation(districts){
-    let locationDescription = 'none';
+    let locationDescription = null;
     if (districts.town && districts.county) {
       switch (districts.town.properties.type){
         case 'city':

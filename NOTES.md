@@ -42,6 +42,7 @@ DATA management
 UI Polish
 - [ ] Add CSS class handles to react components
 - [ ] Style things better
+- [ ] Change marker to pin
 
 TODO:
 - [ ] Set default map display at statewide

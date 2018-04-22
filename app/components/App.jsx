@@ -1,33 +1,24 @@
 import React from 'react';
 
-import Dropdown from 'react-dropdown';
-
-import DataManager from './../js/DataManager.js'
-
-import LocationForm from './LocationForm.jsx';
-import TownPicker from './TownPicker.jsx';
-import DistrictMap from './DistrictMap.jsx';
-import DistrictsResults from './DistrictsResults.jsx';
-
 import { FlyToInterpolator } from 'react-map-gl'
 import turfBbox from '@turf/bbox';
 import WebMercatorViewport from 'viewport-mercator-project';
 
+import DataManager from './../js/DataManager.js'
+
+import TownPicker from './TownPicker.jsx';
+import DistrictMap from './DistrictMap.jsx';
+import DistrictsResults from './DistrictsResults.jsx';
+
 import mtTowns from './../geodata/mt-places.geojson'; // Hacky/redundant import
-
 import layers from './../js/layers.js'
-
 import mapStyle from './../js/map-style.js';
 
 import './../css/app.css';
 import './../css/control-container.css';
 import './../css/react-dropdown.css';
 
-// For initial app state config. May not be necessary depending on UI choices.
-const initLayerIndex = 0; //'house-districts'
-const initAddress = '420 North Higgins Avenue, Missoula'
-const initLnglat = [-113.99293899536133, 46.87292510231656];
-
+// initial state
 const defaultState = {
   focusLnglat: null,
   mapViewport: {
@@ -52,14 +43,7 @@ export default class App extends React.Component {
     const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
     this.state = {
       focusLnglat: defaults.focusLnglat,
-      // focusAddress: null,
-      mapsToRender: [],
       readyToRenderMap: false,
-      currentLayer: {
-        key: 'null',
-        label: null,
-        data: null,
-      },
       districts: {
         town: null,
         school: null,
@@ -68,134 +52,49 @@ export default class App extends React.Component {
       mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
       mapStyle: mapStyle
     }
-
-    this.layerDropdownConfig = this.buildLayerDropdownConfig(layers);
   }
 
   componentDidMount(){
-    // SET DUMMY DATA
-    // TODO: Think through what initial app state should be
-    this.setState({
-      mapsToRender: this.dataManager.locatePointOnLayers(initLnglat),
-      currentLayer: layers[initLayerIndex],
-      readyToRenderMap: true,
-    })
+    // Was previously necessary for some reason
+    // this.setState({
+    //   readyToRenderMap: true,
+    // })
   }
 
   /* Render functions */
 
-  render(){
-    console.log('rendering w/ state...', this.state)
-
-    return (
-       <div className="app-container">
-
-        <h1>How is your town doing?</h1>
-
-        <button
-          onClick={this.reset.bind(this)}>
-          Reset
-        </button>
-
-        {this.buildControlPanel()}
-
-        {this.buildMap()}
-
-        {this.buildResults()}
-
-      </div>
-    );
-  }
-
   buildControlPanel(){
-    // const isPointSelected = (this.state.focusLnglat != null)
-
-    // const addressContainer = this.state.focusAddress ? (
-    //     <div className="address-container">
-    //       {this.state.focusAddress}
-    //     </div>
-    //   ) : null;
-
-    // const layerPicker = (<Dropdown
-    //   options={this.layerDropdownConfig}
-    //   value={this.state.currentLayer.label}
-    //   placeholder={'Select layer'}
-
-    //   onChange={this.handleLayerSelect}
-    // />);
-
-    // const controlContainer = (
-    //   <div className="control-container">
-
-    //     <div className="label">Location</div>
-    //     {addressContainer}
-    //     <LocationForm
-    //       isPointSelected={isPointSelected}
-    //       focusAddress={this.state.focusAddress}
-
-    //       handleNewLocation={this.handleNewLocation}
-    //     />
-    //   </div>
-    // );
-
-    // Hacky way to get town districts
-    // TODO: Rework layer management architecture so it's more elegant
-
-    const controlContainer = (
+    // TODO: Find less hacky way to get town districts?
+    return (
       <div className="control-container">
         <TownPicker
           options={mtTowns}
           handleChoice={this.handleMapShapeSelect.bind(this)}
         />
       </div>
-    )
-
-    return controlContainer;
-
+    );
   }
 
   buildMap(){
-    // this.state.readyToRenderMap keeps map from rendering until after App is mounted
-    // TODO - figure out why this is necessary (something to do with data loading?)
+    // if (!this.state.readyToRenderMap) return null;
+    // May no longer be necessary
 
-    const districtMap = this.state.readyToRenderMap ? (
-        <DistrictMap
-          // key={renderLayer.feature.properties.id}
-          lnglat={this.state.focusLnglat}
-          townFeature={this.state.districts.town}
-          schoolFeature={this.state.districts.school}
-          countyFeature={this.state.districts.county}
+    return (
+      <DistrictMap
+        // key={renderLayer.feature.properties.id}
+        lnglat={this.state.focusLnglat}
+        townFeature={this.state.districts.town}
+        schoolFeature={this.state.districts.school}
+        countyFeature={this.state.districts.county}
 
-          viewport={this.state.mapViewport}
-          style={this.state.mapStyle}
+        viewport={this.state.mapViewport}
+        style={this.state.mapStyle}
 
-          setViewport={this.setViewport.bind(this)}
+        setViewport={this.setViewport.bind(this)}
 
-          handleMapPointSelect={this.handleMapPointSelect.bind(this)}
-        />
-      ) : null;
-
-    return districtMap;
-  }
-
-  buildLayerDropdownConfig(layers){
-    // Build config object for layer select dropdown
-    // See https://www.npmjs.com/package/react-dropdown
-    const layerCategories = [... new Set(layers.map(layer => layer.category))]
-
-    const layerOptions = layerCategories.map(cat => {
-      const items = layers
-        .filter(layer => layer.category === cat)
-        .map(layer => {
-          return {
-            value: layer.key,
-            label: layer.label
-          }
-        });
-      return { type: 'group', name: cat, items: items }
-    })
-
-    return layerOptions;
+        handleMapPointSelect={this.handleMapPointSelect.bind(this)}
+      />
+    );
   }
 
   buildResults(){
@@ -204,16 +103,23 @@ export default class App extends React.Component {
         districts={this.state.districts}
       />
     )
-
   }
 
-  /* Utility functions */
+  render(){
+    console.log('rendering w/ state...', this.state)
+    return (
+       <div className="app-container">
+        <h1>How is your town doing?</h1>
+        <div
+          onClick={this.reset.bind(this)}>
+          [RESET]
+        </div>
+        {this.buildControlPanel()}
+        {this.buildMap()}
+        {this.buildResults()}
 
-  _getLayer(key){
-    const curLayer = layers.filter(layer => {
-      return layer.key === key;
-    })[0];
-    return curLayer;
+      </div>
+    );
   }
 
   /* Interaction handlers */
@@ -233,41 +139,14 @@ export default class App extends React.Component {
 
     this.setState({
       focusLnglat: lnglat,
-      // focusAddress: address,
-      mapsToRender: maps,
       districts: districts
     });
   }
 
   handleMapShapeSelect(location){
-    console.log('new map shape select')
-
     const shape = location.shape;
     this.zoomToShape(shape);
-
     this.handleMapPointSelect(location);
-  }
-
-  handleLayerSelect(e){
-    this.setState({
-      currentLayer: this._getLayer(e.value),
-    })
-  }
-
-  // Map handling
-  // Here because hoisted state
-
-  reset(){
-    const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))
-    this.setViewport(defaultViewport)
-    this.setState({
-      focusLnglat: null,
-      districts: {
-        town: null,
-        school: null,
-        county: null,
-      },
-    })
   }
 
   setViewport(newViewport){
@@ -303,6 +182,19 @@ export default class App extends React.Component {
       zoom: bounds.zoom,
       latitude: bounds.latitude,
       longitude: bounds.longitude,
+    })
+  }
+
+  reset(){
+    const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))
+    this.setViewport(defaultViewport)
+    this.setState({
+      focusLnglat: null,
+      districts: {
+        town: null,
+        school: null,
+        county: null,
+      },
     })
   }
 
