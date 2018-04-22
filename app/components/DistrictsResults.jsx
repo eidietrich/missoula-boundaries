@@ -25,12 +25,12 @@ export default class DistrictsResults extends React.Component {
     }
 
     const school = this.props.districts.school
-    if (school !== prevProps.districts.school){
+    if (school && school !== prevProps.districts.school){
       this.loadSchoolData(school)
     }
 
     const county = this.props.districts.county
-    if (county !== prevProps.districts.county){
+    if (county && county !== prevProps.districts.county){
       this.loadCountyData(county)
     }
 

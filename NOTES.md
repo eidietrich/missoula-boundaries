@@ -9,33 +9,53 @@ How is my town doing?:
 UI controls
 
 - Pick address
-- Pick town (typeahead, pick from cdps) --> Select arbitrary point in town (centroid for now)
-- Layers to show (check boxes, cdps, school districts, counties)
-- On map, Mouseover/select geographies
-    - Move interest point based on non-drag click/tap, select geographies around it
-- Have a form 'see something you're curious about? Tell us'
+- [x] Pick town (typeahead, pick from cdps) --> Select arbitrary point in town (centroid for now)
+- [ ]Layers to show (check boxes, cdps, school districts, counties)
+- [x] On map, non-drag click/tap to move interest point, select geographies around it
+- [ ]Have a form 'see something you're curious about? Tell us'
 
 GEO display:
-- CDP/town boundaries (show incorporated municipalities differently)
-- School district boundaries
-- County boundary
+- [x] CDP/town boundaries (show incorporated municipalities differently)
+- [x] School district boundaries
+- [x] County boundary
+- [ ] Reservation boundaries
+- [ ] Legislative districts (?)
 
 DATA display:
 - Population (from census) - current, percent change over decade, chart
-- School district enrollment history - current, percent change over decade, chart
-- BEA data @ county level (decide what's most relevant - income distribution, wages)
+    - [x] places/towns (incorporated)
+    - [ ] census places (unincorporated)
+    - [ ] counties
+    - [ ] school district catchment areas?
+- School districts (high schools)
+    - [x] enrollment history - current, percent change over decade, chart
+    - [ ] tax base change
+    - [ ]
+- [ ] BEA data @ county level (decide what's most relevant - income distribution, wages)
+- [ ] Add topology linkages (e.g. 'other towns in this county')
 
---> Initially, wire something together so selecting an interest point pulls up data for town/school district/county
+DATA management
+- [ ] Clean up scripting process
+- [ ] Write tool for adding general data via census API
+- [ ] Separate non-downloaded data files from /raw-data, add to git version control
 
-Q's - What does back-end look like here? This is probably a bit too sophisticated to do w/ just flat files. Set up Postgres back end (separate out as an API)
-
-
+UI Polish
+- [ ] Add CSS class handles to react components
+- [ ] Style things better
 
 TODO:
+- [ ] Set default map display at statewide
+- [ ] Polish dropdown selector
+    - [ ] Keyboard accessibility
+    - [ ] Escape w/out selecting function
 
+DOCUMENTATION
+- [ ] Update README.md
+- [ ] Push to public github
 
 Extra features
 - Show reservation boundaries
+- Annotations (e.g. school district merger/consolidations, Anaconda/Butte switching to consolidated govts)
 - Add checkboxes for layers to show/hide (reservations, legislative districts)
 - Consider separating census places from incorporated municipalities - cleaner from a census data perspective
 

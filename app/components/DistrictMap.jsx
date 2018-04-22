@@ -82,11 +82,11 @@ export default class DistrictMap extends React.Component {
       }} />
     ) : null ;
 
-    const markerOverlay = (
+    const markerOverlay = this.props.lnglat ? (
       <SVGOverlay redraw={(opt) => {
         return this.buildMarker(opt, this.props.lnglat)
       }} />
-    );
+    ) : null;
 
     return (
       <div className='map-container' ref='map-container'>
@@ -137,9 +137,8 @@ export default class DistrictMap extends React.Component {
 
   }
 
-  buildMarker(opt, lngLat){
-    const coord = this.props.lnglat;
-    const p = opt.project([coord[0], coord[1]]);
+  buildMarker(opt, lnglat){
+    const p = opt.project([lnglat[0], lnglat[1]]);
     return (
       <g transform={'translate(' + p[0] + ',' + p[1] + ')'}>
         <circle
@@ -150,17 +149,17 @@ export default class DistrictMap extends React.Component {
     );
   }
 
-  /* Interaction handlers */
+//   /* Interaction handlers */
 
-  zoomToStreetLevel(){
-    this._setViewport({
-      zoom: 14,
-      latitude: this.props.lnglat[1],
-      longitude: this.props.lnglat[0],
-    })
-  }
+//   // zoomToStreetLevel(){
+//   //   this._setViewport({
+//   //     zoom: 14,
+//   //     latitude: this.props.lnglat[1],
+//   //     longitude: this.props.lnglat[0],
+//   //   })
+//   // }
 
-  zoomToFit(){
-    this._setBounds(this.props.districtFeature);
-  }
+//   zoomToFit(){
+//     this._setBounds(this.props.districtFeature);
+//   }
 }

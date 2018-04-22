@@ -28,6 +28,19 @@ const initLayerIndex = 0; //'house-districts'
 const initAddress = '420 North Higgins Avenue, Missoula'
 const initLnglat = [-113.99293899536133, 46.87292510231656];
 
+const defaultState = {
+  focusLnglat: null,
+  mapViewport: {
+    latitude: 46.75,
+    longitude: -109.88,
+    bearing: 0,
+    pitch: 0,
+    zoom: 4.75,
+    minZoom: 4,
+    maxZoom: 13,
+  }
+}
+
 export default class App extends React.Component {
 
   /* Lifecycle methods */
@@ -35,9 +48,11 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     this.dataManager = new DataManager(layers);
+
+    const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
     this.state = {
-      focusLnglat: null,
-      focusAddress: null,
+      focusLnglat: defaults.focusLnglat,
+      // focusAddress: null,
       mapsToRender: [],
       readyToRenderMap: false,
       currentLayer: {
@@ -50,13 +65,7 @@ export default class App extends React.Component {
         school: null,
         county: null,
       },
-      mapViewport: {
-        latitude: initLnglat[1],
-        longitude: initLnglat[0],
-        zoom: 8,
-        width: 400,
-        height: 300,
-      },
+      mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
       mapStyle: mapStyle
     }
 
@@ -67,8 +76,6 @@ export default class App extends React.Component {
     // SET DUMMY DATA
     // TODO: Think through what initial app state should be
     this.setState({
-      focusLnglat: initLnglat,
-      focusAddress: initAddress,
       mapsToRender: this.dataManager.locatePointOnLayers(initLnglat),
       currentLayer: layers[initLayerIndex],
       readyToRenderMap: true,
@@ -84,6 +91,11 @@ export default class App extends React.Component {
        <div className="app-container">
 
         <h1>How is your town doing?</h1>
+
+        <button
+          onClick={this.reset.bind(this)}>
+          Reset
+        </button>
 
         {this.buildControlPanel()}
 
@@ -244,6 +256,19 @@ export default class App extends React.Component {
 
   // Map handling
   // Here because hoisted state
+
+  reset(){
+    const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))
+    this.setViewport(defaultViewport)
+    this.setState({
+      focusLnglat: null,
+      districts: {
+        town: null,
+        school: null,
+        county: null,
+      },
+    })
+  }
 
   setViewport(newViewport){
     const viewport = Object.assign(this.state.mapViewport, newViewport)
