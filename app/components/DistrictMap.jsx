@@ -19,41 +19,14 @@ NOTES/POSSIBLE GOTCHAS:
 */
 
 import React from 'react';
-import ReactMapGL, { SVGOverlay, FlyToInterpolator } from 'react-map-gl';
-import turfBbox from '@turf/bbox';
-import WebMercatorViewport from 'viewport-mercator-project';
 
+import ReactMapGL, { SVGOverlay } from 'react-map-gl'
 
 import './../css/mapbox-gl.css';
-
-/* Hoist this reference? */
-import mapStyle from './../js/map-style.js';
-
-import mtTowns from './../geodata/mt-places.geojson';
-import mtHighSchools from './../geodata/mt-hs-districts.geojson';
-import mtCounties from './../geodata/mt-counties.geojson';
 
 const mapAspect = 0.65;
 
 export default class DistrictMap extends React.Component {
-  constructor(props){
-    // NOTE: Component is being rebuilt every time App.jsx gets a new data layer selected
-    super(props)
-
-    this.state = {
-      viewport: {
-        latitude: props.lnglat[1],
-        longitude: props.lnglat[0],
-        zoom: 8,
-        width: 400,
-        height: 300,
-      },
-      style: mapStyle,
-      // highlightTown: null
-    }
-
-    this._onViewportChange = this._onViewportChange.bind(this);
-  }
 
   componentDidMount(){
     window.addEventListener('resize', this._setSize.bind(this));
@@ -68,91 +41,21 @@ export default class DistrictMap extends React.Component {
   _setSize(){
     // adjusts map display width to match container width
     let { clientHeight, clientWidth } = this.refs['map-container']
-    const viewport = Object.assign(this.state.viewport, {
+
+    this.props.setViewport({
       width: clientWidth,
       height: clientWidth * mapAspect,
     })
-    this.setState({
-      viewport: viewport
-    })
-  }
-
-  _setBounds(shape){
-    // Sets map center point / zoom scale to fit shape
-    let { clientHeight, clientWidth } = this.refs['map-container']
-    const vpHelper = new WebMercatorViewport({
-      width: clientWidth,
-      height: clientHeight,
-    });
-
-    // TODO: Figure out how to avoid redundancy with _setSize
-    // BUG: calling this in componentDidMount sets to pre _setSize() viewport shape
-
-    const bbox = turfBbox(shape);
-    const bounds = vpHelper.fitBounds(
-      [[bbox[0], bbox[1]],[bbox[2],bbox[3]]],
-      {padding: 50}
-      );
-
-    this._setViewport({
-      zoom: bounds.zoom,
-      latitude: bounds.latitude,
-      longitude: bounds.longitude,
-    })
-  }
-
-  _setViewport({longitude, latitude, zoom}){
-    const viewport = Object.assign(this.state.viewport,
-      {
-        longitude: longitude,
-        latitude: latitude,
-        zoom: zoom,
-        transitionInterpolator: new FlyToInterpolator(),
-        transitionDuration: 400,
-      })
-    this.setState({ viewport })
   }
 
   _onViewportChange(newViewport){
-    this.setState({
-      viewport: newViewport
-    });
+    this.props.setViewport(newViewport)
   }
-  // _onHover(event) {
-  //   // TODO: Figure out how to setup mouseover effects
-  //   // THIS DOESN'T WORK
-  //   if(event.features){
-  //     // event.features.forEach(d => console.log(d))
-  //     const town = event.features.find(d => d.layer.id === 'town-fill')
-  //     const newStyle = JSON.parse(JSON.stringify(mapStyle))
 
-  //     if (town){
-  //       console.log('add highlight')
-  //       newStyle.layers
-  //         .find(d => d.id === 'highlight-towns')
-  //         .filter[2] = town.properties.id
-  //       this.setState({
-  //         style: newStyle,
-  //         highlightTown: town.properties.id
-  //       })
-  //     } else {
-  //       console.log('clear highlight')
-  //       newStyle.layers
-  //         .find(d => d.id === 'highlight-towns')
-  //         .filter[2] = ''
-  //       this.setState({
-  //         style: mapStyle,
-  //         highlightTown: null
-  //       })
-  //     }
-  //   }
-  // }
   _onClick(event){
     const latlng = event.lngLat
-    const address = `(${latlng[0]},${latlng[1]})`
-    this.props.handleNewLocation({
+    this.props.handleMapPointSelect({
       lnglat: latlng,
-      address: address
     })
 
   }
@@ -160,20 +63,6 @@ export default class DistrictMap extends React.Component {
   /* Render methods */
 
   render(){
-
-    // const isDistrictToRender = this.props.districtFeature != null;
-
-    // const labels = (
-    //   <div className='map-label-container'>
-    //     <div className='label-district-name'>
-    //       {this.props.districtName}
-    //     </div>
-    //   </div>
-    // )
-
-    // console.log('t', this.props.townFeature)
-    // console.log('s', this.props.schoolFeature)
-    // console.log('c', this.props.countyFeature)
 
     const focusTown = this.props.townFeature ? (
       <SVGOverlay redraw={(opt) => {
@@ -202,10 +91,11 @@ export default class DistrictMap extends React.Component {
     return (
       <div className='map-container' ref='map-container'>
         <ReactMapGL
-          {...this.state.viewport}
+          {...this.props.viewport}
           mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
-          mapStyle={this.state.style}
-          onViewportChange={this._onViewportChange}
+          mapStyle={this.props.style}
+          onViewportChange={this._onViewportChange.bind(this)}
+          // onViewportChange={this.props.setViewport}
           // onHover={this._onHover.bind(this)}
           onClick={this._onClick.bind(this)}
         >

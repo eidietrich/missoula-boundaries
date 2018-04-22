@@ -9,9 +9,15 @@ import TownPicker from './TownPicker.jsx';
 import DistrictMap from './DistrictMap.jsx';
 import DistrictsResults from './DistrictsResults.jsx';
 
+import { FlyToInterpolator } from 'react-map-gl'
+import turfBbox from '@turf/bbox';
+import WebMercatorViewport from 'viewport-mercator-project';
+
 import mtTowns from './../geodata/mt-places.geojson'; // Hacky/redundant import
 
 import layers from './../js/layers.js'
+
+import mapStyle from './../js/map-style.js';
 
 import './../css/app.css';
 import './../css/control-container.css';
@@ -43,13 +49,18 @@ export default class App extends React.Component {
         town: null,
         school: null,
         county: null,
-      }
+      },
+      mapViewport: {
+        latitude: initLnglat[1],
+        longitude: initLnglat[0],
+        zoom: 8,
+        width: 400,
+        height: 300,
+      },
+      mapStyle: mapStyle
     }
 
     this.layerDropdownConfig = this.buildLayerDropdownConfig(layers);
-
-    this.handleNewLocation = this.handleNewLocation.bind(this);
-    this.handleLayerSelect = this.handleLayerSelect.bind(this);
   }
 
   componentDidMount(){
@@ -122,7 +133,7 @@ export default class App extends React.Component {
       <div className="control-container">
         <TownPicker
           options={mtTowns}
-          handleChoice={this.handleNewLocation}
+          handleChoice={this.handleMapShapeSelect.bind(this)}
         />
       </div>
     )
@@ -134,6 +145,7 @@ export default class App extends React.Component {
   buildMap(){
     // this.state.readyToRenderMap keeps map from rendering until after App is mounted
     // TODO - figure out why this is necessary (something to do with data loading?)
+
     const districtMap = this.state.readyToRenderMap ? (
         <DistrictMap
           // key={renderLayer.feature.properties.id}
@@ -142,7 +154,12 @@ export default class App extends React.Component {
           schoolFeature={this.state.districts.school}
           countyFeature={this.state.districts.county}
 
-          handleNewLocation={this.handleNewLocation}
+          viewport={this.state.mapViewport}
+          style={this.state.mapStyle}
+
+          setViewport={this.setViewport.bind(this)}
+
+          handleMapPointSelect={this.handleMapPointSelect.bind(this)}
         />
       ) : null;
 
@@ -189,10 +206,10 @@ export default class App extends React.Component {
 
   /* Interaction handlers */
 
-  handleNewLocation(location){
-    console.log('h new', location)
-    // pass location as {lnglat} object
+  handleMapPointSelect(location){
+    console.log('new map point select')
     const lnglat = location.lnglat;
+
     // const address = location.address;
     const maps = this.dataManager.locatePointOnLayers(lnglat);
 
@@ -210,9 +227,58 @@ export default class App extends React.Component {
     });
   }
 
+  handleMapShapeSelect(location){
+    console.log('new map shape select')
+
+    const shape = location.shape;
+    this.zoomToShape(shape);
+
+    this.handleMapPointSelect(location);
+  }
+
   handleLayerSelect(e){
     this.setState({
       currentLayer: this._getLayer(e.value),
     })
   }
+
+  // Map handling
+  // Here because hoisted state
+
+  setViewport(newViewport){
+    const viewport = Object.assign(this.state.mapViewport, newViewport)
+    this.setState({
+      mapViewport: viewport
+    })
+  }
+
+  zoomViewport(newViewport){
+    // setViewport with zoom animation
+    const viewport = Object.assign(newViewport, {
+      transitionInterpolator: new FlyToInterpolator(),
+      transitionDuration: 2500,
+    })
+    this.setViewport(viewport)
+  }
+
+  zoomToShape(shape){
+    console.log('zooming', shape)
+    const vpHelper = new WebMercatorViewport({
+      width: this.state.mapViewport.width,
+      height: this.state.mapViewport.height,
+    });
+
+    const bbox = turfBbox(shape);
+    const bounds = vpHelper.fitBounds(
+      [[bbox[0], bbox[1]],[bbox[2],bbox[3]]],
+      {padding: 100}
+      );
+
+    this.zoomViewport({
+      zoom: bounds.zoom,
+      latitude: bounds.latitude,
+      longitude: bounds.longitude,
+    })
+  }
+
 }

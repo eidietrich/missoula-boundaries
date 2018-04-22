@@ -20,7 +20,6 @@ export default class TownPicker extends React.Component {
   }
 
   buildOptions(rawOptions){
-    console.log('raw', rawOptions)
     // Assume rawOptions is a geojson collection
 
     const options = rawOptions ? rawOptions.features.map(d => {
@@ -31,7 +30,8 @@ export default class TownPicker extends React.Component {
         value: d.properties.id,
         type: d.properties.type,
         label: `${d.properties.id} (${d.properties.type})`,
-        centroid: centroid(d.geometry).geometry.coordinates,
+        shape: d.geometry,
+        lnglat: centroid(d.geometry).geometry.coordinates,
       }
     }) : [];
 
@@ -82,7 +82,6 @@ export default class TownPicker extends React.Component {
 
   handleInputChange(event){
     const value = event.target.value;
-    console.log(value);
     this.setState({
       value: value
     })
@@ -91,8 +90,7 @@ export default class TownPicker extends React.Component {
   }
 
   getMatching(value){
-    const matching = this.options.filter(d => d.name.includes(value))
-    console.log("matching", matching)
+    const matching = this.options.filter(d => d.name.toUpperCase().includes(value.toUpperCase()))
     this.setState({
       responses: matching,
       showResponseBox: true
@@ -120,9 +118,7 @@ export default class TownPicker extends React.Component {
   handleSelect(option){
     console.log('selecting', option);
 
-    console.log(this.props)
-
-    this.props.handleChoice({lnglat: option.centroid})
+    this.props.handleChoice(option)
 
     this.setState({
       value: option.label,
