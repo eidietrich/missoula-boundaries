@@ -10,6 +10,8 @@ See https://github.com/uber/react-map-gl/blob/master/docs/get-started/adding-cus
 // import defaultMapStyle from './../map-style-basic-v8.json';
 import defaultMapStyle from './../map-style-custom.json';
 
+import { fromJS } from 'immutable';
+
 // Data for custom map layers
 import mtHighSchools from './../geodata/mt-hs-districts.geojson';
 import mtTowns from './../geodata/mt-places.geojson';
@@ -42,7 +44,17 @@ style.layers.splice(insertIndex, 0, {
   type: 'fill',
   paint: {
     'fill-color': '#666',
-    'fill-opacity': 0.1,
+    'fill-opacity': 0.05,
+  },
+  interactive: true
+});
+style.layers.splice(insertIndex, 0, {
+  id: 'schools-fill',
+  source: 'schools',
+  type: 'fill',
+  paint: {
+    'fill-color': '#666',
+    'fill-opacity': 0.05,
   },
   interactive: true
 });
@@ -113,26 +125,74 @@ style.layers.splice(insertIndex, 0, {
   filter: ['in', 'type', 'city', 'town'],
 });
 
-
-
-// Highlight layers
+// Mouseover handling
 style.layers.splice(insertIndex, 0, {
-  id: 'highlight-town-lines',
+  id: 'town-mouseover',
   source: 'towns',
-  type: 'line',
+  type: 'fill',
   paint: {
-    'line-color': '#00ff00',
-    'line-opacity': 0.9,
-    'line-width': {
-      'base': 2,
-      'stops': [
-        [4, 5],
-        [13, 20]
-      ]
-    }
+    'fill-color': '#000000',
+    'fill-opacity': 0.9
   },
   filter: ['in', 'fips', ''],
 });
+
+
+
+// // Highlight layers
+// // NOT WORKING
+// style.layers.splice(insertIndex, 0, {
+//   id: 'highlight-town-line',
+//   source: 'towns',
+//   type: 'line',
+//   paint: {
+//     'line-color': '#000000',
+//     'line-opacity': 0.9,
+//     'line-width': {
+//       'base': 2,
+//       'stops': [
+//         [4, 3],
+//         [13, 10]
+//       ]
+//     }
+//   },
+//   filter: ['in', 'fips', ''],
+// });
+// style.layers.splice(insertIndex, 0, {
+//   id: 'highlight-school-district-line',
+//   source: 'towns',
+//   type: 'line',
+//   paint: {
+//     'line-color': '#000000',
+//     'line-opacity': 0.9,
+//     'line-width': {
+//       'base': 2,
+//       'stops': [
+//         [4, 3],
+//         [13, 10]
+//       ]
+//     }
+//   },
+//   filter: ['in', 'le_code', ''],
+// });
+// style.layers.splice(insertIndex, 0, {
+//   id: 'highlight-county-line',
+//   source: 'towns',
+//   type: 'line',
+//   paint: {
+//     'line-color': '#000000',
+//     'line-opacity': 0.9,
+//     'line-width': {
+//       'base': 2,
+//       'stops': [
+//         [4, 3],
+//         [13, 10]
+//       ]
+//     }
+//   },
+//   filter: ['in', 'fips', ''],
+// });
+
 
 
 // FOR INTERACTION
@@ -147,4 +207,4 @@ style.layers.splice(insertIndex, 0, {
 //   filter: ['in', 'id', '']
 // })
 
-export default style;
+export default fromJS(style);

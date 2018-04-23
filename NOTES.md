@@ -45,7 +45,7 @@ UI Polish
 - [ ] Change marker to pin
 
 TODO:
-- [ ] Set default map display at statewide
+- [x] Set default map display at statewide
 - [ ] Polish dropdown selector
     - [ ] Keyboard accessibility
     - [ ] Escape w/out selecting function
@@ -60,6 +60,8 @@ Extra features
 - Add checkboxes for layers to show/hide (reservations, legislative districts)
 - Consider separating census places from incorporated municipalities - cleaner from a census data perspective
 
+Features to leave out
+- Mouseover effects on towns/counties (too laggy)
 
 Longer-term:
 - Use react-router setup to get sharable URLs for app state

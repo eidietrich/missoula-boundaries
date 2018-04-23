@@ -54,6 +54,19 @@ h1 {
     stroke-width: 3px;
 }
 
+.point-marker-icon {
+    fill: #377eb8;
+    stroke: #fff;
+    stroke-width: 0.75px;
+    stroke-linejoin: round;
+}
+.point-marker-icon-shadow {
+    fill: #444;
+    stroke: none;
+    opacity: 0.2;
+}
+
+
 .map-highlight {
 
 
@@ -70,13 +83,14 @@ h1 {
     fill: #ffff33;
     fill-opacity: 0.3;
     stroke: #ffff33;
-    stroke-width: 2px;
+    stroke-width: 1.5px;
     stroke-opacity: 0.9;
 }
 .map-highlight.county {
     fill: none;
     stroke: #e41a1c;
-    stroke-width: 4px;
+    stroke-width: 3px;
+    transform: translate(1);
 }
 
 .districts {

@@ -98,7 +98,6 @@ export default class TownPicker extends React.Component {
   }
 
   handleInputFocus(){
-    console.log('focus')
     this.setState({
       value: '',
       responses: this.options,
@@ -107,7 +106,6 @@ export default class TownPicker extends React.Component {
   }
 
   handleInputBlur(){
-    console.log('blur')
     this.setState({
       value: this.props.focusAddress,
       responses: [],
@@ -116,8 +114,6 @@ export default class TownPicker extends React.Component {
   }
 
   handleSelect(option){
-    console.log('selecting', option);
-
     this.props.handleChoice(option)
 
     this.setState({
