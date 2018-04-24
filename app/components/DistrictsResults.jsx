@@ -17,65 +17,85 @@ export default class DistrictsResults extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-
+    const focusFeatures = this.props.focusFeatures;
     // Load new data if geographies have chanced
-    const town = this.props.districts.town
-    if (town && town !== prevProps.districts.town){
-      this.loadTownData(town);
-    }
 
-    const school = this.props.districts.school
-    if (school && school !== prevProps.districts.school){
-      this.loadSchoolData(school)
+    // TODO: Generalize this via layers.js config
+    // OR generalize load function
+    const directory = {
+      'places': this.loadTownData.bind(this),
+      'schools-secondary': this.loadSchoolData.bind(this),
+      'counties': this.loadCountyData.bind(this),
     }
+    const layers = Object.keys(directory);
 
-    const county = this.props.districts.county
-    if (county && county !== prevProps.districts.county){
-      this.loadCountyData(county)
-    }
-
+    layers.forEach(key => {
+      const district =
+        focusFeatures.find(d => d.key === key) &&
+        focusFeatures.find(d => d.key === key).feature;
+      const prevDistrict =
+        prevProps.focusFeatures.find(d => d.key === key) &&
+        prevProps.focusFeatures.find(d => d.key === key).feature;
+      const isUpdate = (district !== prevDistrict);
+      if (district && isUpdate){
+        // call appropriate load function
+        directory[key](district);
+      }
+    });
   }
 
   // Render methods
   // TODO: Consider breaking some of these out into separate components
   render(){
-    // console.log('results state', this.state)
-    const districts = this.props.districts;
-    const location = this.interpretLocation(districts);
+    // console.log('### results component', this.props, this.state)
+    const focusFeatures = this.props.focusFeatures;
+    const town =
+      focusFeatures.find(d => d.key === 'places') &&
+      focusFeatures.find(d => d.key === 'places').feature;
+    const school =
+      focusFeatures.find(d => d.key === 'schools-secondary') &&
+      focusFeatures.find(d => d.key === 'schools-secondary').feature;
+    const county =
+      focusFeatures.find(d => d.key === 'counties') &&
+      focusFeatures.find(d => d.key === 'counties').feature;
+
+    const location = this.interpretLocation(town, county);
+
     return(
       <div>
         <h2>{location}</h2>
-        {this.makeTownResults(districts.town)}
-        {this.makeSchoolResults(districts.school)}
-        {this.makeCountyResults(districts.county)}
+        {this.makeTownResults(town)}
+        {this.makeSchoolResults(school)}
+        {this.makeCountyResults(county)}
       </div>
     )
   }
 
-  interpretLocation(districts){
+  interpretLocation(town, county){
     let locationDescription = null;
-    if (districts.town && districts.county) {
-      switch (districts.town.properties.type){
+
+    if (town && county) {
+      switch (town.properties.type){
         case 'city':
-          locationDescription = `City of ${districts.town.properties.id}`
+          locationDescription = `City of ${town.properties.id}`
           break;
         case 'town':
-          locationDescription = `Town of ${districts.town.properties.id}`
+          locationDescription = `Town of ${town.properties.id}`
           break;
         case 'census place':
-          locationDescription = `${districts.town.properties.id} (unincorporated)`
+          locationDescription = `${town.properties.id} (unincorporated)`
           break;
         case 'consolidated city/county':
-          locationDescription = `${districts.town.properties.id} (consolidated city/county)`
+          locationDescription = `${town.properties.id} (consolidated city/county)`
       }
-    } else if (districts.county) {
-      locationDescription = `Unincorporated ${districts.county.properties.id} County`
+    } else if (county) {
+      locationDescription = `Unincorporated ${county.properties.id} County`
     }
     return locationDescription;
   }
 
   makeTownResults(feature){
-    if(feature === null) return null;
+    if(!feature) return null;
 
     const population = this.state.townPopulation;
 
@@ -90,7 +110,7 @@ export default class DistrictsResults extends React.Component {
   }
 
   makeSchoolResults(feature){
-    if(feature === null) return null;
+    if(!feature) return null;
 
     const enrollment = this.state.schoolEnrollment;
 
@@ -105,7 +125,7 @@ export default class DistrictsResults extends React.Component {
   }
 
   makeCountyResults(feature){
-    if(feature === null) return null;
+    if(!feature) return null;
     const population = this.state.countyPopulation;
 
     const county = (

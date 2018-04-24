@@ -1,20 +1,18 @@
 /* DistrictMap.jsx
 
-Component to render a specified location inside a geographic district.
+Component to render map with Mapbox style and specifi
 
 Inputs:
- - props.lnglat --> [lng, lat] coordinate pair of interest point
- - props.districtFeature --> single geojson-format district feature to plot on map
- - props.districtType --> string label for district type being mapped (e.g. 'House district')
- - props.districtName --> string id for district (e.g. 'House District 4')
- - props.districts --> geojson FeatureCollection of all districts in current layer
+  - props.lnglat --> [lng, lat] coordinate pair of interest point/marker
+  - props.focusFeature --> array of features to map as geojson overlay boundaries
+  - viewport - viewport control object
+  - style - mapbox style (includes custom boundaries currrently)
+  - setViewport - way to pass viewport changes up to viewport object
+  - handleMapPointSelect - function for handling map click
 
 Outputs:
- - Render container with district information and map with boundary and interest point plotted
+ - Render container with district information and map with boundaries and interest point plotted
 
-NOTES/POSSIBLE GOTCHAS:
-- Depending on input library requirements, props.districtShape may or may not be appropriate format. Check whether library expects a geojson {type: "Feature"} or {type: "FeatureCollection"} (props.districtShape is supplied as {type: "Feature" currently})
-- Some geomapping systems assume [lat, lng] for coordinates, others [lng, lat]. Make sure props.latlng is in the order the mapping library expects.
 
 */
 
@@ -63,36 +61,15 @@ export default class DistrictMap extends React.Component {
     })
   }
 
-  // _onHover(event){
-  //   const features = event.features;
-  //   this.props.handleMapHover(features)
-  // }
-
   /* Render methods */
 
   render(){
 
-    const focusTown = this.props.townFeature ? (
-      <SVGOverlay redraw={(opt) => {
-        return this.buildShape(opt, this.props.townFeature, 'map-highlight town')
-      }} />
-    ) : null ;
-
-    const focusSchool = this.props.schoolFeature ? (
-      <SVGOverlay redraw={(opt) => {
-        return this.buildShape(opt, this.props.schoolFeature, 'map-highlight school')
-      }} />
-    ) : null ;
-
-    const focusCounty = this.props.countyFeature ? (
-      <SVGOverlay redraw={(opt) => {
-        return this.buildShape(opt, this.props.countyFeature, 'map-highlight county')
-      }} />
-    ) : null ;
-
-    // const focusTown = null;
-    // const focusSchool = null;
-    // const focusCounty = null;
+    const focusShapes = this.props.focusFeatures
+      .slice().reverse() // slice to avoid mutation
+      .map(d => {
+        return this.makeHighlightFeature(d.feature, d.cssClass)
+      });
 
     const markerOverlay = this.props.lnglat ? (
       <SVGOverlay redraw={(opt) => {
@@ -109,15 +86,21 @@ export default class DistrictMap extends React.Component {
           onViewportChange={this._onViewportChange.bind(this)}
           onClick={this._onClick.bind(this)}
         >
-          {focusCounty}
-          {focusSchool}
-          {focusTown}
+          {focusShapes}
           {markerOverlay}
         </ReactMapGL>
       </div>
     );
   }
 
+  makeHighlightFeature(geo, cssClass){
+    if (!geo) return null;
+    return (
+      <SVGOverlay key={cssClass} redraw={(opt) => {
+        return this.buildShape(opt, geo, 'map-highlight ' + cssClass)
+      }} />
+    )
+  }
 
   buildShape(opt, feature, className){
     const isMulti = feature.geometry.type === 'MultiPolygon'
@@ -143,8 +126,6 @@ export default class DistrictMap extends React.Component {
         {paths}
       </g>);
     }
-
-
   }
 
   buildMarker(opt, lnglat){
@@ -162,18 +143,4 @@ export default class DistrictMap extends React.Component {
       </g>
     );
   }
-
-//   /* Interaction handlers */
-
-//   // zoomToStreetLevel(){
-//   //   this._setViewport({
-//   //     zoom: 14,
-//   //     latitude: this.props.lnglat[1],
-//   //     longitude: this.props.lnglat[0],
-//   //   })
-//   // }
-
-//   zoomToFit(){
-//     this._setBounds(this.props.districtFeature);
-//   }
 }

@@ -21,6 +21,7 @@ import './../css/react-dropdown.css';
 // initial state
 const defaultState = {
   focusLnglat: null,
+  focusFeatures: [],
   mapViewport: {
     latitude: 46.75,
     longitude: -109.88,
@@ -38,11 +39,13 @@ export default class App extends React.Component {
 
   constructor(props){
     super(props);
-    this.dataManager = new DataManager(layers);
+    this.layers = layers;
+    this.dataManager = new DataManager(this.layers);
 
     const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
     this.state = {
       focusLnglat: defaults.focusLnglat,
+      focusFeatures: defaults.focusFeatures,
       readyToRenderMap: false,
       districts: {
         town: null,
@@ -81,11 +84,8 @@ export default class App extends React.Component {
 
     return (
       <DistrictMap
-        // key={renderLayer.feature.properties.id}
         lnglat={this.state.focusLnglat}
-        townFeature={this.state.districts.town}
-        schoolFeature={this.state.districts.school}
-        countyFeature={this.state.districts.county}
+        focusFeatures={this.state.focusFeatures}
 
         viewport={this.state.mapViewport}
         style={this.state.mapStyle}
@@ -100,6 +100,7 @@ export default class App extends React.Component {
   buildResults(){
     return (
       <DistrictsResults
+        focusFeatures={this.state.focusFeatures}
         districts={this.state.districts}
       />
     )
@@ -129,35 +130,19 @@ export default class App extends React.Component {
     const lnglat = location.lnglat;
 
     // const address = location.address;
-    const maps = this.dataManager.locatePointOnLayers(lnglat);
+    const focusFeatures = this.dataManager.locatePointOnLayers(lnglat);
 
-    const districts = {
-      town: maps.find(d => d.key === 'places').feature,
-      school: maps.find(d => d.key === 'schools-secondary').feature,
-      county: maps.find(d => d.key === 'counties').feature
-    }
+    // const districts = {
+    //   town: maps.find(d => d.key === 'places').feature,
+    //   school: maps.find(d => d.key === 'schools-secondary').feature,
+    //   county: maps.find(d => d.key === 'counties').feature
+    // }
 
     this.setState({
       focusLnglat: lnglat,
-      districts: districts
+      focusFeatures: focusFeatures,
     });
   }
-
-  // // THIS IS TOO LAGGY
-  // handleMapHover(features){
-  //   // features that are hovered over
-  //   // console.log('map hover', features)
-
-  //   // filter to town feature
-  //   const town = features.find(d => d.layer.id === 'town-fill')
-  //   if (town){
-  //     // console.log(town.properties)
-  //     this.setFilterValue('town-mouseover', town.properties.fips)
-  //   } else {
-  //     this.setFilterValue('town-mouseover', '')
-  //   }
-
-  // }
 
   handleMapShapeSelect(location){
     const shape = location.shape;
@@ -213,59 +198,6 @@ export default class App extends React.Component {
         county: null,
       },
       mapStyle: mapStyle
-    })
-  }
-
-  // // Failed (for now) effort to render focus shapes with Mapbox styling
-  // changeMapStyleColor(){
-  //   // This produces a warning, trigers full map refresh
-  //   // ImmutableJS is used as solution to this on examples
-
-  //   const layerId = 'town-fill';
-  //   const newColor = '#0000ff';
-
-  //   this.changeMultipleFilters({
-  //     'town': '04975',
-  //     'school': '0369',
-  //     'county': '30007',
-  //   })
-
-  //   // this.changeMapFillColor(layerId, newColor);
-  //   // this.changeFilterValue('highlight-town-line', '04975')
-  //   // this.changeFilterValue('highlight-school-district-line', '0369')
-  //   // this.changeFilterValue('highlight-county-line', '30007')
-
-  //   console.log('ddd');
-
-  // }
-
-  // changeMultipleFilters(newIds){
-  //   const townLayerIndex = mapStyle.toJS().layers.findIndex(d => d.id === 'highlight-town-line', '04975')
-  //   const schoolLayerIndex = mapStyle.toJS().layers.findIndex(d => d.id === 'highlight-school-district-line')
-  //   const countyLayerIndex = mapStyle.toJS().layers.findIndex(d => d.id === 'highlight-county-line')
-
-  //   let newMapStyle = this.state.mapStyle;
-  //   newMapStyle = newMapStyle.setIn(['layers', townLayerIndex, 'filter', 2], newIds.town)
-  //   newMapStyle = newMapStyle.setIn(['layers', schoolLayerIndex, 'filter', 2], newIds.school)
-  //   newMapStyle = newMapStyle.setIn(['layers', countyLayerIndex, 'filter', 2], newIds.county)
-  //   console.log('x', newMapStyle)
-  //   this.setState({
-  //     mapStyle: newMapStyle
-  //   })
-  // }
-
-  // changeMapFillColor(layerId, color){
-  //   const layerIndex = mapStyle.toJS().layers.findIndex(d => d.id === layerId)
-  //   this.setState({
-  //     mapStyle: this.state.mapStyle.setIn(['layers', layerIndex, 'paint', 'fill-color'], color)
-  //   })
-  // }
-
-  setFilterValue(layerId, newFilterId){
-    console.log(layerId, newFilterId)
-    const layerIndex = mapStyle.toJS().layers.findIndex(d => d.id === layerId)
-    this.setState({
-      mapStyle: this.state.mapStyle.setIn(['layers', layerIndex, 'filter', 2], newFilterId)
     })
   }
 

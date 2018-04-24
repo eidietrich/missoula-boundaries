@@ -54,6 +54,9 @@ DOCUMENTATION
 - [ ] Update README.md
 - [ ] Push to public github
 
+OPTIMIZATION
+- Results component is getting rendered once for every API it calls -- could look at some sort of queuing solution
+
 Extra features
 - Show reservation boundaries
 - Annotations (e.g. school district merger/consolidations, Anaconda/Butte switching to consolidated govts)

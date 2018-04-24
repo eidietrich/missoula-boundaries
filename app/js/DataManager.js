@@ -46,11 +46,12 @@ export default class DataManager {
 
   locatePointOnLayers(lnglat){
     const maps = this.layers.map(layer => {
-      const features = layer.data.features;
+      const features = layer.geodata.features;
       const containingFeature = this.getContainingFeature(features, lnglat)
       return {
         key: layer.key,
         label: layer.label,
+        cssClass: layer.cssClass,
         feature: containingFeature
       };
 
