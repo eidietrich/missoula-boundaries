@@ -4,7 +4,11 @@ import SchoolEnrollmentResults from './SchoolEnrollmentResults.jsx';
 import PlacePopulationResults from './PlacePopulationResults.jsx';
 import CountyPopulationResults from './CountyPopulationResults.jsx';
 
-const API_URL = process.env.API_URL || '';
+function apiCallback(key, data) {
+  const stateUpdate = {};
+  stateUpdate[key] = data;
+  this.setState(stateUpdate);
+}
 
 export default class DistrictsResults extends React.Component {
   constructor(props){
@@ -17,31 +21,18 @@ export default class DistrictsResults extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    const focusFeatures = this.props.focusFeatures;
     // Load new data if geographies have chanced
+    const focusFeatures = this.props.focusFeatures;
+    if (focusFeatures === prevProps.focusFeatures) return;
+    this.loadData(focusFeatures);
+  }
 
-    // TODO: Generalize this via layers.js config
-    // OR generalize load function
-    const directory = {
-      'places': this.loadTownData.bind(this),
-      'schools-secondary': this.loadSchoolData.bind(this),
-      'counties': this.loadCountyData.bind(this),
-    }
-    const layers = Object.keys(directory);
-
-    layers.forEach(key => {
-      const district =
-        focusFeatures.find(d => d.key === key) &&
-        focusFeatures.find(d => d.key === key).feature;
-      const prevDistrict =
-        prevProps.focusFeatures.find(d => d.key === key) &&
-        prevProps.focusFeatures.find(d => d.key === key).feature;
-      const isUpdate = (district !== prevDistrict);
-      if (district && isUpdate){
-        // call appropriate load function
-        directory[key](district);
+  loadData(focusFeatures){
+    focusFeatures.forEach(layer => {
+      if (layer.feature){
+        layer.loader(layer.feature, apiCallback.bind(this));
       }
-    });
+    })
   }
 
   // Render methods
@@ -136,33 +127,5 @@ export default class DistrictsResults extends React.Component {
     );
 
     return county;
-  }
-
-  // Data management
-  loadTownData(town){
-    // Current API DB doesn't have data for census places, only incorporated municipalities
-    if (town && town.properties.type != 'census place'){
-      this.apiCall('/place/population/', town.properties.fips, 'townPopulation')
-    } else {
-      this.setState({townPopulation: null})
-    }
-  }
-
-  loadSchoolData(school){
-    this.apiCall('/school/enrollment/hs/', school.properties.le_code, 'schoolEnrollment')
-  }
-
-  loadCountyData(county){
-    this.apiCall('/county/population/', county.properties.fips, 'countyPopulation')
-  }
-
-  apiCall(route, code, stateVariable){
-    fetch(API_URL + route + code)
-      .then(results => results.json())
-      .then(json => {
-        const stateUpdate = {}
-        stateUpdate[stateVariable] = json.data;
-        this.setState(stateUpdate)
-      })
   }
 }

@@ -57,13 +57,6 @@ export default class App extends React.Component {
     }
   }
 
-  componentDidMount(){
-    // Was previously necessary for some reason
-    // this.setState({
-    //   readyToRenderMap: true,
-    // })
-  }
-
   /* Render functions */
 
   buildControlPanel(){
@@ -79,9 +72,6 @@ export default class App extends React.Component {
   }
 
   buildMap(){
-    // if (!this.state.readyToRenderMap) return null;
-    // May no longer be necessary
-
     return (
       <DistrictMap
         lnglat={this.state.focusLnglat}
@@ -91,7 +81,6 @@ export default class App extends React.Component {
         style={this.state.mapStyle}
 
         setViewport={this.setViewport.bind(this)}
-
         handleMapPointSelect={this.handleMapPointSelect.bind(this)}
       />
     );
@@ -101,7 +90,6 @@ export default class App extends React.Component {
     return (
       <DistrictsResults
         focusFeatures={this.state.focusFeatures}
-        districts={this.state.districts}
       />
     )
   }
@@ -129,14 +117,7 @@ export default class App extends React.Component {
   handleMapPointSelect(location){
     const lnglat = location.lnglat;
 
-    // const address = location.address;
     const focusFeatures = this.dataManager.locatePointOnLayers(lnglat);
-
-    // const districts = {
-    //   town: maps.find(d => d.key === 'places').feature,
-    //   school: maps.find(d => d.key === 'schools-secondary').feature,
-    //   county: maps.find(d => d.key === 'counties').feature
-    // }
 
     this.setState({
       focusLnglat: lnglat,

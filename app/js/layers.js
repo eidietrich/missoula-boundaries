@@ -1,13 +1,18 @@
 // Data import
-// #TODO: Find a cleaner way to import multiple datafiles?
-// Eventually extract this to its own file
-import mtHouseDistricts from './../geodata/mt-house-districts.geojson';
-import mtSenateDistricts from './../geodata/mt-senate-districts.geojson';
+
+// GEODATA
+
+// import mtHouseDistricts from './../geodata/mt-house-districts.geojson';
+// import mtSenateDistricts from './../geodata/mt-senate-districts.geojson';
 import mtElemSchools from './../geodata/mt-elem-districts.geojson';
 import mtHighSchools from './../geodata/mt-hs-districts.geojson';
 import mtTowns from './../geodata/mt-places.geojson';
 import mtCounties from './../geodata/mt-counties.geojson';
 
+// OTHER HELPER DATA
+
+// functions for API calls
+import loaders from './data-loaders';
 
 // const layers = [
 //   {key: 'places', category: 'Montana towns', label: 'Towns', data: mtTowns},
@@ -28,6 +33,12 @@ Idea is to set up an info that
 - [ ] tells DistrictResults.jsx which values to display
 - [ ] enables a toggle layer on/off state functionality
 
+# Layer specification
+- key
+- label
+- cssClass - key used for style bindings
+- geodata - geojson feature collection
+
 */
 
 const layers = [
@@ -36,18 +47,21 @@ const layers = [
     label: 'Towns',
     cssClass: 'town',
     geodata: mtTowns,
+    loader: loaders.loadTownData,
   },
   {
     key: 'schools-secondary',
     label: 'High School Districts',
     cssClass: 'school',
     geodata: mtHighSchools,
+    loader: loaders.loadSchoolData,
   },
   {
     key: 'counties',
     label: 'Counties',
     cssClass: 'county',
     geodata: mtCounties,
+    loader: loaders.loadCountyData,
   },
 ]
 

@@ -52,7 +52,9 @@ export default class DataManager {
         key: layer.key,
         label: layer.label,
         cssClass: layer.cssClass,
+        loader: layer.loader, // routing for API call
         feature: containingFeature
+
       };
 
     });
