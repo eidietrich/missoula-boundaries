@@ -90,7 +90,11 @@ h1 {
     fill: none;
     stroke: #e41a1c;
     stroke-width: 3px;
-    transform: translate(1);
+}
+.map-highlight.reservation {
+    fill: none;
+    stroke: #f781bf;
+    stroke-width: 1.5px;
 }
 
 .districts {

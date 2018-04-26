@@ -4,7 +4,8 @@ import { FlyToInterpolator } from 'react-map-gl'
 import turfBbox from '@turf/bbox';
 import WebMercatorViewport from 'viewport-mercator-project';
 
-import DataManager from './../js/DataManager.js'
+import DataManager from './../js/DataManager.js';
+import StyleManager from './../js/StyleManager.js';
 
 import TownPicker from './TownPicker.jsx';
 import DistrictMap from './DistrictMap.jsx';
@@ -12,7 +13,7 @@ import DistrictsResults from './DistrictsResults.jsx';
 
 import mtTowns from './../geodata/mt-places.geojson'; // Hacky/redundant import
 import layers from './../js/layers.js'
-import mapStyle from './../js/map-style.js'; // Immutable.js object
+// import mapStyle from './../js/map-style.js'; // Immutable.js object
 
 import './../css/app.css';
 import './../css/control-container.css';
@@ -22,6 +23,12 @@ import './../css/react-dropdown.css';
 const defaultState = {
   focusLnglat: null,
   focusFeatures: [],
+  showLayers: [
+    'places',
+    'schools-secondary',
+    'reservations',
+    'counties',
+  ],
   mapViewport: {
     latitude: 46.75,
     longitude: -109.88,
@@ -39,21 +46,18 @@ export default class App extends React.Component {
 
   constructor(props){
     super(props);
-    this.layers = layers;
-    this.dataManager = new DataManager(this.layers);
+    this.dataManager = new DataManager(layers);
+    this.dataManager.setShowLayers(defaultState.showLayers);
+
+    this.styleManager = new StyleManager();
 
     const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
     this.state = {
       focusLnglat: defaults.focusLnglat,
       focusFeatures: defaults.focusFeatures,
       readyToRenderMap: false,
-      districts: {
-        town: null,
-        school: null,
-        county: null,
-      },
       mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
-      mapStyle: mapStyle
+      mapStyle: this.styleManager.getStyle().toJS(),
     }
   }
 
@@ -173,12 +177,8 @@ export default class App extends React.Component {
     this.setViewport(defaultViewport)
     this.setState({
       focusLnglat: null,
-      districts: {
-        town: null,
-        school: null,
-        county: null,
-      },
-      mapStyle: mapStyle
+      // mapStyle: this.styleManager.getStyle().toJS(),
+      focusFeatures: []
     })
   }
 

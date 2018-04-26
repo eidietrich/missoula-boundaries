@@ -35,22 +35,22 @@ export default class DistrictsResults extends React.Component {
     })
   }
 
+  getFeature(fromSet, key){
+    return fromSet.find(d => d.key === key) &&
+      fromSet.find(d => d.key === key).feature;
+  }
+
   // Render methods
   // TODO: Consider breaking some of these out into separate components
   render(){
     // console.log('### results component', this.props, this.state)
     const focusFeatures = this.props.focusFeatures;
-    const town =
-      focusFeatures.find(d => d.key === 'places') &&
-      focusFeatures.find(d => d.key === 'places').feature;
-    const school =
-      focusFeatures.find(d => d.key === 'schools-secondary') &&
-      focusFeatures.find(d => d.key === 'schools-secondary').feature;
-    const county =
-      focusFeatures.find(d => d.key === 'counties') &&
-      focusFeatures.find(d => d.key === 'counties').feature;
+    const town = this.getFeature(focusFeatures, 'places')
+    const school = this.getFeature(focusFeatures, 'schools-secondary')
+    const reservation = this.getFeature(focusFeatures, 'reservations')
+    const county = this.getFeature(focusFeatures, 'counties')
 
-    const location = this.interpretLocation(town, county);
+    const location = this.interpretLocation(town, county, reservation);
 
     return(
       <div>
@@ -62,7 +62,7 @@ export default class DistrictsResults extends React.Component {
     )
   }
 
-  interpretLocation(town, county){
+  interpretLocation(town, county, reservation){
     let locationDescription = null;
 
     if (town && county) {
@@ -82,6 +82,12 @@ export default class DistrictsResults extends React.Component {
     } else if (county) {
       locationDescription = `Unincorporated ${county.properties.id} County`
     }
+
+    if (reservation){
+      const name = reservation.properties.id;
+      locationDescription += ` (${name} Reservation)`
+    }
+
     return locationDescription;
   }
 

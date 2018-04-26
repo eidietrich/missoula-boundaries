@@ -4,9 +4,10 @@
 
 // import mtHouseDistricts from './../geodata/mt-house-districts.geojson';
 // import mtSenateDistricts from './../geodata/mt-senate-districts.geojson';
-import mtElemSchools from './../geodata/mt-elem-districts.geojson';
+// import mtElemSchools from './../geodata/mt-elem-districts.geojson';
 import mtHighSchools from './../geodata/mt-hs-districts.geojson';
 import mtTowns from './../geodata/mt-places.geojson';
+import mtReservations from './../geodata/mt-reservations.geojson';
 import mtCounties from './../geodata/mt-counties.geojson';
 
 // OTHER HELPER DATA
@@ -55,6 +56,13 @@ const layers = [
     cssClass: 'school',
     geodata: mtHighSchools,
     loader: loaders.loadSchoolData,
+  },
+  {
+    key: 'reservations',
+    label: 'American Indian Reservations',
+    cssClass: 'reservation',
+    geodata: mtReservations,
+    loader: loaders.loadReservationData,
   },
   {
     key: 'counties',

@@ -34,9 +34,14 @@ function loadCountyData(county, callback){
   apiCall(callback, '/county/population/', county.properties.fips, 'countyPopulation')
 }
 
+function loadReservationData(reservation, callback){
+  return null;
+}
+
 
 export default {
   loadTownData: loadTownData,
   loadSchoolData: loadSchoolData,
   loadCountyData: loadCountyData,
+  loadReservationData: loadReservationData,
 }
