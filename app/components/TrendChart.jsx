@@ -20,12 +20,16 @@ export default class TrendChart extends React.Component {
 
     if (data === null) return null;
 
+    const width = this.props.width || '100%';
+    const height = this.props.height || '100%';
+
     const plotData = data.map(trendFunction)
 
 
     const lineChart = (
-      <div className='line-chart-wrapper' style={{ margin: 20 }}>
-        <LineChart width={400} height={150} data={plotData}>
+      <div className='metric-line-chart-wrapper' style={{ margin: 0 }}>
+      <ResponsiveContainer width={'100%'} height={100}>
+        <LineChart data={plotData}>
           <CartesianGrid stroke="#eee" vertical={false}/>
           <YAxis type='number' yAxisId={0} domain={range} axisLine={false} stroke="#666"
             tickFormatter={format(',')}
@@ -36,6 +40,7 @@ export default class TrendChart extends React.Component {
           <ReferenceLine y={0} stroke="#444" strokeDasharray="1 1" />
           <Line dataKey='y' stroke='#ff7300' strokeWidth={2} yAxisId={0}/>
         </LineChart>
+      </ResponsiveContainer>
 
       </div>
     );

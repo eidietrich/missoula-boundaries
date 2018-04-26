@@ -53,7 +53,7 @@ export default class DistrictsResults extends React.Component {
     const location = this.interpretLocation(town, county, reservation);
 
     return(
-      <div>
+      <div className='results-container'>
         <h2>{location}</h2>
         {this.makeTownResults(town)}
         {this.makeSchoolResults(school)}
@@ -97,9 +97,13 @@ export default class DistrictsResults extends React.Component {
     const population = this.state.townPopulation;
 
     const town = (
-      <div>
-        <h3>{feature.properties.id}</h3>
-        <PlacePopulationResults data={population} />
+      <div className="geography-container town">
+        <div className="geography-header">
+          {feature.properties.id}
+        </div>
+        <div className="geography-metric-row">
+          <PlacePopulationResults data={population} />
+        </div>
       </div>
     );
 
@@ -112,9 +116,13 @@ export default class DistrictsResults extends React.Component {
     const enrollment = this.state.schoolEnrollment;
 
     const school = (
-      <div>
-        <h3>{feature.properties.id}</h3>
-        <SchoolEnrollmentResults data={enrollment} />
+      <div className="geography-container school">
+        <div className="geography-header">
+          {feature.properties.id}
+        </div>
+        <div className="geography-metric-row">
+          <SchoolEnrollmentResults data={enrollment} />
+        </div>
       </div>
     );
 
@@ -126,9 +134,15 @@ export default class DistrictsResults extends React.Component {
     const population = this.state.countyPopulation;
 
     const county = (
-      <div>
-        <h3>{feature.properties.id + ' County'}</h3>
-        <CountyPopulationResults data={population} />
+      <div className="geography-container county">
+        <div className="geography-header">
+          {feature.properties.id + ' County'}
+        </div>
+        <div className="geography-metric-row">
+          <CountyPopulationResults data={population} />
+          <CountyPopulationResults data={population} />
+          <CountyPopulationResults data={population} />
+        </div>
       </div>
     );
 

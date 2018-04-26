@@ -54,11 +54,11 @@ export default class CountyPopulationResults extends React.Component {
     />
 
     return (
-      <div>
-        <h4>Population</h4>
-        <p>{description}</p>
+      <div className="metric-container">
+        <div className="metric-header">Population</div>
+        <div className="metric-description">{description}</div>
         {lineChart}
-        <p>Data: US Census Bureau.</p>
+        <div className="metric-note">Data: US Census Bureau</div>
       </div>
     );
   }

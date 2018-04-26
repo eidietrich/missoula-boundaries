@@ -17,6 +17,7 @@ import layers from './../js/layers.js'
 
 import './../css/app.css';
 import './../css/control-container.css';
+import './../css/results-containers.css';
 import './../css/react-dropdown.css';
 
 // initial state
@@ -102,7 +103,7 @@ export default class App extends React.Component {
     // console.log('rendering w/ state...', this.state)
     return (
        <div className="app-container">
-        <h1>How is your town doing?</h1>
+        <h1>Montana Explorer</h1>
         <div
           onClick={this.reset.bind(this)}>
           [RESET]

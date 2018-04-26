@@ -46,7 +46,8 @@ export default class DistrictMap extends React.Component {
 
     this.props.setViewport({
       width: clientWidth,
-      height: clientWidth * mapAspect,
+      // height: clientWidth * mapAspect,
+      height: clientHeight,
     })
   }
 

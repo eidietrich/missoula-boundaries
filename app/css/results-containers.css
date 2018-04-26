@@ -1,0 +1,79 @@
+/*
+
+Hierarchy here:
+- Results container
+    - geography container
+        - metric container
+
+*/
+
+
+.results-container {
+    /*border: 1px solid red;*/
+
+    display: flex;
+    flex-direction: column;
+    /*height: 1000px;*/
+}
+
+.geography-container {
+    /*border: 1px solid green;*/
+    display: block;
+    margin-top: 5px;
+}
+
+.geography-header {
+    text-transform: uppercase;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 0.2em;
+
+    color: #fff;
+    background-color: #444;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 5px;
+
+}
+
+.geography-metric-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.metric-container {
+    /*border: 1px solid blue;*/
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 300px;
+    /*max-width: 50%;*/
+
+    flex-grow: 1;
+    /*height: 250px;*/
+}
+
+.metric-header {
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: 0.2em;
+}
+
+.metric-description {
+    margin-bottom: 0.5em;
+}
+
+.metric-description span.bold {
+    font-weight: bold;
+}
+
+.metric-line-chart-wrapper {
+
+}
+
+.metric-note {
+    color: #666;
+    font-style: italic;
+    font-size: 0.8em;
+    text-align: right;
+}

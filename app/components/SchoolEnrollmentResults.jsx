@@ -52,11 +52,11 @@ export default class SchoolEnrollmentResults extends React.Component {
     />
 
     return (
-      <div>
-        <h4>Enrollment</h4>
-        <p>{description}</p>
+      <div className="metric-container">
+        <div className="metric-header">Enrollment</div>
+        <div className="metric-description">{description}</div>
         {lineChart}
-        <p>Data: Montana Office of Public Instruction</p>
+        <div className="metric-note">Data: Montana Office of Public Instruction</div>
       </div>
     );
   }
