@@ -2,7 +2,7 @@ import React from 'react';
 
 import { format } from 'd3-format';
 
-import TrendChart from './TrendChart.jsx';
+import TrendChart from './../TrendChart.jsx';
 
 const f = format(',')
 const p = format('.1%')

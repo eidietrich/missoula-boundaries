@@ -16,6 +16,10 @@ Hierarchy here:
     /*height: 1000px;*/
 }
 
+.results-location-header{
+
+}
+
 .geography-container {
     /*border: 1px solid green;*/
     display: block;
@@ -63,7 +67,7 @@ Hierarchy here:
     margin-bottom: 0.5em;
 }
 
-.metric-description span.bold {
+.metric-description span.result {
     font-weight: bold;
 }
 

@@ -10,28 +10,16 @@ import mtTowns from './../geodata/mt-places.geojson';
 import mtReservations from './../geodata/mt-reservations.geojson';
 import mtCounties from './../geodata/mt-counties.geojson';
 
-// OTHER HELPER DATA
+import dataLoaders from './data-loaders.js';
+import dataDisplayers from './data-displayers.js';
 
-// functions for API calls
-import loaders from './data-loaders';
 
-// const layers = [
-//   {key: 'places', category: 'Montana towns', label: 'Towns', data: mtTowns},
-//   {key: 'counties', category: 'Montana counties', label: 'Counties', data: mtCounties},
-//   // {key: 'legislature-house', category: 'Montana Legislature', label: 'House Districts', data: mtHouseDistricts},
-//   // {key: 'legislature-senate', category: 'Montana Legislature', label: 'Senate Districts', data: mtSenateDistricts},
-//   // {key: 'schools-elementary', category: 'Montana Schools', label: 'Elementary School Districts', data: mtElemSchools},
-//   {key: 'schools-secondary', category: 'Montana Schools', label: 'High School Districts', data: mtHighSchools},
-// ];
+/*
 
-/* V2.0
-
-Work in progress here
-
-Idea is to set up an info that
-- [ ] works with DataManager.js,
-- [ ] feeds into DistrictMap focusFeatures,
-- [ ] tells DistrictResults.jsx which values to display
+Idea is to set up a data structure that
+- [x] works with DataManager.js,
+- [x] feeds into DistrictMap focusFeatures,
+- [x] tells DistrictResults.jsx which values to display
 - [ ] enables a toggle layer on/off state functionality
 
 # Layer specification
@@ -39,6 +27,8 @@ Idea is to set up an info that
 - label
 - cssClass - key used for style bindings
 - geodata - geojson feature collection
+- loader - function for making API calls to pull in feature-related data
+- displayer - function for rendering results from feature (is it redundant with loader?)
 
 */
 
@@ -48,28 +38,32 @@ const layers = [
     label: 'Towns',
     cssClass: 'town',
     geodata: mtTowns,
-    loader: loaders.loadTownData,
+    loader: dataLoaders.loadTownData,
+    displayer: dataDisplayers.makeTownResults,
   },
   {
     key: 'schools-secondary',
     label: 'High School Districts',
     cssClass: 'school',
     geodata: mtHighSchools,
-    loader: loaders.loadSchoolData,
+    loader: dataLoaders.loadSchoolData,
+    displayer: dataDisplayers.makeSchoolResults,
   },
   {
     key: 'reservations',
     label: 'American Indian Reservations',
     cssClass: 'reservation',
     geodata: mtReservations,
-    loader: loaders.loadReservationData,
+    loader: dataLoaders.loadReservationData,
+    displayer: dataDisplayers.makeReservationResults,
   },
   {
     key: 'counties',
     label: 'Counties',
     cssClass: 'county',
     geodata: mtCounties,
-    loader: loaders.loadCountyData,
+    loader: dataLoaders.loadCountyData,
+    displayer: dataDisplayers.makeCountyResults,
   },
 ]
 

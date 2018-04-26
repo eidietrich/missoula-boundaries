@@ -1,6 +1,7 @@
-/* DataManager.js
 
-Object for managing/parsing data
+/* LayerManager.js
+
+Object for managing/parsing data layers
 
 Expects:
   layers - array of geojson feature collections to be included
@@ -17,7 +18,7 @@ NOTES:
 import { point, polygon } from '@turf/helpers';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
-export default class DataManager {
+export default class LayerManager {
   constructor(allLayers){
     this.allLayers = allLayers;
     this.showLayers = [];
@@ -64,13 +65,22 @@ export default class DataManager {
         key: layer.key,
         label: layer.label,
         cssClass: layer.cssClass,
-        loader: layer.loader, // routing for API call
-        feature: containingFeature
+        loader: layer.loader, // routing for API calls
+        displayer: layer.displayer, // instructions for result rendering
+        feature: containingFeature,
 
       };
 
     });
     return maps;
+  }
+
+  getAllLayers(){
+    return this.allLayers;
+  }
+
+  getShowLayers(){
+    return this.showLayers;
   }
 
 }

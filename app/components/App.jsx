@@ -4,10 +4,11 @@ import { FlyToInterpolator } from 'react-map-gl'
 import turfBbox from '@turf/bbox';
 import WebMercatorViewport from 'viewport-mercator-project';
 
-import DataManager from './../js/DataManager.js';
+import LayerManager from './../js/LayerManager.js';
 import StyleManager from './../js/StyleManager.js';
 
 import TownPicker from './TownPicker.jsx';
+import LayerPicker from './LayerPicker.jsx';
 import DistrictMap from './DistrictMap.jsx';
 import DistrictsResults from './DistrictsResults.jsx';
 
@@ -17,6 +18,7 @@ import layers from './../js/layers.js'
 
 import './../css/app.css';
 import './../css/control-container.css';
+import './../css/map-container.css';
 import './../css/results-containers.css';
 import './../css/react-dropdown.css';
 
@@ -47,8 +49,8 @@ export default class App extends React.Component {
 
   constructor(props){
     super(props);
-    this.dataManager = new DataManager(layers);
-    this.dataManager.setShowLayers(defaultState.showLayers);
+    this.layerManager = new LayerManager(layers);
+    this.layerManager.setShowLayers(defaultState.showLayers);
 
     this.styleManager = new StyleManager();
 
@@ -57,61 +59,52 @@ export default class App extends React.Component {
       focusLnglat: defaults.focusLnglat,
       focusFeatures: defaults.focusFeatures,
       readyToRenderMap: false,
+      showLayers: defaults.showLayers,
       mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
       mapStyle: this.styleManager.getStyle().toJS(),
     }
   }
 
-  /* Render functions */
-
-  buildControlPanel(){
-    // TODO: Find less hacky way to get town districts?
-    return (
-      <div className="control-container">
-        <TownPicker
-          options={mtTowns}
-          handleChoice={this.handleMapShapeSelect.bind(this)}
-        />
-      </div>
-    );
-  }
-
-  buildMap(){
-    return (
-      <DistrictMap
-        lnglat={this.state.focusLnglat}
-        focusFeatures={this.state.focusFeatures}
-
-        viewport={this.state.mapViewport}
-        style={this.state.mapStyle}
-
-        setViewport={this.setViewport.bind(this)}
-        handleMapPointSelect={this.handleMapPointSelect.bind(this)}
-      />
-    );
-  }
-
-  buildResults(){
-    return (
-      <DistrictsResults
-        focusFeatures={this.state.focusFeatures}
-      />
-    )
-  }
-
   render(){
     // console.log('rendering w/ state...', this.state)
     return (
-       <div className="app-container">
+      <div className="app-container">
         <h1>Montana Explorer</h1>
-        <div
-          onClick={this.reset.bind(this)}>
-          [RESET]
+
+        <div className="control-container">
+          <div onClick={this.reset.bind(this)}>
+            [RESET]
+          </div>
+
+          <LayerPicker
+            layers={this.layerManager.getAllLayers()}
+
+          />
+          <TownPicker
+            options={mtTowns}
+            handleChoice={this.handleMapShapeSelect.bind(this)}
+          />
         </div>
 
-        {this.buildControlPanel()}
-        {this.buildMap()}
-        {this.buildResults()}
+        <DistrictMap
+          // Display data
+          lnglat={this.state.focusLnglat}
+          focusFeatures={this.state.focusFeatures}
+          // Map state
+          viewport={this.state.mapViewport}
+          style={this.state.mapStyle}
+          // Interaction handling
+          setViewport={this.setViewport.bind(this)}
+          handleMapPointSelect={this.handleMapPointSelect.bind(this)}
+        />
+
+        <DistrictsResults
+          focusFeatures={this.state.focusFeatures}
+        />
+
+        <div className="respond-container">
+          See something here that deserves a story? Let us know at <a href="mailto:">tkemail@placeholder.com</a>.
+        </div>
 
       </div>
     );
@@ -122,7 +115,7 @@ export default class App extends React.Component {
   handleMapPointSelect(location){
     const lnglat = location.lnglat;
 
-    const focusFeatures = this.dataManager.locatePointOnLayers(lnglat);
+    const focusFeatures = this.layerManager.locatePointOnLayers(lnglat);
 
     this.setState({
       focusLnglat: lnglat,

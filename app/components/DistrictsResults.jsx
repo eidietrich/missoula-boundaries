@@ -1,18 +1,11 @@
 import React from 'react';
 
-import SchoolEnrollmentResults from './SchoolEnrollmentResults.jsx';
-import PlacePopulationResults from './PlacePopulationResults.jsx';
-import CountyPopulationResults from './CountyPopulationResults.jsx';
-
-function apiCallback(key, data) {
-  const stateUpdate = {};
-  stateUpdate[key] = data;
-  this.setState(stateUpdate);
-}
+// NOTE: focus features come with 'displayer' property that provides instructions on how to render them
 
 export default class DistrictsResults extends React.Component {
   constructor(props){
     super(props)
+    // This is a weird place to store fetched data
     this.state = {
       townPopulation: null,
       schoolEnrollment: null,
@@ -28,6 +21,12 @@ export default class DistrictsResults extends React.Component {
   }
 
   loadData(focusFeatures){
+    function apiCallback(key, data) {
+      const stateUpdate = {};
+      stateUpdate[key] = data;
+      this.setState(stateUpdate);
+    }
+
     focusFeatures.forEach(layer => {
       if (layer.feature){
         layer.loader(layer.feature, apiCallback.bind(this));
@@ -52,17 +51,20 @@ export default class DistrictsResults extends React.Component {
 
     const location = this.interpretLocation(town, county, reservation);
 
+    const results = focusFeatures.map(feature =>
+      feature.displayer(feature.feature, this.state)
+    );
+
     return(
       <div className='results-container'>
-        <h2>{location}</h2>
-        {this.makeTownResults(town)}
-        {this.makeSchoolResults(school)}
-        {this.makeCountyResults(county)}
+        <div className="results-location-header">{location}</div>
+        {results}
       </div>
     )
   }
 
   interpretLocation(town, county, reservation){
+    // Takes focus geographies and creates language description
     let locationDescription = null;
 
     if (town && county) {
@@ -91,61 +93,5 @@ export default class DistrictsResults extends React.Component {
     return locationDescription;
   }
 
-  makeTownResults(feature){
-    if(!feature) return null;
 
-    const population = this.state.townPopulation;
-
-    const town = (
-      <div className="geography-container town">
-        <div className="geography-header">
-          {feature.properties.id}
-        </div>
-        <div className="geography-metric-row">
-          <PlacePopulationResults data={population} />
-        </div>
-      </div>
-    );
-
-    return town;
-  }
-
-  makeSchoolResults(feature){
-    if(!feature) return null;
-
-    const enrollment = this.state.schoolEnrollment;
-
-    const school = (
-      <div className="geography-container school">
-        <div className="geography-header">
-          {feature.properties.id}
-        </div>
-        <div className="geography-metric-row">
-          <SchoolEnrollmentResults data={enrollment} />
-        </div>
-      </div>
-    );
-
-    return school;
-  }
-
-  makeCountyResults(feature){
-    if(!feature) return null;
-    const population = this.state.countyPopulation;
-
-    const county = (
-      <div className="geography-container county">
-        <div className="geography-header">
-          {feature.properties.id + ' County'}
-        </div>
-        <div className="geography-metric-row">
-          <CountyPopulationResults data={population} />
-          <CountyPopulationResults data={population} />
-          <CountyPopulationResults data={population} />
-        </div>
-      </div>
-    );
-
-    return county;
-  }
 }
