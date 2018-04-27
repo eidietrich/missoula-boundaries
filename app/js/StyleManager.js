@@ -17,79 +17,67 @@ import mtCounties from './../geodata/mt-counties.geojson';
 import mtReservations from './../geodata/mt-reservations.geojson';
 
 export default class StyleManager {
-  constructor(){
+  constructor(layers){
     this.defaultStyle = fromJS(defaultMapStyle);
-    this.style = this.defaultStyle;
+
 
     // location for new shape layers, beneath labels
     this.insertIndex = -3;
 
-    this.addGeojsonSourceLayer(mtTowns, 'towns')
-    this.addGeojsonSourceLayer(mtHighSchools, 'schools')
-    this.addGeojsonSourceLayer(mtCounties, 'counties')
-    this.addGeojsonSourceLayer(mtReservations, 'reservations')
+    this.addGeodataSources(layers);
+    this.style = this.defaultStyle;
+    // defaultStyle is constant, style changes
 
-    this.addDisplayLayer('counties','fill', {
-      'fill-color': '#666',
-      'fill-opacity': 0.05,
-    })
-    this.addDisplayLayer('reservations','fill', {
-      'fill-color': '#f781bf',
-      'fill-opacity': 0.2,
-    })
-    this.addDisplayLayer('schools','fill', {
-      'fill-color': '#666',
-      'fill-opacity': 0.05,
-    })
-    this.addDisplayLayer('schools','line', {
-      'line-color': '#ffff33',
-      'line-opacity': 0.5,
-      'line-width': {
-        'base': 2,
-        'stops': [
-          [4, 1],
-          [13, 8]
-        ],
-      }
-    });
-    this.addDisplayLayer('counties','line', {
-      'line-color': '#e41a1c',
-      'line-opacity': 0.5,
-      'line-width': {
-        'base': 2,
-        'stops': [
-          [4, 1],
-          [13, 8]
-        ]
-      }
-    });
-
-    this.addDisplayLayer('towns','fill', {
-      'fill-color': '#ff7f00',
-      'fill-opacity': 0.3,
-    })
-    this.addDisplayLayer('towns','line', {
-      'line-color': '#ff7f00',
-      'line-opacity': 0.9,
-      'line-width': {
-        'base': 2,
-        'stops': [
-          [4, 1],
-          [13, 3]
-        ]
-      }
-    }, ['in', 'type', 'city', 'town']);
+    this.addDisplayLayers(layers);
   }
 
   getStyle(){
     return this.style;
   }
 
-  addGeojsonSourceLayer(featureCollection, id){
-    this.style = this.style.setIn(['sources', id], {
-      type: 'geojson',
-      data: featureCollection,
-    })
+  // This should happen every time the style in App is changed
+  addDisplayLayers(layers){
+    console.log('adl', layers);
+
+    let mapStyles = [];
+
+    layers.forEach(layer => {
+      const fillStyle = layer.mapStyle && layer.mapStyle.fill;
+      const lineStyle = layer.mapStyle && layer.mapStyle.line;
+
+      if (fillStyle){
+        mapStyles.push({
+          sourceId: layer.key,
+          order: fillStyle.order,
+          type: 'fill',
+          paintOpts: {
+            'fill-color': fillStyle['fill-color'],
+            'fill-opacity': fillStyle['fill-opacity']
+          },
+          filter: fillStyle.filter
+        })
+      }
+      if (lineStyle){
+        mapStyles.push({
+          sourceId: layer.key,
+          order: lineStyle.order,
+          type: 'line',
+          paintOpts: {
+            'line-color': lineStyle['line-color'],
+            'line-opacity': lineStyle['line-opacity'],
+            'line-width': lineStyle['line-width']
+          },
+          filter: lineStyle.filter
+        })
+      }
+    });
+
+    mapStyles
+      .sort((a,b) => a.order - b.order) // ascending
+      .forEach(d => {
+        this.addDisplayLayer(d.sourceId, d.type, d.paintOpts, d.filter);
+      })
+
   }
 
   addDisplayLayer(sourceId, type, paintOpts, filter=null){
@@ -104,6 +92,21 @@ export default class StyleManager {
 
     const newLayers = this.style.get('layers').insert(this.insertIndex, newLayer)
     this.style = this.style.set('layers', newLayers)
+  }
+
+
+  // This should happen once at construction
+  addGeodataSources(layers){
+    layers.forEach(layer => {
+      this.addGeojsonSourceLayer(layer.geodata, layer.key)
+    })
+  }
+
+  addGeojsonSourceLayer(featureCollection, id){
+    this.defaultStyle = this.defaultStyle.setIn(['sources', id], {
+      type: 'geojson',
+      data: featureCollection,
+    })
   }
 
 }

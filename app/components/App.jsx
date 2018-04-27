@@ -10,6 +10,7 @@ import StyleManager from './../js/StyleManager.js';
 import TownPicker from './TownPicker.jsx';
 import LayerPicker from './LayerPicker.jsx';
 import DistrictMap from './DistrictMap.jsx';
+import LocationResult from './LocationResult.jsx';
 import DistrictsResults from './DistrictsResults.jsx';
 
 import mtTowns from './../geodata/mt-places.geojson'; // Hacky/redundant import
@@ -22,16 +23,17 @@ import './../css/map-container.css';
 import './../css/results-containers.css';
 import './../css/react-dropdown.css';
 
+const defaultLayers = [
+  'places',
+  // 'schools-secondary',
+  // 'reservations',
+  'counties',
+];
+
 // initial state
 const defaultState = {
   focusLnglat: null,
   focusFeatures: [],
-  showLayers: [
-    'places',
-    'schools-secondary',
-    'reservations',
-    'counties',
-  ],
   mapViewport: {
     latitude: 46.75,
     longitude: -109.88,
@@ -50,14 +52,14 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     this.layerManager = new LayerManager(layers);
-    this.layerManager.setShowLayers(defaultState.showLayers);
 
-    this.styleManager = new StyleManager();
+    this.styleManager = new StyleManager(layers);
 
     const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
     this.state = {
       focusLnglat: defaults.focusLnglat,
       focusFeatures: defaults.focusFeatures,
+      layers: this.layerManager.getLayers(defaultLayers),
       readyToRenderMap: false,
       showLayers: defaults.showLayers,
       mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
@@ -67,6 +69,7 @@ export default class App extends React.Component {
 
   render(){
     // console.log('rendering w/ state...', this.state)
+    console.log('sty', this.state.mapStyle.sources, this.state.mapStyle.layers);
     return (
       <div className="app-container">
         <h1>Montana Explorer</h1>
@@ -77,7 +80,11 @@ export default class App extends React.Component {
           </div>
 
           <LayerPicker
-            layers={this.layerManager.getAllLayers()}
+            layers={this.layerManager.getLayers()}
+            activeLayers={this.state.layers}
+
+            addActiveLayer={this.addActiveLayer.bind(this)}
+            removeActiveLayer={this.removeActiveLayer.bind(this)}
 
           />
           <TownPicker
@@ -98,6 +105,10 @@ export default class App extends React.Component {
           handleMapPointSelect={this.handleMapPointSelect.bind(this)}
         />
 
+        <LocationResult
+          focusFeatures={this.state.focusFeatures}
+        />
+
         <DistrictsResults
           focusFeatures={this.state.focusFeatures}
         />
@@ -115,7 +126,7 @@ export default class App extends React.Component {
   handleMapPointSelect(location){
     const lnglat = location.lnglat;
 
-    const focusFeatures = this.layerManager.locatePointOnLayers(lnglat);
+    const focusFeatures = this.layerManager.locatePointOnLayers(lnglat, this.state.layers);
 
     this.setState({
       focusLnglat: lnglat,
@@ -164,7 +175,33 @@ export default class App extends React.Component {
       longitude: bounds.longitude,
     })
   }
-  //
+
+  addActiveLayer(key){
+    let curLayerKeys = this.state.layers.map(d => d.key);
+    curLayerKeys.push(key);
+    this._setActiveLayers(curLayerKeys);
+  }
+
+  removeActiveLayer(key){
+    let curLayerKeys = this.state.layers.map(d => d.key);
+    curLayerKeys = curLayerKeys.filter(k => k !== key)
+
+    this._setActiveLayers(curLayerKeys);
+  }
+
+  _setActiveLayers(layerKeys){
+    const newState = {}
+
+    const layers = this.layerManager.getLayers(layerKeys);
+    const focusLnglat = this.state.focusLnglat;
+
+    newState.layers = layers;
+    if (focusLnglat) {
+      newState.focusFeatures = this.layerManager.locatePointOnLayers(focusLnglat, layers);
+    }
+
+    this.setState(newState)
+  }
 
   reset(){
     const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))

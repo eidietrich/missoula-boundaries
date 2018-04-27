@@ -19,20 +19,19 @@ import { point, polygon } from '@turf/helpers';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 export default class LayerManager {
-  constructor(allLayers){
-    this.allLayers = allLayers;
-    this.showLayers = [];
+  constructor(layers){
+    this.layers = layers;
   }
 
-  setShowLayers(showLayerKeys){
-    this.showLayers = this.allLayers
+  getLayers(layerKeys){
+    // null argument --> get all layers
+    if (!layerKeys) return this.layers;
+
+    // list of layer keys --> get some layers
+    return this.layers
       .filter(layer => {
-        return showLayerKeys.includes(layer.key)
+        return layerKeys.includes(layer.key)
       })
-  }
-
-  showAllLayers(){
-    this.showLayers = this.allLayers;
   }
 
   /* Internal functions */
@@ -57,8 +56,8 @@ export default class LayerManager {
 
   /* External functions */
 
-  locatePointOnLayers(lnglat){
-    const maps = this.showLayers.map(layer => {
+  locatePointOnLayers(lnglat, layers){
+    const maps = layers.map(layer => {
       const features = layer.geodata.features;
       const containingFeature = this.getContainingFeature(features, lnglat)
       return {
@@ -74,13 +73,4 @@ export default class LayerManager {
     });
     return maps;
   }
-
-  getAllLayers(){
-    return this.allLayers;
-  }
-
-  getShowLayers(){
-    return this.showLayers;
-  }
-
 }

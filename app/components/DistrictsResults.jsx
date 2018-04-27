@@ -44,12 +44,6 @@ export default class DistrictsResults extends React.Component {
   render(){
     // console.log('### results component', this.props, this.state)
     const focusFeatures = this.props.focusFeatures;
-    const town = this.getFeature(focusFeatures, 'places')
-    const school = this.getFeature(focusFeatures, 'schools-secondary')
-    const reservation = this.getFeature(focusFeatures, 'reservations')
-    const county = this.getFeature(focusFeatures, 'counties')
-
-    const location = this.interpretLocation(town, county, reservation);
 
     const results = focusFeatures.map(feature =>
       feature.displayer(feature.feature, this.state)
@@ -57,40 +51,9 @@ export default class DistrictsResults extends React.Component {
 
     return(
       <div className='results-container'>
-        <div className="results-location-header">{location}</div>
         {results}
       </div>
     )
-  }
-
-  interpretLocation(town, county, reservation){
-    // Takes focus geographies and creates language description
-    let locationDescription = null;
-
-    if (town && county) {
-      switch (town.properties.type){
-        case 'city':
-          locationDescription = `City of ${town.properties.id}`
-          break;
-        case 'town':
-          locationDescription = `Town of ${town.properties.id}`
-          break;
-        case 'census place':
-          locationDescription = `${town.properties.id} (unincorporated)`
-          break;
-        case 'consolidated city/county':
-          locationDescription = `${town.properties.id} (consolidated city/county)`
-      }
-    } else if (county) {
-      locationDescription = `Unincorporated ${county.properties.id} County`
-    }
-
-    if (reservation){
-      const name = reservation.properties.id;
-      locationDescription += ` (${name} Reservation)`
-    }
-
-    return locationDescription;
   }
 
 
