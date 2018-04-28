@@ -14,7 +14,7 @@ import LocationResult from './LocationResult.jsx';
 import DistrictsResults from './DistrictsResults.jsx';
 
 import mtTowns from './../geodata/mt-places.geojson'; // Hacky/redundant import
-import layers from './../js/layers.js'
+import allLayers from './../js/layers.js'
 // import mapStyle from './../js/map-style.js'; // Immutable.js object
 
 import './../css/app.css';
@@ -51,19 +51,23 @@ export default class App extends React.Component {
 
   constructor(props){
     super(props);
-    this.layerManager = new LayerManager(layers);
+    this.layerManager = new LayerManager(allLayers);
 
-    this.styleManager = new StyleManager(layers);
+    this.styleManager = new StyleManager(allLayers);
 
     const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
+
+    const layers = this.layerManager.getLayers(defaultLayers);
+    const mapStyle = this.styleManager.getStyleForLayers(layers).toJS()
+
     this.state = {
       focusLnglat: defaults.focusLnglat,
       focusFeatures: defaults.focusFeatures,
-      layers: this.layerManager.getLayers(defaultLayers),
+      layers: layers,
       readyToRenderMap: false,
       showLayers: defaults.showLayers,
       mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
-      mapStyle: this.styleManager.getStyle().toJS(),
+      mapStyle: mapStyle,
     }
   }
 
@@ -180,12 +184,14 @@ export default class App extends React.Component {
     let curLayerKeys = this.state.layers.map(d => d.key);
     curLayerKeys.push(key);
     this._setActiveLayers(curLayerKeys);
+    this.setState({
+
+    })
   }
 
   removeActiveLayer(key){
     let curLayerKeys = this.state.layers.map(d => d.key);
     curLayerKeys = curLayerKeys.filter(k => k !== key)
-
     this._setActiveLayers(curLayerKeys);
   }
 
@@ -193,9 +199,11 @@ export default class App extends React.Component {
     const newState = {}
 
     const layers = this.layerManager.getLayers(layerKeys);
+    const mapStyle = this.styleManager.getStyleForLayers(layers).toJS()
     const focusLnglat = this.state.focusLnglat;
 
     newState.layers = layers;
+    newState.mapStyle = mapStyle;
     if (focusLnglat) {
       newState.focusFeatures = this.layerManager.locatePointOnLayers(focusLnglat, layers);
     }

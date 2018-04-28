@@ -21,23 +21,35 @@ export default class StyleManager {
     this.defaultStyle = fromJS(defaultMapStyle);
 
 
-    // location for new shape layers, beneath labels
+    // array location for new shape layers, beneath labels
+    // different than order attribute for added layers
     this.insertIndex = -3;
+
+    console.log('l', layers)
+
 
     this.addGeodataSources(layers);
     this.style = this.defaultStyle;
     // defaultStyle is constant, style changes
 
-    this.addDisplayLayers(layers);
+    // this.addDisplayLayers(layers);
   }
 
   getStyle(){
     return this.style;
   }
 
+  getStyleForLayers(layers){
+    if (!layers) return this.defaultStyle;
+
+    return this.addDisplayLayers(layers);
+  }
+
   // This should happen every time the style in App is changed
   addDisplayLayers(layers){
     console.log('adl', layers);
+
+    this.style = this.defaultStyle;
 
     let mapStyles = [];
 
@@ -77,6 +89,8 @@ export default class StyleManager {
       .forEach(d => {
         this.addDisplayLayer(d.sourceId, d.type, d.paintOpts, d.filter);
       })
+
+    return this.style;
 
   }
 
