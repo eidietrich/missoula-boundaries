@@ -58,7 +58,7 @@ export default class App extends React.Component {
     const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
 
     const layers = this.layerManager.getLayers(defaultLayers);
-    const mapStyle = this.styleManager.getStyleForLayers(layers).toJS()
+    const mapStyle = this.styleManager.getStyleForLayers(layers);
 
     this.state = {
       focusLnglat: defaults.focusLnglat,
@@ -73,7 +73,6 @@ export default class App extends React.Component {
 
   render(){
     // console.log('rendering w/ state...', this.state)
-    console.log('sty', this.state.mapStyle.sources, this.state.mapStyle.layers);
     return (
       <div className="app-container">
         <h1>Montana Explorer</h1>
@@ -199,7 +198,7 @@ export default class App extends React.Component {
     const newState = {}
 
     const layers = this.layerManager.getLayers(layerKeys);
-    const mapStyle = this.styleManager.getStyleForLayers(layers).toJS()
+    const mapStyle = this.styleManager.getStyleForLayers(layers);
     const focusLnglat = this.state.focusLnglat;
 
     newState.layers = layers;

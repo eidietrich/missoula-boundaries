@@ -6,7 +6,7 @@ https://github.com/uber/react-map-gl/blob/master/docs/get-started/adding-custom-
 
 */
 
-import { fromJS } from 'immutable';
+import { Map, fromJS } from 'immutable';
 
 import defaultMapStyle from './../map-style-custom.json';
 
@@ -101,10 +101,11 @@ export default class StyleManager {
       type: type,
       paint: paintOpts,
       interactive: true,
-    }
+    };
     if (filter) newLayer.filter = filter;
 
-    const newLayers = this.style.get('layers').insert(this.insertIndex, newLayer)
+
+    const newLayers = this.style.get('layers').insert(this.insertIndex, Map(newLayer))
     this.style = this.style.set('layers', newLayers)
   }
 
@@ -117,10 +118,10 @@ export default class StyleManager {
   }
 
   addGeojsonSourceLayer(featureCollection, id){
-    this.defaultStyle = this.defaultStyle.setIn(['sources', id], {
+    this.defaultStyle = this.defaultStyle.setIn(['sources', id], Map({
       type: 'geojson',
       data: featureCollection,
-    })
+    }));
   }
 
 }
