@@ -7,8 +7,10 @@ import WebMercatorViewport from 'viewport-mercator-project';
 import LayerManager from './../js/LayerManager.js';
 import StyleManager from './../js/StyleManager.js';
 
+import ResetButton from './ResetButton.jsx';
 import TownPicker from './TownPicker.jsx';
 import LayerPicker from './LayerPicker.jsx';
+
 import DistrictMap from './DistrictMap.jsx';
 import LocationResult from './LocationResult.jsx';
 import DistrictsResults from './DistrictsResults.jsx';
@@ -25,8 +27,8 @@ import './../css/react-dropdown.css';
 
 const defaultLayers = [
   'places',
-  // 'schools-secondary',
-  // 'reservations',
+  'schools-secondary',
+  'reservations',
   'counties',
 ];
 
@@ -78,10 +80,6 @@ export default class App extends React.Component {
         <h1>Montana Explorer</h1>
 
         <div className="control-container">
-          <div onClick={this.reset.bind(this)}>
-            [RESET]
-          </div>
-
           <LayerPicker
             layers={this.layerManager.getLayers()}
             activeLayers={this.state.layers}
@@ -93,6 +91,10 @@ export default class App extends React.Component {
           <TownPicker
             options={mtTowns}
             handleChoice={this.handleMapShapeSelect.bind(this)}
+          />
+
+          <ResetButton
+            onClick={this.reset.bind(this)}
           />
         </div>
 

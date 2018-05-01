@@ -11,7 +11,7 @@ export default class LayerPicker extends React.Component {
 
     const options = layers.map(layer => {
       return (
-        <div key={layer.key}>
+        <div key={layer.key} className="control-layer-picker-item">
           <input
             type="checkbox"
             name={layer.label}
@@ -24,8 +24,8 @@ export default class LayerPicker extends React.Component {
       )
     })
 
-    return (<div>
-      <div>Showing layers</div>
+    return (<div className="control-layer-picker">
+      <div className="control-header">Layers</div>
       {options}
     </div>);
   }

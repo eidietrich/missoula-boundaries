@@ -66,12 +66,17 @@ export default class TownPicker extends React.Component {
 
     return (
       <div className='location-form-container'>
+        <div className="control-header">
+          Zoom to place
+        </div>
+        <div onClick={this.cancelInputFocus.bind(this)}>Cancel</div>
         <form>
           <input className='location-form-input'
             type="text"
             value={this.state.value}
             onChange={this.handleInputChange.bind(this)}
-            onFocus={this.handleInputFocus.bind(this)}
+            onClick={this.handleClick.bind(this)}
+            // onFocus={this.handleInputFocus.bind(this)}
             placeholder='Search/select town'
           />
         </form>
@@ -97,19 +102,28 @@ export default class TownPicker extends React.Component {
     })
   }
 
+  cancelInputFocus(){
+    console.log('ccc')
+    this.setState({
+      showResponseBox: false,
+    })
+  }
+
+  handleClick(){
+    if (this.state.showResponseBox) {
+      this.setState({
+        showResponseBox: false
+      })
+    } else {
+      this.handleInputFocus()
+    }
+  }
+
   handleInputFocus(){
     this.setState({
       value: '',
       responses: this.options,
       showResponseBox: true
-    })
-  }
-
-  handleInputBlur(){
-    this.setState({
-      value: this.props.focusAddress,
-      responses: [],
-      showResponseBox: false,
     })
   }
 

@@ -10,22 +10,25 @@ UI controls
 
 - Pick address
 - [x] Pick town (typeahead, pick from cdps) --> Select arbitrary point in town (centroid for now)
-- [ ]Layers to show (check boxes, cdps, school districts, counties)
+- [x]Layers to show (check boxes, cdps, school districts, counties)
 - [x] On map, non-drag click/tap to move interest point, select geographies around it
-- [ ]Have a form 'see something you're curious about? Tell us'
+- [x]Have a form 'see something you're curious about? Tell us'
+- [ ] Set up check system for picking layer variables, e.g. town --> population, metric-b, metric-c
+
 
 GEO display:
 - [x] CDP/town boundaries (show incorporated municipalities differently)
 - [x] School district boundaries
 - [x] County boundary
-- [ ] Reservation boundaries
-- [ ] Legislative districts (?)
+- [x] Reservation boundaries
+- [ ] Legislative districts (not default)
+- [ ] Elem district boundaries
 
 DATA display:
 - Population (from census) - current, percent change over decade, chart
     - [x] places/towns (incorporated)
     - [ ] census places (unincorporated)
-    - [ ] counties
+    - [x] counties
     - [ ] school district catchment areas?
 - School districts (high schools)
     - [x] enrollment history - current, percent change over decade, chart
@@ -38,17 +41,19 @@ DATA management
 - [ ] Clean up scripting process
 - [ ] Write tool for adding general data via census API
 - [ ] Separate non-downloaded data files from /raw-data, add to git version control
+- [ ] Set up lazy load for layer data --> load only initially displayed layers first?
 
 UI Polish
-- [ ] Add CSS class handles to react components
+- [x] Add CSS class handles to react components
 - [ ] Style things better
-- [ ] Change marker to pin
+- [x] Change marker to pin
 
 TODO:
 - [x] Set default map display at statewide
 - [ ] Polish dropdown selector
     - [ ] Keyboard accessibility
-    - [ ] Escape w/out selecting function
+    - [x] Escape w/out selecting function
+
 
 DOCUMENTATION
 - [ ] Update README.md

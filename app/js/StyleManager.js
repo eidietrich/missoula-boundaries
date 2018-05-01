@@ -25,14 +25,8 @@ export default class StyleManager {
     // different than order attribute for added layers
     this.insertIndex = -3;
 
-    console.log('l', layers)
-
-
     this.addGeodataSources(layers);
     this.style = this.defaultStyle;
-    // defaultStyle is constant, style changes
-
-    // this.addDisplayLayers(layers);
   }
 
   getStyle(){
@@ -47,7 +41,6 @@ export default class StyleManager {
 
   // This should happen every time the style in App is changed
   addDisplayLayers(layers){
-    console.log('adl', layers);
 
     this.style = this.defaultStyle;
 
