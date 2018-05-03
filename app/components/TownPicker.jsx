@@ -69,7 +69,6 @@ export default class TownPicker extends React.Component {
         <div className="control-header">
           Zoom to place
         </div>
-        <div onClick={this.cancelInputFocus.bind(this)}>Cancel</div>
         <form>
           <input className='location-form-input'
             type="text"
