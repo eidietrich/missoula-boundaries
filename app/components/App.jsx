@@ -44,6 +44,12 @@ const defaultState = {
     zoom: 4.75,
     minZoom: 4,
     maxZoom: 13,
+  },
+  data: {
+    townPopulation: null,
+    schoolEnrollment: null,
+    countyPopulation: null,
+    countyIncome: null,
   }
 }
 
@@ -69,6 +75,7 @@ export default class App extends React.Component {
       showLayers: defaults.showLayers,
       mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
       mapStyle: mapStyle,
+      data: defaults.data,
     }
   }
 
@@ -115,6 +122,7 @@ export default class App extends React.Component {
 
         <DistrictsResults
           focusFeatures={this.state.focusFeatures}
+          data={this.state.data}
         />
 
         <div className="respond-container">
@@ -131,6 +139,7 @@ export default class App extends React.Component {
     const lnglat = location.lnglat;
 
     const focusFeatures = this.layerManager.locatePointOnLayers(lnglat, this.state.layers);
+    this.loadData(focusFeatures);
 
     this.setState({
       focusLnglat: lnglat,
@@ -140,7 +149,7 @@ export default class App extends React.Component {
 
   handleMapShapeSelect(location){
     const shape = location.shape;
-    this.viewportManager.zoomToShape(shape);
+    this.zoomToShape(shape);
     this.handleMapPointSelect(location);
   }
 
@@ -205,7 +214,10 @@ export default class App extends React.Component {
     newState.layers = layers;
     newState.mapStyle = mapStyle;
     if (focusLnglat) {
-      newState.focusFeatures = this.layerManager.locatePointOnLayers(focusLnglat, layers);
+      const focusFeatures = this.layerManager.locatePointOnLayers(focusLnglat, layers);
+      this.loadData(focusFeatures);
+      newState.focusFeatures = focusFeatures;
+
     }
 
     this.setState(newState)
@@ -219,5 +231,28 @@ export default class App extends React.Component {
       focusFeatures: []
     })
   }
+
+  /* Async data management */
+  // TODO: Figure out how to refactor this away
+
+  updateData(key, newValue){
+    // Updates piece of data held in app state
+    if(!newValue) return;
+    const newData = {};
+    newData[key] = newValue;
+    const update = Object.assign(this.state.data, newData)
+    this.setState({ data: update });
+  }
+
+  loadData(focusFeatures){
+    // loads data for set of focusFeature
+    focusFeatures.forEach(layer => {
+      if (layer.feature){
+        layer.loader(layer.feature, this.updateData.bind(this));
+      }
+    })
+  }
+
+
 
 }

@@ -33,6 +33,8 @@ export default class PlacePopulationResults extends React.Component {
 
       const changeSincePeak = Math.abs(current.population - peak.population);
       const perChangeSincePeak = changeSincePeak / peak.population
+
+      description = `${f(current.population)} residents in ${current.year} (down ${f(changeSincePeak)}, or ${p(perChangeSincePeak)}, from peak of ${f(peak.population)} in ${peak.year}).`
     }
 
     return description;
