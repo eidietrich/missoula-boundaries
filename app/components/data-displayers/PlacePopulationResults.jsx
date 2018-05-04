@@ -8,11 +8,6 @@ const f = format(',')
 const p = format('.1%')
 
 export default class PlacePopulationResults extends React.Component {
-  constructor(props){
-    super(props)
-    this.state = {}
-  }
-
   buildTrendDescription(data){
     const baseYear = '1990'
 
@@ -43,6 +38,7 @@ export default class PlacePopulationResults extends React.Component {
   render() {
     if(this.props.data === null) return null;
     const data = this.props.data.population;
+    console.log('place population', data);
 
     const description = this.buildTrendDescription(data);
 

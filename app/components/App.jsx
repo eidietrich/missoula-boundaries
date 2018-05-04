@@ -240,7 +240,6 @@ export default class App extends React.Component {
 
   updateData(key, newValue){
     // Updates piece of data held in app state
-    if(!newValue) return;
     const newData = {};
     newData[key] = newValue;
     const update = Object.assign(this.state.data, newData)
