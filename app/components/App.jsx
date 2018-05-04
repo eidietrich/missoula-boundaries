@@ -1,5 +1,6 @@
 import React from 'react';
 
+// for viewport management
 import { FlyToInterpolator } from 'react-map-gl'
 import turfBbox from '@turf/bbox';
 import WebMercatorViewport from 'viewport-mercator-project';
@@ -17,7 +18,6 @@ import DistrictsResults from './DistrictsResults.jsx';
 
 import mtTowns from './../geodata/mt-places.geojson'; // Hacky/redundant import
 import allLayers from './../js/layers.js'
-// import mapStyle from './../js/map-style.js'; // Immutable.js object
 
 import './../css/app.css';
 import './../css/control-container.css';
@@ -66,7 +66,6 @@ export default class App extends React.Component {
       focusLnglat: defaults.focusLnglat,
       focusFeatures: defaults.focusFeatures,
       layers: layers,
-      readyToRenderMap: false,
       showLayers: defaults.showLayers,
       mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
       mapStyle: mapStyle,
@@ -74,7 +73,7 @@ export default class App extends React.Component {
   }
 
   render(){
-    // console.log('rendering w/ state...', this.state)
+    console.log('rendering w/ state...', this.state)
     return (
       <div className="app-container">
         <h1>Montana Explorer</h1>
@@ -141,7 +140,7 @@ export default class App extends React.Component {
 
   handleMapShapeSelect(location){
     const shape = location.shape;
-    this.zoomToShape(shape);
+    this.viewportManager.zoomToShape(shape);
     this.handleMapPointSelect(location);
   }
 
@@ -217,7 +216,6 @@ export default class App extends React.Component {
     this.setViewport(defaultViewport)
     this.setState({
       focusLnglat: null,
-      // mapStyle: this.styleManager.getStyle().toJS(),
       focusFeatures: []
     })
   }

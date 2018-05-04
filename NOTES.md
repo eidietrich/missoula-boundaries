@@ -33,13 +33,17 @@ DATA display:
 - School districts (high schools)
     - [x] enrollment history - current, percent change over decade, chart
     - [ ] tax base change
-    - [ ]
+    - [ ] general fund budget
 - [ ] BEA data @ county level (decide what's most relevant - income distribution, wages)
+    - [ ] relative importance of different industries
+    - [ ] employment trend in most important industries
 - [ ] Add topology linkages (e.g. 'other towns in this county')
 
 DATA management
 - [ ] Clean up scripting process
-- [ ] Write tool for adding general data via census API
+- [ ] Write tool for adding general data via census
+- [ ] Refactor state management for scalability - use mobx or redux --> Need to do a tutorial first
+API
 - [ ] Separate non-downloaded data files from /raw-data, add to git version control
 - [ ] Set up lazy load for layer data --> load only initially displayed layers first?
 
