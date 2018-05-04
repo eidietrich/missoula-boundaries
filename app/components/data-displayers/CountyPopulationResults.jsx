@@ -10,7 +10,6 @@ const p = format('.1%')
 export default class CountyPopulationResults extends React.Component {
   constructor(props){
     super(props)
-    this.state = {}
   }
 
   buildTrendDescription(data){
@@ -41,7 +40,7 @@ export default class CountyPopulationResults extends React.Component {
   }
 
   render() {
-    if(this.props.data === null) return null;
+    if(!this.props.data) return null;
     const data = this.props.data.population;
 
     const description = this.buildTrendDescription(data);
@@ -58,7 +57,7 @@ export default class CountyPopulationResults extends React.Component {
         <div className="metric-header">Population</div>
         <div className="metric-description">{description}</div>
         {lineChart}
-        <div className="metric-note">Data: US Census Bureau</div>
+        <div className="metric-note">Data: U.S. Census Bureau</div>
       </div>
     );
   }

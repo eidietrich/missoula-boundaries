@@ -12,6 +12,8 @@ import React from 'react';
 import SchoolEnrollmentResults from './../components/data-displayers/SchoolEnrollmentResults.jsx';
 import PlacePopulationResults from './../components/data-displayers/PlacePopulationResults.jsx';
 import CountyPopulationResults from './../components/data-displayers/CountyPopulationResults.jsx';
+import CountyIncomeResults from './../components/data-displayers/CountyIncomeResults.jsx';
+
 
 
 
@@ -57,6 +59,7 @@ function makeSchoolResults(feature, data){
 function makeCountyResults(feature, data){
   if(!feature) return null;
   const population = data.countyPopulation;
+  const income = data.countyIncome;
 
   const county = (
     <div className="geography-container county" key={feature.properties.id}>
@@ -65,8 +68,7 @@ function makeCountyResults(feature, data){
       </div>
       <div className="geography-metric-row">
         <CountyPopulationResults data={population} />
-        <CountyPopulationResults data={population} />
-        <CountyPopulationResults data={population} />
+        <CountyIncomeResults data={income} />
       </div>
     </div>
   );

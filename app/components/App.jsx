@@ -73,7 +73,7 @@ export default class App extends React.Component {
   }
 
   render(){
-    console.log('rendering w/ state...', this.state)
+    // console.log('rendering w/ state...', this.state)
     return (
       <div className="app-container">
         <h1>Montana Explorer</h1>

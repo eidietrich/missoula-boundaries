@@ -32,6 +32,7 @@ function loadSchoolData(school, callback){
 
 function loadCountyData(county, callback){
   apiCall(callback, '/county/population/', county.properties.fips, 'countyPopulation')
+  apiCall(callback, '/county/income/', county.properties.fips, 'countyIncome')
 }
 
 function loadReservationData(reservation, callback){

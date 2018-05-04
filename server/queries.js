@@ -117,9 +117,36 @@ function getCountyPopulation(req, res, next){
     })
 }
 
+function getCountyIncome(req, res, next){
+  var placeFips = req.params.fips;
+  db.any('select fips, name, year, pc_income from mt_county_economy where fips= $1', placeFips)
+    .then(function(data){
+      const grouped = {}
+      grouped.place = data[0].place
+      grouped.fips = data[0].fips
+      grouped.income = data.map(d => {
+        return {
+          year: d.year,
+          perCapitaIncome: d.pc_income,
+        }
+      }).sort((a,b) => a.year.localeCompare(b.year))
+
+      res.status(200)
+        .json({
+          status: 'success',
+          data: grouped,
+          source: 'U.S. Bureau of Economic Analysis'
+        })
+    })
+    .catch(function(err) {
+      return next(err)
+    })
+}
+
 module.exports = {
   getPlacePopulation: getPlacePopulation,
   getDistrictHSEnrollment: getDistrictHSEnrollment,
   getCountyPopulation: getCountyPopulation,
+  getCountyIncome: getCountyIncome,
 }
 
