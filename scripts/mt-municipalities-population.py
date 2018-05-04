@@ -28,7 +28,7 @@ table_name = 'mt_place_population'
 db = create_engine(db_path)
 
 # import historic census data
-old = pd.read_csv('raw-data/mt-places-population/mt-ceic-historic-census-incorporated.csv', dtype={'fips': str})
+old = pd.read_csv('source-data/mt-places-population/mt-ceic-historic-census-incorporated.csv', dtype={'fips': str})
 
 r = requests.get('https://api.census.gov/data/2016/pep/population?get=POP,GEONAME&for=place:*&in=state:30')
 

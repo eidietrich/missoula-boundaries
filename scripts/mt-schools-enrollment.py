@@ -23,7 +23,7 @@ db_path = 'postgresql://ericdietrich@localhost:5432/mt-vitality-metrics'
 table_name = 'mt_school_enrollment'
 db = create_engine(db_path)
 
-df = pd.read_excel('./raw-data/mt-schools-enrollment/ALLYEARS91_18.xlsx', dtype={'LE': str})
+df = pd.read_excel('./source-data/mt-schools-enrollment/ALLYEARS91_18.xlsx', dtype={'LE': str})
 inc_cols = {
     'LE': 'le_code',
     'LE_NAME': 'name',

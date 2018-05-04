@@ -1,0 +1,196 @@
+3/27/95
+
+MONTANA
+Population of Counties by Decennial Census: 1900 to 1990
+Compiled and edited by Richard L. Forstall
+                       Population Division
+                       US Bureau of the Census
+                       Washington, DC  20233
+
+Please see file, 1900-90.doc for explanatory notes and documentation.
+
+ FIPS      1990      1980      1970      1960
+00000 248709873 226545805 203211926 179323175 United States
+
+30000    799065    786690    694409    674767 Montana
+30001      8424      8186      8187      7194 Beaverhead County
+30003     11337     11096     10057     10007 Big Horn County
+30005      6728      6999      6727      8091 Blaine County
+30007      3318      3267      2526      2804 Broadwater County
+30009      8080      8099      7080      8317 Carbon County
+30011      1503      1799      1956      2493 Carter County
+30013     77691     80696     81804     73418 Cascade County
+30015      5452      6092      6473      7348 Chouteau County
+30017     11697     13109     12174     13227 Custer County
+30019      2266      2835      3083      3755 Daniels County
+30021      9505     11805     11269     12314 Dawson County
+30023     10278     12518     15652     18640 Deer Lodge County
+30025      3103      3763      4050      3997 Fallon County
+30027     12083     13076     12611     14018 Fergus County
+30029     59218     51966     39460     32965 Flathead County
+30031     50463     42865     32505     26045 Gallatin County
+30033      1589      1656      1796      1981 Garfield County
+30035     12121     10628     10783     11565 Glacier County
+30037       912      1026       931      1203 Golden Valley County
+30039      2548      2700      2737      3014 Granite County
+30041     17654     17985     17358     18653 Hill County
+30043      7939      7029      5238      4297 Jefferson County
+30045      2282      2646      2667      3085 Judith Basin County
+30047     21041     19056     14445     13104 Lake County
+30049     47495     43039     33281     28006 Lewis and Clark County
+30051      2295      2329      2359      2624 Liberty County
+30053     17481     17752     18063     12537 Lincoln County
+30055      2276      2702      2875      3321 McCone County
+30057      5989      5448      5014      5211 Madison County
+30059      1819      2154      2122      2616 Meagher County
+30061      3315      3675      2958      3037 Mineral County
+30063     78687     76016     58263     44663 Missoula County
+30065      4106      4428      3734      4888 Musselshell County
+30067     14562     12869     11197     13168 Park County
+30069       519       655       675       894 Petroleum County
+30071      5163      5367      5386      6027 Phillips County
+30073      6433      6731      6611      7653 Pondera County
+30075      2090      2520      2862      2485 Powder River County
+30077      6620      6958      6660      7002 Powell County
+30079      1383      1836      1752      2318 Prairie County
+30081     25010     22493     14409     12341 Ravalli County
+30083     10716     12243      9837     10504 Richland County
+30085     10999     10467     10365     11731 Roosevelt County
+30087     10505      9899      6032      6187 Rosebud County
+30089      8669      8675      7093      6880 Sanders County
+30091      4732      5414      5779      6458 Sheridan County
+30093     33941     38092     41981     46454 Silver Bow County
+30095      6536      5598      4632      5526 Stillwater County
+30097      3154      3216      2980      3290 Sweet Grass County
+30099      6271      6491      6116      7295 Teton County
+30101      5046      5559      5839      7904 Toole County
+30103       874       981      1069      1345 Treasure County
+30105      8239     10250     11471     17080 Valley County
+30107      2246      2359      2529      3026 Wheatland County
+30109      1191      1476      1465      1698 Wibaux County
+30111    113419    108035     87367     79016 Yellowstone County
+30113        52        66        64        47 Yellowstone National Park (pt.)
+
+ FIPS      1950      1940      1930      1920
+00000 151325798 132164569 123202624 106021537 United States
+
+30000    591024    559456    537606    548889 Montana
+30001      6671      6943      6654      7369 Beaverhead County
+30003      9824     10419      8543      7015 Big Horn County
+30005      8516      9566      9006      9057 Blaine County
+30007      2922      3451      2738      3239 Broadwater County
+30009     10241     11865     12571     15279 Carbon County
+30011      2798      3280      4136      3972 Carter County
+30013     53027     41999     41146     38836 Cascade County
+30015      6974      7316      8635     11051 Chouteau County
+30017     12661     10422     11242     12194 Custer County
+30019      3946      4563      5553       --- Daniels County
+30021      9092      8618      9881      9239 Dawson County
+30023     16553     13627     16293     15323 Deer Lodge County
+30025      3660      3719      4568      4548 Fallon County
+30027     14015     14040     16531     28344 Fergus County
+30029     31495     24271     19200     21705 Flathead County
+30031     21902     18269     16124     15864 Gallatin County
+30033      2172      2641      4252      5368 Garfield County
+30035      9645      9034      5297      4178 Glacier County
+30037      1337      1607      2126       --- Golden Valley County
+30039      2773      3401      3013      4167 Granite County
+30041     14285     13304     13775     13958 Hill County
+30043      4014      4664      4133      5203 Jefferson County
+30045      3200      3655      5238       --- Judith Basin County
+30047     13835     13490      9541       --- Lake County
+30049     24540     22131     18224     18660 Lewis and Clark County
+30051      2180      2209      2198      2416 Liberty County
+30053      8693      7882      7089      7797 Lincoln County
+30055      3258      3798      4790      4747 McCone County
+30057      5998      7294      6323      7495 Madison County
+30059      2079      2237      2272      2622 Meagher County
+30061      2081      2135      1626      2327 Mineral County
+30063     35493     29038     21782     24041 Missoula County
+30065      5408      5717      7242     12030 Musselshell County
+30067     11999     11566     10922     11330 Park County
+30069      1026      1083      2045       --- Petroleum County
+30071      6334      7892      8208      9311 Phillips County
+30073      6392      6716      6964      5741 Pondera County
+30075      2693      3159      3909      3357 Powder River County
+30077      6301      6152      6202      6909 Powell County
+30079      2377      2410      3941      3684 Prairie County
+30081     13101     12978     10315     10098 Ravalli County
+30083     10366     10209      9633      8989 Richland County
+30085      9580      9806     10672     10347 Roosevelt County
+30087      6570      6477      7347      8002 Rosebud County
+30089      6983      6926      5692      4903 Sanders County
+30091      6674      7814      9869     13847 Sheridan County
+30093     48422     53207     56969     60313 Silver Bow County
+30095      5416      5694      6253      7630 Stillwater County
+30097      3621      3719      3944      4926 Sweet Grass County
+30099      7232      6922      6068      5870 Teton County
+30101      6867      6769      6714      3724 Toole County
+30103      1402      1499      1661      1990 Treasure County
+30105     11353     15181     11181     11542 Valley County
+30107      3187      3286      3751      5619 Wheatland County
+30109      1907      2161      2767      3113 Wibaux County
+30111     55875     41182     30785     29600 Yellowstone County
+30113        58        43        52       --- Yellowstone National Park (pt.)
+
+ FIPS      1910      1900
+00000  92228496  76212168                     United States
+
+30000    376053    243329                     Montana
+30001      6446      5615                     Beaverhead County
+30003       ---       ---                     Big Horn County
+30005       ---       ---                     Blaine County
+30007      3491      2641                     Broadwater County
+30009     13962      7533                     Carbon County
+30011       ---       ---                     Carter County
+30013     28833     25777                     Cascade County
+30015     17191     10966                     Chouteau County
+30017     14123      7891                     Custer County
+30019       ---       ---                     Daniels County
+30021     12725      2443                     Dawson County
+30023     12988     17393                     Deer Lodge County
+30025       ---       ---                     Fallon County
+30027     17385      6937                     Fergus County
+30029     18785      9375                     Flathead County
+30031     14079      9553                     Gallatin County
+30033       ---       ---                     Garfield County
+30035       ---       ---                     Glacier County
+30037       ---       ---                     Golden Valley County
+30039      2942      4328                     Granite County
+30041       ---       ---                     Hill County
+30043      5601      5330                     Jefferson County
+30045       ---       ---                     Judith Basin County
+30047       ---       ---                     Lake County
+30049     21853     19171                     Lewis and Clark County
+30051       ---       ---                     Liberty County
+30053      3638       ---                     Lincoln County
+30055       ---       ---                     McCone County
+30057      7229      7695                     Madison County
+30059      4190      2526                     Meagher County
+30061       ---       ---                     Mineral County
+30063     23596     13964                     Missoula County
+30065       ---       ---                     Musselshell County
+30067     10731      7341                     Park County
+30069       ---       ---                     Petroleum County
+30071       ---       ---                     Phillips County
+30073       ---       ---                     Pondera County
+30075       ---       ---                     Powder River County
+30077      5904       ---                     Powell County
+30079       ---       ---                     Prairie County
+30081     11666      7822                     Ravalli County
+30083       ---       ---                     Richland County
+30085       ---       ---                     Roosevelt County
+30087      7985       ---                     Rosebud County
+30089      3713       ---                     Sanders County
+30091       ---       ---                     Sheridan County
+30093     56848     47635                     Silver Bow County
+30095       ---       ---                     Stillwater County
+30097      4029      3086                     Sweet Grass County
+30099      9546      5080                     Teton County
+30101       ---       ---                     Toole County
+30103       ---       ---                     Treasure County
+30105     13630      4355                     Valley County
+30107       ---       ---                     Wheatland County
+30109       ---       ---                     Wibaux County
+30111     22944      6212                     Yellowstone County
+30113       ---       ---                     Yellowstone National Park (pt.)

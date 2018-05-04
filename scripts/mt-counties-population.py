@@ -24,7 +24,7 @@ table_name = 'mt_county_population'
 db = create_engine(db_path)
 
 
-old = pd.read_csv('raw-data/mt-counties-population/mt-counties-population-historic.csv', dtype={'fips': str})
+old = pd.read_csv('source-data/mt-counties-population/mt-counties-population-historic.csv', dtype={'fips': str})
 
 r = requests.get('https://api.census.gov/data/2016/pep/population?get=POP,GEONAME&for=county:*&in=state:30')
 
@@ -45,7 +45,7 @@ df = df[['fips', 'name', '2016', '2010', '2000', '1990', '1980', '1970', '1960',
 
 dfm = df.melt(id_vars=['fips','name'], var_name='year', value_name='population')
 
-# dfm.to_csv('raw-data/mt-counties-population/mt-counties-population-tidied.csv', index=False)
+dfm.to_csv('raw-data/mt-counties-population/mt-counties-population-tidied.csv', index=False)
 
 print('Writing to database')
 

@@ -6,6 +6,8 @@ Minimum viable product —
 
 How is my town doing?:
 
+
+
 UI controls
 
 - Pick address
@@ -49,8 +51,7 @@ DATA management
 - [ ] Refactor state management for scalability - use mobx or redux --> Need to do a tutorial first
 - [ ] Standardize column names to allow server code refactoring
 - [ ] Figure out how to deal w/ inflation adjustments
-API
-- [ ] Separate non-downloaded data files from /raw-data, add to git version control
+- [x] Separate non-downloaded data files from /raw-data, add to git version control
 - [ ] Set up lazy load for layer data --> load only initially displayed layers first?
 
 UI Polish
