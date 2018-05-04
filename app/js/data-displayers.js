@@ -10,12 +10,12 @@ import React from 'react';
 
 
 import SchoolEnrollmentResults from './../components/data-displayers/SchoolEnrollmentResults.jsx';
+import SchoolTaxBaseResults from './../components/data-displayers/SchoolTaxBaseResults.jsx';
+
 import PlacePopulationResults from './../components/data-displayers/PlacePopulationResults.jsx';
+
 import CountyPopulationResults from './../components/data-displayers/CountyPopulationResults.jsx';
 import CountyIncomeResults from './../components/data-displayers/CountyIncomeResults.jsx';
-
-
-
 
 function makeTownResults(feature, data){
   if(!feature) return null;
@@ -29,7 +29,6 @@ function makeTownResults(feature, data){
       </div>
       <div className="geography-metric-row">
         <PlacePopulationResults data={population} />
-        <PlacePopulationResults data={population} />
       </div>
     </div>
   );
@@ -41,6 +40,7 @@ function makeSchoolResults(feature, data){
   if(!feature) return null;
 
   const enrollment = data.schoolEnrollment;
+  const taxBase = data.schoolTaxBase;
 
   const school = (
     <div className="geography-container school" key={feature.properties.id}>
@@ -49,6 +49,7 @@ function makeSchoolResults(feature, data){
       </div>
       <div className="geography-metric-row">
         <SchoolEnrollmentResults data={enrollment} />
+        <SchoolTaxBaseResults data={taxBase} />
       </div>
     </div>
   );

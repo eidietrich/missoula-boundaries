@@ -1,10 +1,27 @@
+#!/usr/bin/env python3
+'''
+
+python3 scripts/mt-schools-enrollment.py
+
+Script for importing school enrollment data from FOIA'd data file to database.
+
+Source: File from previous MT School enrollment work (data downloaded from MT Office of Public Instruction website via April 17, 2018 data request)
+
+'''
+
 # helper script for school enrollment data import
 # designed to be called from project root folder
 
 import pandas as pd
 import numpy as np
 
+from sqlalchemy import create_engine
+from sqlalchemy.types import Integer, Float
 
+
+db_path = 'postgresql://ericdietrich@localhost:5432/mt-vitality-metrics'
+table_name = 'mt_school_enrollment'
+db = create_engine(db_path)
 
 df = pd.read_excel('./raw-data/mt-schools-enrollment/ALLYEARS91_18.xlsx', dtype={'LE': str})
 inc_cols = {
@@ -49,5 +66,19 @@ df_hs['LEVEL'] = 'HS' # Standardize
 df_hs.rename(columns=inc_cols, inplace=True)
 
 df_hs.to_csv('./raw-data/mt-schools-enrollment/mt-hs-enrollment-91-18-cleaned.csv',index=False)
+
+df_hs.to_sql(
+    name=table_name,
+    con=db,
+    if_exists='replace',
+    index=False,
+    dtype={
+        'elem_enrollment': Integer,
+        'hs_enrollment': Integer,
+        'tot_enrollment': Integer,
+        'general_fund_budget': Float,
+        'tax_base': Float,
+    }
+)
 
 print('python script done')

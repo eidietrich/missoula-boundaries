@@ -57,13 +57,13 @@ function getPlacePopulation(req, res, next){
 // NB: High school enrollment only!
 function getDistrictHSEnrollment(req, res, next){
   var districtCode = req.params.le_code;
-  db.any(`select * from mt_school_enrollment where code = $1`, districtCode)
+  db.any(`select * from mt_school_enrollment where le_code = $1`, districtCode)
   .then(function(data){
       // data processing
       // TODO: Break this out as separate file
 
       const grouped = {}
-      grouped.code = data[0].code
+      grouped.le_code = data[0].le_code
       grouped.counties = data[0].county
       grouped.districts = [...new Set(data.map(d => d.district))] // get uniques
       grouped.schools = [...new Set(data.map(d => d.school))]
@@ -90,12 +90,45 @@ function getDistrictHSEnrollment(req, res, next){
   })
 }
 
+function getDistrictHSTaxBase(req, res, next){
+  var districtCode = req.params.le_code;
+  db.any(`select * from mt_school_enrollment where le_code = $1`, districtCode)
+  .then(function(data){
+      // data processing
+
+      const grouped = {}
+      grouped.le_code = data[0].le_code
+      grouped.counties = data[0].county
+      grouped.districts = [...new Set(data.map(d => d.district))] // get uniques
+      grouped.schools = [...new Set(data.map(d => d.school))]
+      grouped.years = [...new Set(data.map(d => d.year))]
+      grouped.grades = [...new Set(data.map(d => d.grade))]
+      grouped.taxBase = grouped.years.map(year => {
+        const curYear = data.filter(d => d.year === year)
+        const taxBase = curYear.reduce((a,b) => {
+          return a + b.tax_base
+        }, 0)
+        return {year: year, taxBase: taxBase}
+      }).sort((a,b) => a.year.localeCompare(b.year)) // alphabetic sort for year order
+
+      res.status(200)
+        .json({
+          status: 'success',
+          data: grouped,
+          source: 'MT Office of Public Instruction'
+        })
+  })
+  .catch(function(err) {
+    return next(err)
+  })
+}
+
 function getCountyPopulation(req, res, next){
   var placeFips = req.params.fips;
-  db.any('select fips, place, year, population from mt_county_population where fips = $1', placeFips)
+  db.any('select fips, name, year, population from mt_county_population where fips = $1', placeFips)
     .then(function(data){
       const grouped = {}
-      grouped.place = data[0].place
+      grouped.name = data[0].name
       grouped.fips = data[0].fips
       grouped.population = data.map(d => {
         return {
@@ -145,7 +178,10 @@ function getCountyIncome(req, res, next){
 
 module.exports = {
   getPlacePopulation: getPlacePopulation,
+
   getDistrictHSEnrollment: getDistrictHSEnrollment,
+  getDistrictHSTaxBase: getDistrictHSTaxBase,
+
   getCountyPopulation: getCountyPopulation,
   getCountyIncome: getCountyIncome,
 }

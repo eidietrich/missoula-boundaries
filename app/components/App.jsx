@@ -48,6 +48,7 @@ const defaultState = {
   data: {
     townPopulation: null,
     schoolEnrollment: null,
+    schoolTaxBase: null,
     countyPopulation: null,
     countyIncome: null,
   }
@@ -189,6 +190,17 @@ export default class App extends React.Component {
     })
   }
 
+  reset(){
+    const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))
+    this.setViewport(defaultViewport)
+    this.setState({
+      focusLnglat: null,
+      focusFeatures: []
+    })
+  }
+
+  /* Layer visibility management */
+
   addActiveLayer(key){
     let curLayerKeys = this.state.layers.map(d => d.key);
     curLayerKeys.push(key);
@@ -223,15 +235,6 @@ export default class App extends React.Component {
     this.setState(newState)
   }
 
-  reset(){
-    const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))
-    this.setViewport(defaultViewport)
-    this.setState({
-      focusLnglat: null,
-      focusFeatures: []
-    })
-  }
-
   /* Async data management */
   // TODO: Figure out how to refactor this away
 
@@ -252,7 +255,5 @@ export default class App extends React.Component {
       }
     })
   }
-
-
 
 }

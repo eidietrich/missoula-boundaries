@@ -1,6 +1,7 @@
 '''
 Run from repo home directory
-python3 mt-municipalities-pop-history.py
+
+python3 scripts/mt-municipalities-population.py
 
 Source: File downloaded summer 2017 from MT CENSUS & ECONOMIC INFORMATION CENTER (As of April 2017 it looks like it's no longer up on their website)
 Manually cleaned/FIPS codes added.
@@ -10,13 +11,21 @@ This does an auto join against census API population data
 
 TODO: Figure out how to pull data for census designated places here (look to IPUMS data?)
 
-TODO: Figure out how to connect with database in here directly to avoid redundant bash script
+# Source: File downloaded summer 2017 from MT CENSUS & ECONOMIC INFORMATION CENTER (As of April 2017 it looks like it's no longer up on their website)
+# Also downloaded 2016 data from census bureau (file conveniently includes FIPS codes)
+
+# Performed a manual join - turns out the CEIC file includes some no-longer disincorporated communities
 
 '''
 
 import pandas as pd
 import requests
 from sqlalchemy import create_engine
+from sqlalchemy.types import Integer
+
+db_path = 'postgresql://ericdietrich@localhost:5432/mt-vitality-metrics'
+table_name = 'mt_place_population'
+db = create_engine(db_path)
 
 # import historic census data
 old = pd.read_csv('raw-data/mt-places-population/mt-ceic-historic-census-incorporated.csv', dtype={'fips': str})
@@ -56,13 +65,13 @@ dfm = df.melt(id_vars=['fips','place'], var_name='year', value_name='population'
 
 dfm.to_csv('raw-data/mt-places-population/mt-incorporated-population-tidied.csv', index=False)
 
-# DB Connection
-# THIS ISN'T WORKING CURRENTLY
-# USING psql from bash script instead
-engine = create_engine('postgresql://ericdietrich@localhost:5432/mt-vitality-metrics')
-table_name = 'mt_place_populations'
-
-df.to_sql('table_name', engine, if_exists='replace')
+dfm.to_sql(
+    name=table_name,
+    con=db,
+    if_exists='replace',
+    index=False,
+    dtype={'population': Integer}
+)
 
 
 

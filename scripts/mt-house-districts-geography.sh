@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run from repo home directory
-# sh scripts/mt-house-districts.sh
+# sh scripts/mt-house-districts-geography.sh
 # Human-readable source page: http://leg.mt.gov/css/Committees/interim/2011-2012/districting/adopted-plan.asp
 
 # TODO: Make this more generalized

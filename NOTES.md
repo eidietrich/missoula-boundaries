@@ -32,17 +32,23 @@ DATA display:
     - [ ] school district catchment areas?
 - School districts (high schools)
     - [x] enrollment history - current, percent change over decade, chart
-    - [ ] tax base change
+    - [x] tax base change
     - [ ] general fund budget
 - [ ] BEA data @ county level (decide what's most relevant - income distribution, wages)
+    - [x] per-capita income
     - [ ] relative importance of different industries
     - [ ] employment trend in most important industries
 - [ ] Add topology linkages (e.g. 'other towns in this county')
+- [ ] Fine-tune chart formatting --> Look at Semiotic charts https://emeeks.github.io/semiotic/#/semiotic/annotations
+- [ ] Set up system for customizing charts on a per-metric basis
+- [ ] Figure out how to manage annotations
 
 DATA management
-- [ ] Clean up scripting process
+- [x] Clean up scripting process
 - [ ] Write tool for adding general data via census
 - [ ] Refactor state management for scalability - use mobx or redux --> Need to do a tutorial first
+- [ ] Standardize column names to allow server code refactoring
+- [ ] Figure out how to deal w/ inflation adjustments
 API
 - [ ] Separate non-downloaded data files from /raw-data, add to git version control
 - [ ] Set up lazy load for layer data --> load only initially displayed layers first?
@@ -51,6 +57,7 @@ UI Polish
 - [x] Add CSS class handles to react components
 - [ ] Style things better
 - [x] Change marker to pin
+
 
 TODO:
 - [x] Set default map display at statewide
@@ -67,7 +74,7 @@ OPTIMIZATION
 - Results component is getting rendered once for every API it calls -- could look at some sort of queuing solution
 
 Extra features
-- Show reservation boundaries
+
 - Annotations (e.g. school district merger/consolidations, Anaconda/Butte switching to consolidated govts)
 - Add checkboxes for layers to show/hide (reservations, legislative districts)
 - Consider separating census places from incorporated municipalities - cleaner from a census data perspective

@@ -28,16 +28,6 @@ db_path = 'postgresql://ericdietrich@localhost:5432/mt-vitality-metrics'
 table_name = 'mt_county_economy'
 db = create_engine(db_path)
 
-# payload = {
-#     'UserID': '0359863C-C1DB-40F5-8134-959DC689A3BB',
-#     'Method': 'getdata',
-#     'datasetname': 'regionalincome',
-#     'year': 2016,
-#     'geofips': 'STATE',
-#     'tablename': 'CA1',
-#     'linecode': 3
-# }
-
 def get_table_linecodes(tablename):
     pass
     # TODO - convenience function for looking for other metrics
@@ -54,14 +44,16 @@ metrics = [
     { 'metric': 'pc_income', 'table': 'CA1', 'linecode': 3}
 ]
 
+metric = metrics[0]
+
 payload = {
     'UserID': user_id,
     'Method': 'getdata',
     'datasetname': 'regionalincome',
     'year': 'all',
     'geofips': 'COUNTY',
-    'tablename': 'CA1',
-    'linecode': 3
+    'tablename': metric['table'],
+    'linecode': metric['linecode'],
 }
 
 inc_cols = {

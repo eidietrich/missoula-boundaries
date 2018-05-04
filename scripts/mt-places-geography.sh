@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run from repo home directory
-# sh scripts/mt-places.sh
+# sh scripts/mt-places-geography.sh
 
 # TODO: Make this more generalized
 

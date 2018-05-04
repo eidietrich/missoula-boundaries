@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run from repo home directory
-# sh scripts/mt-house-districts.sh
+# sh scripts/mt-house-districts-geography.sh
 
 # TODO: Make this more generalized
 

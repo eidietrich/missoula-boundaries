@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run from repo home directory
-# sh scripts/mt-counties.sh
+# sh scripts/mt-counties-geography.sh
 
 # TODO: Make this more generalized
 

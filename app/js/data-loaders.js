@@ -28,6 +28,7 @@ function loadTownData(town, callback){
 
 function loadSchoolData(school, callback){
   apiCall(callback, '/school/enrollment/hs/', school.properties.le_code, 'schoolEnrollment')
+  apiCall(callback, '/school/taxbase/hs/', school.properties.le_code, 'schoolTaxBase')
 }
 
 function loadCountyData(county, callback){
