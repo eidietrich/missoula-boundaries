@@ -1,11 +1,11 @@
 {
-  "name": "missoula-boundaries",
-  "version": "1.0.0",
-  "description": "Web app that lets users enter a Montana address, returns which county/municipalities/school districts/legislative districts it's part of. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries).",
+  "name": "mt-explorer",
+  "version": "0.1.0",
+  "description": "Explore Montana's communities with an interactive map.",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "build:frontend": "webpack --config webpack.prod.js",
     "server:dev": "nodemon ./server/bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +20,9 @@
     "url": "https://github.com/coffeeAndCodeMSO/missoula-boundaries/issues"
   },
   "homepage": "https://github.com/coffeeAndCodeMSO/missoula-boundaries#readme",
+  "engines": {
+    "node": "10.0.0"
+  },
   "dependencies": {
     "@turf/bbox": "^5.1.5",
     "@turf/boolean-point-in-polygon": "^5.1.5",
