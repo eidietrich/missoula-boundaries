@@ -38,7 +38,6 @@ export default class PlacePopulationResults extends React.Component {
   render() {
     if(this.props.data === null) return null;
     const data = this.props.data.population;
-    console.log('place population', data);
 
     const description = this.buildTrendDescription(data);
 
