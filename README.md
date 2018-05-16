@@ -74,3 +74,9 @@ References for setting up react development environment with webpack/Babel:
 - https://blog.jonathanargentiero.com/how-to-load-a-json-content-inside-a-js-module-with-webpack/
 - https://github.com/ReactJSResources/react-webpack-babel
 - https://webpack.js.org/guides/production/
+
+Deployment references
+- https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/deployment
+- https://medium.freecodecamp.org/i-built-this-now-what-how-to-deploy-a-react-app-on-a-digitalocean-droplet-662de0fe3f48
+- https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04
+- https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-server-blocks-virtual-hosts-on-ubuntu-16-04
