@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build:frontend": "webpack --config webpack.prod.js",
+    "build:frontend-local": "webpack --config webpack.prod-local.js",
+    "build:frontend-deploy": "webpack --config webpack.prod-deploy.js",
     "server:dev": "nodemon ./server/bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -80,3 +80,23 @@ Deployment references
 - https://medium.freecodecamp.org/i-built-this-now-what-how-to-deploy-a-react-app-on-a-digitalocean-droplet-662de0fe3f48
 - https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04
 - https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-server-blocks-virtual-hosts-on-ubuntu-16-04
+- https://medium.com/@timmykko/deploying-create-react-app-with-nginx-and-ubuntu-e6fe83c5e9e7
+- https://www.digitalocean.com/community/tutorials/how-to-backup-postgresql-databases-on-an-ubuntu-vps
+- http://carrot.is/coding/nginx_introduction
+- https://cressler.io/how-to-deploy-react-boilerplate-to-digital-ocean
+- https://expressjs.com/en/guide/debugging.html
+- https://www.digitalocean.com/community/tutorials/how-to-use-sftp-to-securely-transfer-files-with-a-remote-server
+
+Deployment process (work in progress:
+Using Digital Ocean server
+1. Build production version of front end app
+2. Set up digital ocean droplet - install node, Nginx etc. (watch version on nodejs so it doesn't break the express server being used by the API)
+3. Deploy via clone from github repo (TODO: Find a more elegant way)
+4. Transfer /build-app/ directory to /var/www/mt-town-vitality so Nginx server can find it
+4. Set up Postgres server
+4. Install PM2 for server task handling
+5. Get .env configured
+6. Run Express API server ->
+
+
+TODO - figure out how to wrap this in a deployment script for convenience/documentation

@@ -1,6 +1,9 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const Dotenv = require('dotenv-webpack')
+
 module.exports = merge(common, {
   // dev only webpack stuff here
   devServer: {
@@ -13,5 +16,11 @@ module.exports = merge(common, {
       }
     },
     headers: { "Access-Control-Allow-Origin": "*" }
-  }
+  },
+  plugins: [
+    new CleanWebpackPlugin(['build-app']),
+    new Dotenv({
+      path: './.env.dev'
+    })
+  ]
 })

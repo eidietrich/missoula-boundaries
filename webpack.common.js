@@ -3,14 +3,14 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // for separating css out to styles.css file in build/
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// for deleting build folder
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 // for environmental variables
 const Dotenv = require('dotenv-webpack')
 
 const paths = {
   app: path.resolve(__dirname, 'app'),
-  build: path.resolve(__dirname, 'build')
+  buildAppLocal: path.resolve(__dirname, 'build-app'),
+  buildAppDeploy: path.resolve(__dirname, 'build-app-deploy')
 }
 
 
@@ -24,7 +24,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 module.exports = {
   entry: path.join(paths.app, 'index.js'),
   output: {
-    path: paths.build,
+    path: paths.buildAppLocal,
     filename: 'bundle.js'
   },
   module: {
@@ -57,11 +57,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(['build']),
     HtmlWebpackPluginConfig,
     new ExtractTextPlugin("styles.css"),
-    new Dotenv({
-      path: './.env'
-    })
   ]
 }
