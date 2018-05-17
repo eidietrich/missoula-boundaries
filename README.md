@@ -1,10 +1,11 @@
-# Montana vitality
+# Montana Explorer
 
-WIP Web app that lets users enter a Montana address, returns which county/municipalities/school districts it's part of plus info on how those places are doing. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries) and [Census Reporter](https://censusreporter.org/).
+Web interface for exploring Montana municipalities, school districts and counties - showing boundaries and statistical info. Inspired by [Seattle Boundaries](https://github.com/seattleio/boundaries) and [Census Reporter](https://censusreporter.org/).
 
-## Requirements
+## Build requirements
 
 Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work/) key. Using dotenv,  token is stored in MAPBOX_API_TOKEN. See `.env.example`.
+
 
 ## Project components:
 
@@ -14,13 +15,14 @@ Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work
 - Front end application
     - React
     - [react-map-gl](https://github.com/uber/react-map-gl). Poorly documented but powerful React binding for [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/).
-- Back end server
+- Back end server using Postgres databsase
     - Based on http://mherman.org/blog/2016/03/13/designing-a-restful-api-with-node-and-postgres/#.WtP0J9PwaAw
+    - Data wrangling scripts in /scripts folder
     - CORS handling: https://medium.com/trisfera/using-cors-in-express-cac7e29b005b
 
 ## Project structure
 
-- app/ - source directory
+- app/ - Frontend React app
     - /components/ - React components
         - App.jsx - Wrapper
         - layers.js - config file for map layers
@@ -30,43 +32,20 @@ Needs a [Mapbox public token](https://www.mapbox.com/help/how-access-tokens-work
             - collects address, geocodes, passes to DataManager
         - DistrictMap.jsx - React component for displaying interest point inside appropriate boundaries
     - /css/
+    - /js/ - Other JS files
     - /geodata/ - Geojson boundary data
-- build/ - build directory
+- server/ - backend Express API app
 - scripts - Scripts for data collection/processing (e.g. converting source shapefiles to geojson)
-
-
-## TODOS:
-
-- Add more layers (school districts, municipalities)
-- Figure out what initial app state should look like
-- Look at nested layer display in dropdown
-- Try showing non-selected boundaries on map (Turns out this is memory intensive w/out optimization work - maybe try a canvas layer instead of an SVG one)
-- Set up address input box to display current address?
-- Add map controls: Zoom to street level, Zoom to district extent
-- Fix map extent fitting wackiness
-- Map: Limit zoom extents to Montana. Maybe highlight state boundary
-- Map: Fine-tune Mapbox styling (e.g. deemphasize trailer park names)
-- Fine-tune map interaction (e.g. animations between different views)
-- Add buttons for 'default locations'
-- Add way to select point apart from entering address (e.g. drop pin)
-- User testing
-- General refactoring
-
-## Potential stretch features
-
-- Add in information for certain districs (e.g. reps, contact information?)
-- Set up some sort of async data layer loading? (If initial bundle gets too big)
-
+- source-data/ - Raw data for data processing scripts
+- data/mt-vitality-metrics.bak - Text dump of Postgres database used to feed backend API (used for xfer)
 
 ## References:
+
+Inspiration
 - https://github.com/seattleio/boundaries-api
 - https://github.com/seattleio/boundaries
 - https://github.com/seattleio/seattle-boundaries-data
 - https://github.com/mapbox/mapbox-react-examples
-
-Looks like Seattle Boundaries is split into web app, API and geography repos. Web app is built with Choo (some lightweight JS framework) and Mapbox maps. API uses Node's http server, it looks like.
-
-The geography (boundaries) repo stores things as geojsons, with some packaging so they're hosted on [NPM](https://www.npmjs.com/package/seattle-boundaries). The overall project uses node/NPM to collect its parts together.
 
 References for setting up react development environment with webpack/Babel:
 - https://scotch.io/tutorials/setup-a-react-environment-using-webpack-and-babel
@@ -86,17 +65,3 @@ Deployment references
 - https://cressler.io/how-to-deploy-react-boilerplate-to-digital-ocean
 - https://expressjs.com/en/guide/debugging.html
 - https://www.digitalocean.com/community/tutorials/how-to-use-sftp-to-securely-transfer-files-with-a-remote-server
-
-Deployment process (work in progress:
-Using Digital Ocean server
-1. Build production version of front end app
-2. Set up digital ocean droplet - install node, Nginx etc. (watch version on nodejs so it doesn't break the express server being used by the API)
-3. Deploy via clone from github repo (TODO: Find a more elegant way)
-4. Transfer /build-app/ directory to /var/www/mt-town-vitality so Nginx server can find it
-4. Set up Postgres server
-4. Install PM2 for server task handling
-5. Get .env configured
-6. Run Express API server ->
-
-
-TODO - figure out how to wrap this in a deployment script for convenience/documentation

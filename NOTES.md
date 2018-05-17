@@ -8,6 +8,22 @@ How is my town doing?:
 
 
 
+## TODOS:
+
+Frontend
+- Look at nested layer display in dropdown
+- Set up address input box to display current address?
+- Add map zoom controls
+- Fix map extent fitting wackiness (e.g. bad zoom on mobile)
+- Fine-tune map interaction (e.g. animations between different views)
+- Shift away from GeoJSON overlay for highlight shapes (inefficient rendering)
+
+Data management/deployment
+- Refactor frontend to Mobx state management
+- Figure out how to manage deployment config more elegantly
+- Look at webpack production build optimizations
+- Automate build/update process - include staging server --> get as commands in package.json
+
 UI controls
 
 - Pick address
@@ -68,7 +84,7 @@ TODO:
 
 
 DOCUMENTATION
-- [ ] Update README.md
+- [x] Update README.md
 - [ ] Push to public github
 
 OPTIMIZATION
@@ -86,3 +102,18 @@ Features to leave out
 Longer-term:
 - Use react-router setup to get sharable URLs for app state
 - Figure out how to embed in a Wordpress site
+
+DEPLOYMENT
+Deployment process (work in progress:
+Using Digital Ocean server
+1. Build production version of front end app
+2. Set up digital ocean droplet - install node, Nginx etc. (watch version on nodejs so it doesn't break the express server being used by the API)
+3. Deploy via clone from github repo (TODO: Find a more elegant way)
+4. Transfer /build-app/ directory to /var/www/mt-town-vitality so Nginx server can find it
+4. Set up Postgres server
+4. Install PM2 for server task handling
+5. Get .env configured
+6. Run Express API server ->
+
+
+TODO - figure out how to wrap this in a deployment script for convenience/documentation
