@@ -19,6 +19,8 @@ import DistrictsResults from './DistrictsResults.jsx';
 import mtTowns from './../geodata/mt-places.geojson'; // Hacky/redundant import
 import allLayers from './../js/layers.js'
 
+import { detectWebGLsupport } from './../js/utils.js';
+
 import './../css/app.css';
 import './../css/control-container.css';
 import './../css/map-container.css';
@@ -64,6 +66,8 @@ export default class App extends React.Component {
 
     this.styleManager = new StyleManager(allLayers);
 
+    this.webGLok = detectWebGLsupport();
+
     const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
 
     const layers = this.layerManager.getLayers(defaultLayers);
@@ -82,6 +86,20 @@ export default class App extends React.Component {
 
   render(){
     // console.log('rendering w/ state...', this.state)
+
+    const map = this.webGLok ? (
+      <DistrictMap
+          // Display data
+          lnglat={this.state.focusLnglat}
+          focusFeatures={this.state.focusFeatures}
+          // Map state
+          viewport={this.state.mapViewport}
+          style={this.state.mapStyle}
+          // Interaction handling
+          setViewport={this.setViewport.bind(this)}
+          handleMapPointSelect={this.handleMapPointSelect.bind(this)}
+      />): null;
+
     return (
       <div className="app-container">
         <h1>Montana Explorer</h1>
@@ -105,17 +123,7 @@ export default class App extends React.Component {
           />
         </div>
 
-        <DistrictMap
-          // Display data
-          lnglat={this.state.focusLnglat}
-          focusFeatures={this.state.focusFeatures}
-          // Map state
-          viewport={this.state.mapViewport}
-          style={this.state.mapStyle}
-          // Interaction handling
-          setViewport={this.setViewport.bind(this)}
-          handleMapPointSelect={this.handleMapPointSelect.bind(this)}
-        />
+        {map}
 
         <LocationResult
           focusFeatures={this.state.focusFeatures}

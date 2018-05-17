@@ -4,6 +4,7 @@ node_modules
 ssh
 raw-data
 
+.env
 .env.dev
 .env.deploy
 
