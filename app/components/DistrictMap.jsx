@@ -18,7 +18,7 @@ Outputs:
 
 import React from 'react';
 
-import ReactMapGL, { SVGOverlay } from 'react-map-gl'
+import ReactMapGL, { SVGOverlay, NavigationControl } from 'react-map-gl'
 
 import MapMarker from './MapMarker.jsx';
 
@@ -26,16 +26,30 @@ import './../css/mapbox-gl.css';
 
 // const mapAspect = 0.65;
 
-export default class DistrictMap extends React.Component {
+const navStyle = {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  padding: '10px'
+};
 
+export default class DistrictMap extends React.Component {
+  constructor(props){
+    super(props);
+
+    this._setSize = this._setSize.bind(this);
+    this._onViewportChange = this._onViewportChange.bind(this);
+    this._onClick = this._onClick.bind(this);
+
+  }
   componentDidMount(){
-    window.addEventListener('resize', this._setSize.bind(this));
+    window.addEventListener('resize', this._setSize);
     this._setSize();
   }
 
   componentWillUnmount(){
     console.log('unmounting map');
-    window.removeEventListener('resize', this._setSize.bind(this));
+    window.removeEventListener('resize', this._setSize);
   }
 
   _setSize(){
@@ -82,11 +96,19 @@ export default class DistrictMap extends React.Component {
           {...this.props.viewport}
           mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
           mapStyle={this.props.style}
-          onViewportChange={this._onViewportChange.bind(this)}
-          onClick={this._onClick.bind(this)}
+          onViewportChange={this._onViewportChange}
+          onClick={this._onClick}
+          dragRotate={false}
+          attributionControl={true}
         >
-          {focusShapes}
+
           {markerOverlay}
+          <div className="nav" style={navStyle}>
+            <NavigationControl
+              onViewportChange={this._onViewportChange}
+              showCompass={false}
+            />
+          </div>
         </ReactMapGL>
       </div>
     );
