@@ -101,7 +101,7 @@ export default class DistrictMap extends React.Component {
           dragRotate={false}
           attributionControl={true}
         >
-
+          {focusShapes}
           {markerOverlay}
           <div className="nav" style={navStyle}>
             <NavigationControl
