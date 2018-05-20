@@ -46,6 +46,7 @@ Inspiration
 - https://github.com/seattleio/boundaries
 - https://github.com/seattleio/seattle-boundaries-data
 - https://github.com/mapbox/mapbox-react-examples
+- https://blog.patricktriest.com/game-of-thrones-map-node-postgres-redis/
 
 References for setting up react development environment with webpack/Babel:
 - https://scotch.io/tutorials/setup-a-react-environment-using-webpack-and-babel

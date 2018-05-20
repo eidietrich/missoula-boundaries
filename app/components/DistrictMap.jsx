@@ -17,6 +17,7 @@ Outputs:
 */
 
 import React from 'react';
+import {observer} from "mobx-react";
 
 import ReactMapGL, { SVGOverlay, NavigationControl } from 'react-map-gl'
 
@@ -33,12 +34,13 @@ const navStyle = {
   padding: '10px'
 };
 
+@observer
 export default class DistrictMap extends React.Component {
   constructor(props){
     super(props);
 
     this._setSize = this._setSize.bind(this);
-    this._onViewportChange = this._onViewportChange.bind(this);
+    this._updateViewport = this._updateViewport.bind(this);
     this._onClick = this._onClick.bind(this);
 
   }
@@ -55,16 +57,16 @@ export default class DistrictMap extends React.Component {
   _setSize(){
     // adjusts map display width to match container width/height
     let { clientHeight, clientWidth } = this.refs['map-container']
-
-    this.props.setViewport({
+    this.props.mapState.renderWidth = clientWidth;
+    this._updateViewport({
       width: clientWidth,
-      // height: clientWidth * mapAspect,
-      height: clientHeight,
+      height: clientHeight
     })
   }
 
-  _onViewportChange(newViewport){
-    this.props.setViewport(newViewport)
+  _updateViewport(newViewport){
+    const viewport = Object.assign(this.props.mapState.viewport, newViewport)
+    this.props.mapState.viewport = viewport;
   }
 
   _onClick(event){
@@ -93,10 +95,10 @@ export default class DistrictMap extends React.Component {
     return (
       <div className='map-container' ref='map-container'>
         <ReactMapGL
-          {...this.props.viewport}
+          {...this.props.mapState.viewport}
           mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
           mapStyle={this.props.style}
-          onViewportChange={this._onViewportChange}
+          onViewportChange={this._updateViewport}
           onClick={this._onClick}
           dragRotate={false}
           attributionControl={true}
@@ -105,7 +107,7 @@ export default class DistrictMap extends React.Component {
           {markerOverlay}
           <div className="nav" style={navStyle}>
             <NavigationControl
-              onViewportChange={this._onViewportChange}
+              onViewportChange={this._updateViewport}
               showCompass={false}
             />
           </div>

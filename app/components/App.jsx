@@ -1,4 +1,7 @@
 import React from 'react';
+import { observer } from 'mobx-react';
+
+import MapStateStore from './../stores/MapStateStore.js'
 
 // for viewport management
 import { FlyToInterpolator } from 'react-map-gl'
@@ -38,15 +41,15 @@ const defaultLayers = [
 const defaultState = {
   focusLnglat: null,
   focusFeatures: [],
-  mapViewport: {
-    latitude: 46.75,
-    longitude: -109.88,
-    bearing: 0,
-    pitch: 10,
-    zoom: 4.75,
-    minZoom: 4,
-    maxZoom: 13,
-  },
+  // mapViewport: {
+  //   latitude: 46.75,
+  //   longitude: -109.88,
+  //   bearing: 0,
+  //   pitch: 10,
+  //   zoom: 4.75,
+  //   minZoom: 4,
+  //   maxZoom: 13,
+  // },
   data: {
     townPopulation: null,
     schoolEnrollment: null,
@@ -56,6 +59,23 @@ const defaultState = {
   }
 }
 
+const defaultViewport = {
+    latitude: 46.75,
+    longitude: -109.88,
+    bearing: 0,
+    pitch: 10,
+    zoom: 4.75,
+    minZoom: 4,
+    maxZoom: 13,
+    width: 400,
+    height: 300,
+};
+
+const mapState = new MapStateStore({
+  defaultViewport: defaultViewport
+});
+
+@observer
 export default class App extends React.Component {
 
   /* Lifecycle methods */
@@ -78,7 +98,7 @@ export default class App extends React.Component {
       focusFeatures: defaults.focusFeatures,
       layers: layers,
       showLayers: defaults.showLayers,
-      mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
+      // mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
       mapStyle: mapStyle,
       data: defaults.data,
     }
@@ -86,17 +106,16 @@ export default class App extends React.Component {
 
   render(){
     // console.log('rendering w/ state...', this.state)
-
     const map = this.webGLok ? (
       <DistrictMap
           // Display data
           lnglat={this.state.focusLnglat}
           focusFeatures={this.state.focusFeatures}
           // Map state
-          viewport={this.state.mapViewport}
+          mapState={mapState}
           style={this.state.mapStyle}
           // Interaction handling
-          setViewport={this.setViewport.bind(this)}
+          // setViewport={this.setViewport.bind(this)}
           handleMapPointSelect={this.handleMapPointSelect.bind(this)}
       />): null;
 
@@ -158,49 +177,14 @@ export default class App extends React.Component {
 
   handleMapShapeSelect(location){
     const shape = location.shape;
-    this.zoomToShape(shape);
+    mapState.zoomToShape(shape);
     this.handleMapPointSelect(location);
   }
 
-  setViewport(newViewport){
-    const viewport = Object.assign(this.state.mapViewport, newViewport)
-    this.setState({
-      mapViewport: viewport
-    })
-  }
-
-  zoomViewport(newViewport){
-    // setViewport with zoom animation
-    const viewport = Object.assign(newViewport, {
-      transitionInterpolator: new FlyToInterpolator(),
-      transitionDelay: 500,
-      transitionDuration: 1500,
-    })
-    this.setViewport(viewport)
-  }
-
-  zoomToShape(shape){
-    const vpHelper = new WebMercatorViewport({
-      width: this.state.mapViewport.width,
-      height: this.state.mapViewport.height,
-    });
-
-    const bbox = turfBbox(shape);
-    const bounds = vpHelper.fitBounds(
-      [[bbox[0], bbox[1]],[bbox[2],bbox[3]]],
-      {padding: 100}
-      );
-
-    this.zoomViewport({
-      zoom: bounds.zoom,
-      latitude: bounds.latitude,
-      longitude: bounds.longitude,
-    })
-  }
-
   reset(){
-    const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))
-    this.setViewport(defaultViewport)
+    // const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))
+    // this.setViewport(defaultViewport)
+    mapState.resetViewport();
     this.setState({
       focusLnglat: null,
       focusFeatures: []
