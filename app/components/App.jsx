@@ -9,7 +9,6 @@ import turfBbox from '@turf/bbox';
 import WebMercatorViewport from 'viewport-mercator-project';
 
 import LayerManager from './../js/LayerManager.js';
-import StyleManager from './../js/StyleManager.js';
 
 import ResetButton from './ResetButton.jsx';
 import TownPicker from './TownPicker.jsx';
@@ -30,7 +29,9 @@ import './../css/map-container.css';
 import './../css/results-containers.css';
 import './../css/react-dropdown.css';
 
-const defaultLayers = [
+import defaultMapStyle from './../map-style-custom.json';
+
+const defaultLayerKeys = [
   'places',
   'schools-secondary',
   'reservations',
@@ -41,15 +42,6 @@ const defaultLayers = [
 const defaultState = {
   focusLnglat: null,
   focusFeatures: [],
-  // mapViewport: {
-  //   latitude: 46.75,
-  //   longitude: -109.88,
-  //   bearing: 0,
-  //   pitch: 10,
-  //   zoom: 4.75,
-  //   minZoom: 4,
-  //   maxZoom: 13,
-  // },
   data: {
     townPopulation: null,
     schoolEnrollment: null,
@@ -72,7 +64,10 @@ const defaultViewport = {
 };
 
 const mapState = new MapStateStore({
-  defaultViewport: defaultViewport
+  defaultViewport: defaultViewport,
+  defaultStyle: defaultMapStyle,
+  allLayers: allLayers,
+  defaultLayerKeys: defaultLayerKeys,
 });
 
 @observer
@@ -84,28 +79,23 @@ export default class App extends React.Component {
     super(props);
     this.layerManager = new LayerManager(allLayers);
 
-    this.styleManager = new StyleManager(allLayers);
-
     this.webGLok = detectWebGLsupport();
 
     const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
 
-    const layers = this.layerManager.getLayers(defaultLayers);
-    const mapStyle = this.styleManager.getStyleForLayers(layers);
+    const layers = this.layerManager.getLayers(defaultLayerKeys);
 
     this.state = {
       focusLnglat: defaults.focusLnglat,
       focusFeatures: defaults.focusFeatures,
       layers: layers,
       showLayers: defaults.showLayers,
-      // mapViewport: Object.assign(defaults.mapViewport, { width: 400, height: 300}),
-      mapStyle: mapStyle,
       data: defaults.data,
     }
   }
 
   render(){
-    // console.log('rendering w/ state...', this.state)
+    console.log('rendering w/ state...', this.state)
     const map = this.webGLok ? (
       <DistrictMap
           // Display data
@@ -113,7 +103,7 @@ export default class App extends React.Component {
           focusFeatures={this.state.focusFeatures}
           // Map state
           mapState={mapState}
-          style={this.state.mapStyle}
+          // style={this.state.mapStyle}
           // Interaction handling
           // setViewport={this.setViewport.bind(this)}
           handleMapPointSelect={this.handleMapPointSelect.bind(this)}
@@ -197,9 +187,6 @@ export default class App extends React.Component {
     let curLayerKeys = this.state.layers.map(d => d.key);
     curLayerKeys.push(key);
     this._setActiveLayers(curLayerKeys);
-    this.setState({
-
-    })
   }
 
   removeActiveLayer(key){
@@ -212,11 +199,12 @@ export default class App extends React.Component {
     const newState = {}
 
     const layers = this.layerManager.getLayers(layerKeys);
-    const mapStyle = this.styleManager.getStyleForLayers(layers);
+
     const focusLnglat = this.state.focusLnglat;
 
+    mapState.activeLayerKeys = layerKeys;
     newState.layers = layers;
-    newState.mapStyle = mapStyle;
+
     if (focusLnglat) {
       const focusFeatures = this.layerManager.locatePointOnLayers(focusLnglat, layers);
       this.loadData(focusFeatures);

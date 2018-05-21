@@ -79,7 +79,7 @@ export default class DistrictMap extends React.Component {
   /* Render methods */
 
   render(){
-
+    // console.log('style', this.props.mapState.style.toJS())
     const focusShapes = this.props.focusFeatures
       .slice().reverse() // slice to avoid mutation
       .map(d => {
@@ -97,7 +97,7 @@ export default class DistrictMap extends React.Component {
         <ReactMapGL
           {...this.props.mapState.viewport}
           mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
-          mapStyle={this.props.style}
+          mapStyle={this.props.mapState.style}
           onViewportChange={this._updateViewport}
           onClick={this._onClick}
           dragRotate={false}
