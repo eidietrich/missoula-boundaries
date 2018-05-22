@@ -53,7 +53,6 @@ export default class MapStateStore {
         data: layer.geodata,
       })
     });
-    console.log('sources', addedSources);
     return addedSources;
   }
 
@@ -144,7 +143,6 @@ export default class MapStateStore {
 
   // Styling
   @computed get style(){
-    console.log('base', this.baseStyle.toJS())
     const useStyles = this.allDisplayLayers.filter(l => this.activeLayerKeys.includes(l.sourceId))
 
     let style = this.baseStyle;

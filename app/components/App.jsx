@@ -1,14 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 
+import AppStateStore from './../stores/AppStateStore.js';
 import MapStateStore from './../stores/MapStateStore.js'
 
 // for viewport management
 import { FlyToInterpolator } from 'react-map-gl'
 import turfBbox from '@turf/bbox';
 import WebMercatorViewport from 'viewport-mercator-project';
-
-import LayerManager from './../js/LayerManager.js';
 
 import ResetButton from './ResetButton.jsx';
 import TownPicker from './TownPicker.jsx';
@@ -38,18 +37,13 @@ const defaultLayerKeys = [
   'counties',
 ];
 
-// initial state
-const defaultState = {
-  focusLnglat: null,
-  focusFeatures: [],
-  data: {
-    townPopulation: null,
-    schoolEnrollment: null,
-    schoolTaxBase: null,
-    countyPopulation: null,
-    countyIncome: null,
-  }
-}
+const defaultData = {
+  townPopulation: null,
+  schoolEnrollment: null,
+  schoolTaxBase: null,
+  countyPopulation: null,
+  countyIncome: null,
+};
 
 const defaultViewport = {
     latitude: 46.75,
@@ -62,6 +56,13 @@ const defaultViewport = {
     width: 400,
     height: 300,
 };
+
+const appState = new AppStateStore({
+  focusLnglat: null,
+  data: defaultData,
+  layers: allLayers,
+  defaultLayerKeys: defaultLayerKeys,
+});
 
 const mapState = new MapStateStore({
   defaultViewport: defaultViewport,
@@ -77,36 +78,31 @@ export default class App extends React.Component {
 
   constructor(props){
     super(props);
-    this.layerManager = new LayerManager(allLayers);
 
     this.webGLok = detectWebGLsupport();
 
-    const defaults = JSON.parse(JSON.stringify(defaultState)) // deep clone
-
-    const layers = this.layerManager.getLayers(defaultLayerKeys);
+    this.handleMapPointSelect = this.handleMapPointSelect.bind(this)
+    this.addActiveLayer = this.addActiveLayer.bind(this)
+    this.removeActiveLayer = this.removeActiveLayer.bind(this)
+    this.handleMapShapeSelect = this.handleMapShapeSelect.bind(this)
+    this.reset = this.reset.bind(this)
 
     this.state = {
-      focusLnglat: defaults.focusLnglat,
-      focusFeatures: defaults.focusFeatures,
-      layers: layers,
-      showLayers: defaults.showLayers,
-      data: defaults.data,
+      data: defaultData
     }
   }
 
   render(){
-    console.log('rendering w/ state...', this.state)
+    // console.log('rendering w/ state...', this.state)
+
     const map = this.webGLok ? (
       <DistrictMap
           // Display data
-          lnglat={this.state.focusLnglat}
-          focusFeatures={this.state.focusFeatures}
+          lnglat={appState.focusLnglat}
+          focusFeatures={appState.focusFeatures}
           // Map state
           mapState={mapState}
-          // style={this.state.mapStyle}
-          // Interaction handling
-          // setViewport={this.setViewport.bind(this)}
-          handleMapPointSelect={this.handleMapPointSelect.bind(this)}
+          handleMapPointSelect={this.handleMapPointSelect}
       />): null;
 
     return (
@@ -115,11 +111,11 @@ export default class App extends React.Component {
 
         <div className="control-container">
           <LayerPicker
-            layers={this.layerManager.getLayers()}
-            activeLayers={this.state.layers}
+            layers={allLayers}
+            activeLayers={appState.activeLayers}
 
-            addActiveLayer={this.addActiveLayer.bind(this)}
-            removeActiveLayer={this.removeActiveLayer.bind(this)}
+            addActiveLayer={this.addActiveLayer}
+            removeActiveLayer={this.removeActiveLayer}
 
           />
           <TownPicker
@@ -128,18 +124,18 @@ export default class App extends React.Component {
           />
 
           <ResetButton
-            onClick={this.reset.bind(this)}
+            onClick={this.reset}
           />
         </div>
 
         {map}
 
         <LocationResult
-          focusFeatures={this.state.focusFeatures}
+          focusFeatures={appState.focusFeatures}
         />
 
         <DistrictsResults
-          focusFeatures={this.state.focusFeatures}
+          focusFeatures={appState.focusFeatures}
           data={this.state.data}
         />
 
@@ -152,71 +148,47 @@ export default class App extends React.Component {
   }
 
   /* Interaction handlers */
+  // TODO: Move these down to approriate components
 
   handleMapPointSelect(location){
-    const lnglat = location.lnglat;
-
-    const focusFeatures = this.layerManager.locatePointOnLayers(lnglat, this.state.layers);
-    this.loadData(focusFeatures);
-
-    this.setState({
-      focusLnglat: lnglat,
-      focusFeatures: focusFeatures,
-    });
+    appState.focusLnglat = location.lnglat;
+    this.loadData(appState.focusFeatures);
   }
 
   handleMapShapeSelect(location){
-    const shape = location.shape;
-    mapState.zoomToShape(shape);
-    this.handleMapPointSelect(location);
+    appState.focusLnglat = location.lnglat;
+    mapState.zoomToShape(location.shape);
+    this.loadData(appState.focusFeatures);
   }
 
   reset(){
-    // const defaultViewport = JSON.parse(JSON.stringify(defaultState.mapViewport))
-    // this.setViewport(defaultViewport)
     mapState.resetViewport();
-    this.setState({
-      focusLnglat: null,
-      focusFeatures: []
-    })
+    appState.focusLnglat = null;
   }
 
   /* Layer visibility management */
 
   addActiveLayer(key){
-    let curLayerKeys = this.state.layers.map(d => d.key);
+    let curLayerKeys = appState.activeLayerKeys.slice();
     curLayerKeys.push(key);
     this._setActiveLayers(curLayerKeys);
   }
 
   removeActiveLayer(key){
-    let curLayerKeys = this.state.layers.map(d => d.key);
+    let curLayerKeys = appState.activeLayerKeys.slice();
     curLayerKeys = curLayerKeys.filter(k => k !== key)
     this._setActiveLayers(curLayerKeys);
   }
 
   _setActiveLayers(layerKeys){
-    const newState = {}
-
-    const layers = this.layerManager.getLayers(layerKeys);
-
-    const focusLnglat = this.state.focusLnglat;
-
+    // TODO: Work out how to avoid redundancy here
     mapState.activeLayerKeys = layerKeys;
-    newState.layers = layers;
-
-    if (focusLnglat) {
-      const focusFeatures = this.layerManager.locatePointOnLayers(focusLnglat, layers);
-      this.loadData(focusFeatures);
-      newState.focusFeatures = focusFeatures;
-
-    }
-
-    this.setState(newState)
+    appState.activeLayerKeys = layerKeys;
+    this.loadData(appState.focusFeatures);
   }
 
   /* Async data management */
-  // TODO: Figure out how to refactor this away
+  // TODO: Refactor this into DataStateStore component
 
   updateData(key, newValue){
     // Updates piece of data held in app state

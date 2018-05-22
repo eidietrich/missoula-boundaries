@@ -50,7 +50,7 @@ export default class DistrictMap extends React.Component {
   }
 
   componentWillUnmount(){
-    console.log('unmounting map');
+    // console.log('unmounting map');
     window.removeEventListener('resize', this._setSize);
   }
 
@@ -79,7 +79,7 @@ export default class DistrictMap extends React.Component {
   /* Render methods */
 
   render(){
-    // console.log('style', this.props.mapState.style.toJS())
+    // console.log('map props', this.props)
     const focusShapes = this.props.focusFeatures
       .slice().reverse() // slice to avoid mutation
       .map(d => {
