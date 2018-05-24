@@ -1,6 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 
+import { toJS } from 'mobx-react';
+
 import AppStateStore from './../stores/AppStateStore.js';
 import MapStateStore from './../stores/MapStateStore.js'
 
@@ -61,15 +63,19 @@ const appState = new AppStateStore({
   focusLnglat: null,
   data: defaultData,
   layers: allLayers,
+  styleLayers: allLayers,
   defaultLayerKeys: defaultLayerKeys,
-});
-
-const mapState = new MapStateStore({
   defaultViewport: defaultViewport,
   defaultStyle: defaultMapStyle,
-  allLayers: allLayers,
-  defaultLayerKeys: defaultLayerKeys,
+
 });
+
+// const mapState = new MapStateStore({
+//   defaultViewport: defaultViewport,
+//   defaultStyle: defaultMapStyle,
+//   allLayers: allLayers,
+//   defaultLayerKeys: defaultLayerKeys,
+// });
 
 @observer
 export default class App extends React.Component {
@@ -80,16 +86,6 @@ export default class App extends React.Component {
     super(props);
 
     this.webGLok = detectWebGLsupport();
-
-    this.handleMapPointSelect = this.handleMapPointSelect.bind(this)
-    this.addActiveLayer = this.addActiveLayer.bind(this)
-    this.removeActiveLayer = this.removeActiveLayer.bind(this)
-    this.handleMapShapeSelect = this.handleMapShapeSelect.bind(this)
-    this.reset = this.reset.bind(this)
-
-    this.state = {
-      data: defaultData
-    }
   }
 
   render(){
@@ -101,8 +97,8 @@ export default class App extends React.Component {
           lnglat={appState.focusLnglat}
           focusFeatures={appState.focusFeatures}
           // Map state
-          mapState={mapState}
-          handleMapPointSelect={this.handleMapPointSelect}
+          mapState={appState}
+          handleMapPointSelect={appState.handleMapPointSelect}
       />): null;
 
     return (
@@ -114,17 +110,17 @@ export default class App extends React.Component {
             layers={allLayers}
             activeLayers={appState.activeLayers}
 
-            addActiveLayer={this.addActiveLayer}
-            removeActiveLayer={this.removeActiveLayer}
+            addActiveLayer={appState.addActiveLayer}
+            removeActiveLayer={appState.removeActiveLayer}
 
           />
           <TownPicker
             options={mtTowns}
-            handleChoice={this.handleMapShapeSelect.bind(this)}
+            handleChoice={appState.handleMapShapeSelect}
           />
 
           <ResetButton
-            onClick={this.reset}
+            onClick={appState.reset}
           />
         </div>
 
@@ -133,10 +129,9 @@ export default class App extends React.Component {
         <LocationResult
           focusFeatures={appState.focusFeatures}
         />
-
         <DistrictsResults
           focusFeatures={appState.focusFeatures}
-          data={this.state.data}
+          data={appState.data}
         />
 
         <div className="respond-container">
@@ -145,66 +140,6 @@ export default class App extends React.Component {
 
       </div>
     );
-  }
-
-  /* Interaction handlers */
-  // TODO: Move these down to approriate components
-
-  handleMapPointSelect(location){
-    appState.focusLnglat = location.lnglat;
-    this.loadData(appState.focusFeatures);
-  }
-
-  handleMapShapeSelect(location){
-    appState.focusLnglat = location.lnglat;
-    mapState.zoomToShape(location.shape);
-    this.loadData(appState.focusFeatures);
-  }
-
-  reset(){
-    mapState.resetViewport();
-    appState.focusLnglat = null;
-  }
-
-  /* Layer visibility management */
-
-  addActiveLayer(key){
-    let curLayerKeys = appState.activeLayerKeys.slice();
-    curLayerKeys.push(key);
-    this._setActiveLayers(curLayerKeys);
-  }
-
-  removeActiveLayer(key){
-    let curLayerKeys = appState.activeLayerKeys.slice();
-    curLayerKeys = curLayerKeys.filter(k => k !== key)
-    this._setActiveLayers(curLayerKeys);
-  }
-
-  _setActiveLayers(layerKeys){
-    // TODO: Work out how to avoid redundancy here
-    mapState.activeLayerKeys = layerKeys;
-    appState.activeLayerKeys = layerKeys;
-    this.loadData(appState.focusFeatures);
-  }
-
-  /* Async data management */
-  // TODO: Refactor this into DataStateStore component
-
-  updateData(key, newValue){
-    // Updates piece of data held in app state
-    const newData = {};
-    newData[key] = newValue;
-    const update = Object.assign(this.state.data, newData)
-    this.setState({ data: update });
-  }
-
-  loadData(focusFeatures){
-    // loads data for set of focusFeature
-    focusFeatures.forEach(layer => {
-      if (layer.feature){
-        layer.loader(layer.feature, this.updateData.bind(this));
-      }
-    })
   }
 
 }

@@ -11,7 +11,7 @@ import {format} from 'd3-format';
 // [ {'xKey': VALUE, 'yKey': VALUE}, ... ]
 // Trend function is (d, i, data) => {x: xi, y: yi} function for data.map
 
-export default class TrendChart extends React.Component {
+class TrendChart extends React.Component {
 
   render() {
     const data = this.props.data;
@@ -48,3 +48,5 @@ export default class TrendChart extends React.Component {
     return lineChart;
   }
 }
+
+export default TrendChart;
