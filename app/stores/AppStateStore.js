@@ -65,8 +65,8 @@ export default class AppStateStore {
   }
 
   @action
-  handleMapPointSelect(location){
-    this.focusLnglat = location.lnglat;
+  handleMapPointSelect(lnglat){
+    this.focusLnglat = lnglat;
     this.loadData();
   }
 
@@ -91,7 +91,6 @@ export default class AppStateStore {
     this.activeLayerKeys = newLayerKeys;
     this.loadData();
   }
-
 
   @action
   reset(){

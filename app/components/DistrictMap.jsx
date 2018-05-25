@@ -57,7 +57,7 @@ export default class DistrictMap extends React.Component {
   _setSize(){
     // adjusts map display width to match container width/height
     let { clientHeight, clientWidth } = this.refs['map-container']
-    this.props.mapState.renderWidth = clientWidth;
+    this.props.appState.renderWidth = clientWidth;
     this._updateViewport({
       width: clientWidth,
       height: clientHeight
@@ -65,39 +65,39 @@ export default class DistrictMap extends React.Component {
   }
 
   _updateViewport(newViewport){
-    const viewport = Object.assign(this.props.mapState.viewport, newViewport)
-    this.props.mapState.viewport = viewport;
+    const viewport = Object.assign(this.props.appState.viewport, newViewport)
+    this.props.appState.viewport = viewport;
   }
 
   _onClick(event){
-    const latlng = event.lngLat;
-    this.props.handleMapPointSelect({
-      lnglat: latlng,
-    })
+    const lnglat = event.lngLat;
+    this.props.appState.handleMapPointSelect(lnglat)
   }
 
   /* Render methods */
 
   render(){
     // console.log('map props', this.props)
-    const focusShapes = this.props.focusFeatures
+    const state = this.props.appState;
+
+    const focusShapes = state.focusFeatures
       .slice().reverse() // slice to avoid mutation
       .map(d => {
         return this.makeHighlightFeature(d.feature, d.cssClass)
       });
 
-    const markerOverlay = this.props.lnglat ? (
+    const markerOverlay = state.focusLnglat ? (
       <SVGOverlay redraw={(opt) => {
-        return this.buildMarker(opt, this.props.lnglat)
+        return this.buildMarker(opt, state.focusLnglat)
       }} />
     ) : null;
 
     return (
       <div className='map-container' ref='map-container'>
         <ReactMapGL
-          {...this.props.mapState.viewport}
+          {...this.props.appState.viewport}
           mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN}
-          mapStyle={this.props.mapState.style}
+          mapStyle={state.style}
           onViewportChange={this._updateViewport}
           onClick={this._onClick}
           dragRotate={false}

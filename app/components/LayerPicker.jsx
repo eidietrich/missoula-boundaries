@@ -1,9 +1,11 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
+@observer
 export default class LayerPicker extends React.Component {
 
   render(){
-    const layers = this.props.layers;
+    const layers = this.props.appState.layers;
 
     layers.forEach(d => {
       this.isLayerActive(d);
@@ -31,8 +33,8 @@ export default class LayerPicker extends React.Component {
   }
 
   isLayerActive(layer){
-    const activeLayers = this.props.activeLayers;
-    return (activeLayers.find(d => d.key === layer.key) !== undefined)
+    const activeLayerKeys = this.props.appState.activeLayerKeys;
+    return (activeLayerKeys.find(key => (key === layer.key)) !== undefined);
   }
 
   handleChange(event){
@@ -41,9 +43,9 @@ export default class LayerPicker extends React.Component {
     const key = target.id;
 
     if (value === true){
-      this.props.addActiveLayer(key)
+      this.props.appState.addActiveLayer(key)
     } else {
-      this.props.removeActiveLayer(key)
+      this.props.appState.removeActiveLayer(key)
     }
   }
 }

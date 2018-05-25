@@ -1,11 +1,13 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
 import MapMarker from './MapMarker.jsx';
 
+@observer
 export default class LocationResult extends React.Component {
 
   render(){
-    const focusFeatures = this.props.focusFeatures;
+    const focusFeatures = this.props.appState.focusFeatures;
     const town = this.getFeature(focusFeatures, 'places')
     const school = this.getFeature(focusFeatures, 'schools-secondary')
     const reservation = this.getFeature(focusFeatures, 'reservations')

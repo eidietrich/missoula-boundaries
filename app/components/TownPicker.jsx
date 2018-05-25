@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
 import centroid from '@turf/centroid';
 
@@ -8,6 +9,7 @@ import centroid from '@turf/centroid';
 // Translate handleSelect into map control
 // clean up options
 
+@observer
 export default class TownPicker extends React.Component {
   constructor(props) {
     super(props);
@@ -17,6 +19,8 @@ export default class TownPicker extends React.Component {
       responses: this.options,
       showResponseBox: false,
     };
+
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   buildOptions(rawOptions){
@@ -127,7 +131,7 @@ export default class TownPicker extends React.Component {
   }
 
   handleSelect(option){
-    this.props.handleChoice(option)
+    this.props.appState.handleMapShapeSelect(option)
 
     this.setState({
       value: option.label,

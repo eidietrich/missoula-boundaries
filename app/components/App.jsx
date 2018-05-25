@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { toJS } from 'mobx-react';
 
 import AppStateStore from './../stores/AppStateStore.js';
-import MapStateStore from './../stores/MapStateStore.js'
 
 // for viewport management
 import { FlyToInterpolator } from 'react-map-gl'
@@ -70,13 +69,6 @@ const appState = new AppStateStore({
 
 });
 
-// const mapState = new MapStateStore({
-//   defaultViewport: defaultViewport,
-//   defaultStyle: defaultMapStyle,
-//   allLayers: allLayers,
-//   defaultLayerKeys: defaultLayerKeys,
-// });
-
 @observer
 export default class App extends React.Component {
 
@@ -93,12 +85,7 @@ export default class App extends React.Component {
 
     const map = this.webGLok ? (
       <DistrictMap
-          // Display data
-          lnglat={appState.focusLnglat}
-          focusFeatures={appState.focusFeatures}
-          // Map state
-          mapState={appState}
-          handleMapPointSelect={appState.handleMapPointSelect}
+          appState={appState}
       />): null;
 
     return (
@@ -106,17 +93,10 @@ export default class App extends React.Component {
         <h1>Montana Explorer</h1>
 
         <div className="control-container">
-          <LayerPicker
-            layers={allLayers}
-            activeLayers={appState.activeLayers}
-
-            addActiveLayer={appState.addActiveLayer}
-            removeActiveLayer={appState.removeActiveLayer}
-
-          />
+          <LayerPicker appState={appState} />
           <TownPicker
             options={mtTowns}
-            handleChoice={appState.handleMapShapeSelect}
+            appState={appState}
           />
 
           <ResetButton
@@ -127,11 +107,10 @@ export default class App extends React.Component {
         {map}
 
         <LocationResult
-          focusFeatures={appState.focusFeatures}
+          appState={appState}
         />
         <DistrictsResults
-          focusFeatures={appState.focusFeatures}
-          data={appState.data}
+          appState={appState}
         />
 
         <div className="respond-container">
