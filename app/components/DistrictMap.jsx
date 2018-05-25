@@ -92,6 +92,15 @@ export default class DistrictMap extends React.Component {
       }} />
     ) : null;
 
+    const zoom = (
+      <div className="nav" style={navStyle}>
+        <NavigationControl
+          onViewportChange={this._updateViewport}
+          showCompass={false}
+        />
+      </div>
+    );
+
     return (
       <div className='map-container' ref='map-container'>
         <ReactMapGL
@@ -105,12 +114,6 @@ export default class DistrictMap extends React.Component {
         >
           {focusShapes}
           {markerOverlay}
-          <div className="nav" style={navStyle}>
-            <NavigationControl
-              onViewportChange={this._updateViewport}
-              showCompass={false}
-            />
-          </div>
         </ReactMapGL>
       </div>
     );
